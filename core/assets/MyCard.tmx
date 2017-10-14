@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="320" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="MyTiles.tsx"/>
+ <layer name="Background " width="32" height="320">
+  <data encoding="base64" compression="zlib">
+   eJzt1OtNwzAUBtBuQDdoNoANYIOOkDmACSgTAMviolSKrPjaToiExPlxpD5sf77Xcc6Hw+EMAAAAAAAAAAAAAAAAAAAAAAAAFN0lR/k/n8fZ72PBXvmlvD3zxxX5vXvJx+Zr5P3fYx/R3FL9tTWWaluzh3n+2h6syW85/6W5pbXWZJfyo7vYm1/r3Z71l+ppvf89tZTya8/p2vyl77W9bs2P+lw7+9LcUzJ09HPLM7805j55mPqwxbExO//vMXma+rDFEPQp2k90/rV1Wuqr3enW/N571+qv51/Xe05eJq+/kN3T/+vYt+QyeQ+yW/NvmXPR+I/kc/IVZEf5eeaQ2Xrm8/dgVOctrzSn5U5F9bfUWXp3tzxXpZrz7KivtXd3j6X8pf5uWbfVKcsGAAAAAAAAAAAAAAAAAAAAAOB/+AbYBFiw
+  </data>
+ </layer>
+ <layer name="Obstacles" width="32" height="320">
+  <data encoding="base64" compression="zlib">
+   eJzt1Emu1DAUBdCwaNgB7ABYAc0GgBUAEiBm9OjP6BEwoW9fpG/JCu4SUmJyjnSrKikntp+dTBMAAAAAAAAAAAAAAAAAAAAAAAAwuxW5/R/7fxx50mlzNnIucn7HftO8X0feTO06XIhcjFwauO/oWNO8v0W+Z8elcVyJXI1ci1wu3Cs/1xtrbd7peGQ9Wnpjrc07HadxtLRq/D7yoXFtbd7pOI2jpVXj3/PHifq1tXn36p7XMq/x2+NzPztjTnrr33oOUh93snM/Bsec9NZ/ZP89LZxLdSj1mevNu7f/8rm/y3636jBNf++vXh1q8rn/KvxfezaW75e18265e/w974/as7F8v6ydd7p/kq/DUfY7fzZyy/fLmn1fUtqDLaPrfyjL+++5/iNq79k16/8vanXeuv5b9epwaL06rHUycmrDdcv+tq7/6ciZDdcder/t7XrkRuTmzm1H3Yvcjzyo/P8w8miw7RbPIs8jLwr9zV5GXlXa7uFj5FPkc6G/2ZfI10rbQ8j7AwAAAAAAAAAAAAAAAAAAAACAkj873fL0
+  </data>
+ </layer>
+</map>

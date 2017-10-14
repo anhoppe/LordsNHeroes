@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" nextobjectid="18">
+ <tileset firstgid="1" source="MyTiles.tsx"/>
+ <tileset firstgid="257" source="data/tileset/Building.tsx"/>
+ <layer name="Background" width="128" height="128">
+  <data encoding="base64" compression="zlib">
+   eJzt3Vty00AQhWEtACIvgGAtAFgBsIJANsBl/7tgKGrKqinJaqWC5qjP//A94IqTpn8JX2Oeh2F4TmQsLgJzoI9rMQnMAfqD/qA/6A/6g/6gP+gP+oP+oD/oD/qjf/9xiL2GvPR1Y4PXofv1v2xoW+11DV42Bn8ex8rr9m9dmj9fD7T18+h/zPHQXtZ7tor+fY6J3nPQn/709+5f29Pft389BnrP4oL+3pT68/jv/7i3U6X+W7Ni3x6re43V+qvNc1ZLz7utHSdK55vaPNmpnW/0pz/96d97Dhf090Z/b0r9a3uVeRyo9a/HQO9ZXNDfm1J/nv/37v8X/elPf9/+avNkp7bvceD8p3//OVzQ3xv9vdHfG/290d8b/XOoe5tbu3yO/nq2mt0zzSxdtqb335n+N2uf2xDt2F7/TPtWmyc7tX2rzZOd0r5HsXkcKO2b939491ecJzu1favNk53avtXmyU5t32rPR2Wn1l9tnuzU9q02T3Zq+1abJzu1favNk53avtXmyU5t32rzZKe2b7V5slPbt9o82antW22e7NT2rTZPdmr7VpsnO7V9q82Tndq+1ebJTm3favNkp7ZvtXkiPhdfiq8Cs5x932rzRDwV34rvArOcfd9q80T8KH4WvwRmOfu+1ebJTu39VvT33XedRWUeB4r9J4FZXCj15/d/+vS/5+gWe+6P/H4lvRv01P4/Ya2t46MeI3su3/t91kTni1yXf3NednzU83XP5Xu/zxEmgV2f1Thw/jijvzf6e6O/N/p7o783+vuq7envqfafBGZBv/695wD9QX/QH/THMXjt1Ns4cP47o783+nujvzf6e6O/N/p7o783+nujvzf6+1j6XUn6+6A/Wrz+l9Ob4m3xsPF148D5n8W8+bvisXi/cR0+s2Mf5c+KnDf/UHwsPgWuR/845c+KXGoeuR2gf9zZPisycjtA/7witwP090Z/b/S/qfeXIo+ds6D/Tb2/FHnsnAX96U//f+r95ehzJxnQ3xv9vdHfG/29ZXkPwB/ighxy
+  </data>
+ </layer>
+ <layer name="Obstacles" width="128" height="128">
+  <data encoding="base64" compression="zlib">
+   eJzt3XlKxDAUB2A9tMsFXI4yF1Ev4HoAtwO4/WdAhDJ0apvWLM33wUNBOwbM+71EhNnbAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABjnItRlqKvcC6nQQajD3IuY6SbUbai7Cc/YMz9OQp3mXsRMj6GeQj1PeCZmz1Cmt1DvoT4mPBOzZyhHN79jsjxmz1CObn7L8vZ081uWt6eb37K8PUvc39wB67XEzHduWMYmw89cYuY7N9RriZnv3FAvs7ttZnfbzO46LXVWNLvTuA/1kHsRPcz/NF5CveZeRA/zP43PUF+5F9FjaP7LhnlKzfyuofkvG+YpNfO7hnrc3WCeUjO/a6jH3Q2WU+os0ONplDoL9Pj/6fZ8DbOAZZXa86Sh59uU4qyX439FGEfut21K7uvjNpR6/ycNM6Ft7gIAAIzlbwR1uN7PvQIAoAXOhgDtOAp1nOAZ8hma62ehzie+3l/P2B/rMvVcGLOnWuKcTY36cl3Wz7MrC0rMiL5cl/UQZ7vH+3o+RQ6UmDVrs9n6CL82Oz6f+j1AucbM+zFfoz32w7rkOuuTR8zv1n4AaNOY/F/De0UTbw3vFQ0AAABQk2+Yrasq
+  </data>
+ </layer>
+ <layer name="Collision" width="128" height="128">
+  <data encoding="base64" compression="zlib">
+   eJzt20lu1EAAhtEO055xDwT2jHvGfZiWiHkFgQMAJwCuAjeAAyDBAYLgAgEuwPBHQqKT2IEWbZdxvSd9kWMprZJcTlWnnckEAAAAAAAAAAAAAAAAAACAsbmfHqTl0gOhiMfpSXo6WT8XzIs6PEvP04vJ+rkwfUwdpufC9DEAAAAAAAAAAAAAAAAAAAAAAAAAAADdeZlelR4ExbxOb0oPgmLepfelB0ExH9On0oMAAAAAYPAW0ra0Pe1IO9OuoiOiT7vTnrQ37Uv704GiI6JPB9OhdDgtpiPpaNER0adj6Xg6kU6mU+l00RHVaTkL8cP0aOHvf2Yea/eZdDadS+fThXRxxtfg313/dd1vzHD957F2L6VL6XK6kq6mazO+BmXMY+2+mW6l2+lOupvuzXGMdMfaXTdrd92s3fX40HDO2l2P1dIDAAAAOtP0fo96eL/H/+Rt6QHQqK/n+1ZazpsXZZV+vq9tXtCPLp/vc28PX5fPCLi3h88zAsPwueW4a54RGIbvLcdd6+oZgba1v21u2yts1ufvgXlrW/vb5ra9wua/6fb5e4Aypu/x1YZzY/IlfS09iIFpusfXzo3x850fa19m+P+VsdvqGo/t8522/V3N+76xXeOttO3v7Pt+27juj3UfQLONewH7/zp8+8P31MF1BxiXn3w2WJU=
+  </data>
+ </layer>
+ <objectgroup name="Buildings">
+  <object id="16" name="Capital" type="Entry" x="577" y="3009" width="29" height="32">
+   <properties>
+    <property name="TargetMap" value="capitalMap"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

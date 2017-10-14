@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" nextobjectid="2">
+ <tileset firstgid="1" source="MyTiles.tsx"/>
+ <tileset firstgid="257" source="data/tileset/Building.tsx"/>
+ <layer name="Background" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt17ENAzEMBEF1+vW6KzdgwIBB6Ehzgs01vOT/Oec8kiQt7tXgDdWeT23yV9zrW2lncs9fb3ar9AbpfTrHn38DPz8/Pz8//1z/xO9i/t3/RZ32T9yOn5+fn5+fn3+Kv7KJ/o7737xfR//2/fn5+ef5U1UZ7M/Pz7/JX9lEf8f9b96Pn//f/Kmbp9/Az8/Pz8/Pz8+vTb0BuE41dA==
+  </data>
+ </layer>
+ <layer name="Obstacles" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztmtuxAUEURdv/JQJ3CAApCIsM3AQ8EvBIABEgAY8ILhHg1w5A1Zzh9HSfnr2q1peeqd7VZ/pVnCOEkPgZwwmchu6IAj+wDhsFnpnDBVx66VG5NOEvzAo8s4YbuPXSo/cM4NDDezuwC3se3q3JCP6F7gQpldmXvxOSEtr1vlJ+nya+1rsy0NgfWl7vytgfanwLvuo/xP4wVWJY42M672nOi9L6j+m8F2JelH7P/Q9MCWt5tOd/a/mJLtbGn/WvC/PbgvWvS6r5d3APDzntrOWX1v8JnuElp521/FL+4RXectqlmv8OH/CZ0y7V/FKYn+dfS3D/owvz24L1TzSxNv6sf12s5ef468L81cba+Sfm///EhvQOMFWkd4CWKFL/0jvAVJHeARI7cP4nVYb1X204/s5lNedasF0L3ZNwHCucPRZeHRdLgA==
+  </data>
+ </layer>
+ <layer name="Collision" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztm0EOwiAQRWk08TgewY2X1RvoDfQGegM9hbAgURwjTDKUzv8vIflhQx8tbSGZEEhiC9ZK98MUwnFST99iyJ7vc5DyKfadAfyzZ+l/iX1XAP/sWfrfYt8dwD97lv6P2PcE8M+epT8a9JczCvSXMwr0lzMK9JczCvSXMwr0lzMKnvx3iubNvxVP/mvFuYUnfw2lf+v6GYnezz/9x4L+7dBfzjXsBzsn5/1vh/5ythrPkt7+G/D1Pxp8/vvuf0f0b4X+cq6B/z9jge6/6nz+M5q/Bp7/yNlqPEvo3w795Ww1niXc/7Tj7f4j73800F/ONXj0l9ZI2uct4f9Pg6f3vwb6yxkF+n9m1r+x/o31b3NdVT9Y//Zd/5b4Vy9s0eYaF/F794sXqhdpMQ==
+  </data>
+ </layer>
+ <objectgroup name="Buildings">
+  <object id="1" name="World" type="Entry" x="992" y="1984" width="32" height="35">
+   <properties>
+    <property name="TargetMap" value="baseMap"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

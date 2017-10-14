@@ -14,12 +14,14 @@
  </layer>
  <layer name="Collision" width="128" height="128">
   <data encoding="base64" compression="zlib">
-   eJzt20lu1EAAhtEO055xDwT2jHvGfZiWiHkFgQMAJwCuAjeAAyDBAYLgAgEuwPBHQqKT2IEWbZdxvSd9kWMprZJcTlWnnckEAAAAAAAAAAAAAAAAAACAsbmfHqTl0gOhiMfpSXo6WT8XzIs6PEvP04vJ+rkwfUwdpufC9DEAAAAAAAAAAAAAAAAAAAAAAAAAAADdeZlelR4ExbxOb0oPgmLepfelB0ExH9On0oMAAAAAYPAW0ra0Pe1IO9OuoiOiT7vTnrQ37Uv704GiI6JPB9OhdDgtpiPpaNER0adj6Xg6kU6mU+l00RHVaTkL8cP0aOHvf2Yea/eZdDadS+fThXRxxtfg313/dd1vzHD957F2L6VL6XK6kq6mazO+BmXMY+2+mW6l2+lOupvuzXGMdMfaXTdrd92s3fX40HDO2l2P1dIDAAAAOtP0fo96eL/H/+Rt6QHQqK/n+1ZazpsXZZV+vq9tXtCPLp/vc28PX5fPCLi3h88zAsPwueW4a54RGIbvLcdd6+oZgba1v21u2yts1ufvgXlrW/vb5ra9wua/6fb5e4Aypu/x1YZzY/IlfS09iIFpusfXzo3x850fa19m+P+VsdvqGo/t8522/V3N+76xXeOttO3v7Pt+27juj3UfQLONewH7/zp8+8P31MF1BxiXn3w2WJU=
+   eJzt20lu1EAUBuAO055xz7hn3DPuGZeIeQWBAwAnAK4SbgAHQIIDBMEFAlyA4Y9EhJPYIa20XY79fdLfclvq1pOq3K/cXT2ZAAAAAAAAAAAAAAAAAAAAMDSPkyfJfOlCKOJ58iJ5OVk9F8yLcXiVvE7eTFbPheox41CdC9VjAAAAAAAAAAAAAAAAAAAAAAAAAAAA2rOQvC1dBMW8S96XLoJiPiafShdBMV+Sr6WLAAAAAKD35pIdyc5kV7I72VO0Irq0N9mX7E8OJAeTQ0UrokuHkyPJ0eRYcjw5UbQiunQyOZWcTs4kZ5NzRSsap/k04qfJs7nNv2YWvft8ciG5mFxKLidXpnwPtu7233G/M8X4z6J3X02uJdeTG8nN5NaU70EZs+jdd5N7yf3kQfIweTTDGmmP3j1ueve46d3j8bnmnN69fSw0ZLOW2iiKzmx1/Nm+quO9sm/fHBiP6liv7Ns3/gDUqbvfYzzc77GdfChdALW62t+32HDevCir9P6+pnlBN9rc3+fa7r829wi4tvvPHoF++NZw3DZ7BPrhV8Nx29raI9DU+5vmtrXCel1+DsxaU+9vmtvWCuu/0+3yc4Ayqtf4Us25Ifme/ChdRM/UXePL54b4+87v5Ycp/r8ydBuN8dB+32la34153Te0Md5I0/rOuu+ftX1/qOsA6q1dC1j/j8PP/zxnHIw7wLD8AZgtbBs=
   </data>
  </layer>
  <objectgroup name="Buildings">
   <object id="16" name="Capital" type="Entry" x="577" y="3009" width="29" height="32">
    <properties>
+    <property name="StartX" type="int" value="992"/>
+    <property name="StartY" type="int" value="64"/>
     <property name="TargetMap" value="capitalMap"/>
    </properties>
   </object>

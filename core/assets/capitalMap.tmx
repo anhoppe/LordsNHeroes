@@ -20,6 +20,8 @@
  <objectgroup name="Buildings">
   <object id="1" name="World" type="Entry" x="992" y="1984" width="32" height="35">
    <properties>
+    <property name="StartX" type="int" value="577"/>
+    <property name="StartY" type="int" value="1087"/>
     <property name="TargetMap" value="baseMap"/>
    </properties>
   </object>

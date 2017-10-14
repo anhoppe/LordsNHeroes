@@ -169,6 +169,10 @@ public class WorldMap {
 			if (Math.abs(mapObject.getRectangle().x -_camera.position.x) < 32f &&
 				Math.abs(mapObject.getRectangle().y -_camera.position.y) < 32f) {
 				String targetMap = (String)mapObject.getProperties().get("TargetMap");
+				
+				_camera.position.x = (Integer)mapObject.getProperties().get("StartX");
+				_camera.position.y = (Integer)mapObject.getProperties().get("StartY");
+				
 		        _tiledMap = new TmxMapLoader().load(targetMap + ".tmx");
 		        
 		        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                

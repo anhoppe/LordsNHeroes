@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" nextobjectid="18">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" nextobjectid="19">
  <tileset firstgid="1" source="MyTiles.tsx"/>
  <tileset firstgid="257" source="data/tileset/Building.tsx"/>
  <layer name="Background" width="128" height="128">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt3dtx1EAQhWEFAMwGAF4FAEQARIBxAlxChpAYippalUpatSijOerzP3wPbHntpn+JvXp5GobhKZFSXQTmQB/XahSYA/QH/UF/0B/0B/1Bf9Af9Af9QX/QH/RH//5liL2GvPR1ZYbXofv1v2yYt9rrGrysBH8ex8rz9p+7zP58PdDWz6P/McfD/LLeszX073NM9J6D/vSnv3f/1p7+vv3bMdB7Fhf096bUn8d//8e9nSr135oV+/bY3Gus1l9tnrNaet5t7ThROt/U5slO7XyjP/3pT//ec7igvzf6e1Pq39qrzONArX87BnrP4oL+3pT68/y/d/8/6E9/+vv2V5snO7V9l4Hzn/7953BBf2/090Z/b/T3Rn9v9M+h7W1q7fIp+uvZanbPOLF02Zref2f636x9bkO04/z6Z9q32jzZqe1bbZ7slPZdxOZxoLRv3v/h3V9xnuzU9q02T3Zq+1abJzu1fas9H5WdWn+1ebJT27faPNmp7VttnuzU9q02T3Zq+1abJzu1favNk53avtXmyU5t32rzZKe2b7V5slPbt9o82antW22e7NT2rTZPdmr7VpsnO7V9q82Tndq+1eaJ+FB9rD4JzHL2favNE/G5eqy+CMxy9n2rzRPxtfpWfReY5ez7VpsnO7X3W9Hfd99tFpV5HCj2HwVmcaHUn9//6dP/nqNb7Lk/8uOZ9G7Q0/z/CZvbOj7aMbLn8r3fZ010vsh1+Tfn346Pdr7uuXzv9znCKLDrsyoD548z+nujvzf6e6O/N/p7o7+v1p7+nlr/UWAW9Ovfew7QH/QH/UF/HIPXTr2VgfPfGf290d8b/b259v9Z/RKYozfX/qA/6O+O/t7o743+PpZ+V5L+PuiPOV7/y+lF9bJ6tfF1ZeD8z2La/HX1pnrYuA6f2bGP8mdFTpu/rd5V7wPXo3+c8mdFLjWP3A7QP+5snxUZuR2gf16R2wH6e6O/N/rftPtLkcfOWdD/pt1fijx2zoL+9Kf/X+3+cvS5kwzo743+3ujvjf7esrwH4DfpQB1z
   </data>
  </layer>
  <layer name="Obstacles" width="128" height="128">
@@ -14,7 +14,7 @@
  </layer>
  <layer name="Collision" width="128" height="128">
   <data encoding="base64" compression="zlib">
-   eJzt20lu1EAUBuAO055xz7hn3DPuGZeIeQWBAwAnAK4SbgAHQIIDBMEFAlyA4Y9EhJPYIa20XY79fdLfclvq1pOq3K/cXT2ZAAAAAAAAAAAAAAAAAAAAMDSPkyfJfOlCKOJ58iJ5OVk9F8yLcXiVvE7eTFbPheox41CdC9VjAAAAAAAAAAAAAAAAAAAAAAAAAAAA2rOQvC1dBMW8S96XLoJiPiafShdBMV+Sr6WLAAAAAKD35pIdyc5kV7I72VO0Irq0N9mX7E8OJAeTQ0UrokuHkyPJ0eRYcjw5UbQiunQyOZWcTs4kZ5NzRSsap/k04qfJs7nNv2YWvft8ciG5mFxKLidXpnwPtu7233G/M8X4z6J3X02uJdeTG8nN5NaU70EZs+jdd5N7yf3kQfIweTTDGmmP3j1ueve46d3j8bnmnN69fSw0ZLOW2iiKzmx1/Nm+quO9sm/fHBiP6liv7Ns3/gDUqbvfYzzc77GdfChdALW62t+32HDevCir9P6+pnlBN9rc3+fa7r829wi4tvvPHoF++NZw3DZ7BPrhV8Nx29raI9DU+5vmtrXCel1+DsxaU+9vmtvWCuu/0+3yc4Ayqtf4Us25Ifme/ChdRM/UXePL54b4+87v5Ycp/r8ydBuN8dB+32la34153Te0Md5I0/rOuu+ftX1/qOsA6q1dC1j/j8PP/zxnHIw7wLD8AZgtbBs=
+   eJzt20mO00AUBuA0055xz7hn3DPuGZeIeQUNBwBOAFyluQEcAAkOAIILNHABhr8lEOluu+mobZdjf5/0R46lRE+qcl45qUwmAAAAAAAAAAAAAAAAAAAADM3D5FGyWLoQiniaPEueT1bPBfNiHF4kL5NXk9VzYfqYcZieC9PHAAAAAAAAAAAAAAAAAAAAAAAAAAAAtGcpeV26CIp5k7wtXQTFvE8+lC6CYj4nX0oXAQAAAEDvLSTbku3JjmRnsqtoRXRpd7In2ZvsS/YnB4pWRJcOJoeSw8mR5GhyrGhFdOl4ciI5mZxKTidnilY0TotpxI+TJwubf00Tvftsci45n1xILiaXZnwPtu7mn3G/NcP4N9G7LydXkqvJteR6cmPG96CMJnr37eROcje5l9xPHjRYI+3Ru8dN7x43vXs8PlWc07vnx1JNNmu5jaLozFbHn/k1Pd5/9+2bA+NRNdbGH4AqVfd7jIf7PebJu9IFUKmr/X0fa86bF2WV3t9XNy/oRpv7+1zb/dfmHgHXdv/ZI9APX2uO22aPQD/8rDluW1t7BOp6f93ctlZYr8vPgabV9f66uW2tsP473S4/Byhj+hpfrjg3JN+S76WL6Jmqa3zl3BB/3/m18jDD/1eGbqMxHtrvO3XruzGv+4Y2xhupW99Z9/2ztu8PdR1AtbVrAev/cfjxn+eMg3EHGJbf0AJqfA==
   </data>
  </layer>
  <objectgroup name="Buildings">
@@ -23,6 +23,13 @@
     <property name="StartX" type="int" value="992"/>
     <property name="StartY" type="int" value="64"/>
     <property name="TargetMap" value="capitalMap"/>
+   </properties>
+  </object>
+  <object id="18" name="Dungeon" type="Entry" x="354" y="3299" width="61" height="27">
+   <properties>
+    <property name="StartX" type="int" value="992"/>
+    <property name="StartY" type="int" value="1343"/>
+    <property name="TargetMap" value="dungeon"/>
    </properties>
   </object>
  </objectgroup>

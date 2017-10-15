@@ -1,7 +1,5 @@
 package com.lordhero.game;
 
-import java.util.Vector;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,20 +8,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 public class WorldMap {
     private static final float _playerSpeed = 150f;
@@ -36,7 +29,7 @@ public class WorldMap {
     
 	private Texture _playerImage;
 	private Sprite _playerSprite;
-    private TiledMap _tiledMap;
+    private TiledMap _tiledMap; 
     private OrthographicCamera _camera;
     private TiledMapRenderer _tiledMapRenderer;
 
@@ -158,10 +151,7 @@ public class WorldMap {
 	public void enter() {
         MapLayer layer = (MapLayer)_tiledMap.getLayers().get("Buildings");
 
-        int xPos = (int)(_camera.position.x / 32);
-        int yPos = (int)(_camera.position.y / 32);                
-
-		MapObjects objects = layer.getObjects();
+        MapObjects objects = layer.getObjects();
 		
 		for (int i = 0; i < objects.getCount(); i++) {
 			RectangleMapObject mapObject = (RectangleMapObject)objects.get(i);

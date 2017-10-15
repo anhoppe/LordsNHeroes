@@ -40,9 +40,13 @@ public class WorldMap {
     private boolean _rightBlocked = false;
     private boolean _downBlocked = false;
     
+    private String _currentMap;
+    
     private boolean _collision = false;
 
     ICellSelector _cellSelector;
+    
+    Enemies _enemies;
     
     public WorldMap(int xPos, int yPos, int width, int height) {
 		_spriteBatch = new SpriteBatch();
@@ -55,18 +59,25 @@ public class WorldMap {
 		_xCursor = 0;
 		_yCursor = 0;
 		
+		_currentMap = "baseMap";
+		
         _camera = new OrthographicCamera();
         _camera.setToOrtho(false, width, height);
         _camera.update();
         _camera.translate(new Vector2(200, 0));
-        _tiledMap = new TmxMapLoader().load("baseMap.tmx");
+        _tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
         
         _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
+        
+        // Create the enemies object
+        _enemies = new Enemies();
     }
     
 	public void render () {
 		moveCamera();
-		
+
+        _enemies.update();
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -76,12 +87,12 @@ public class WorldMap {
         _tiledMapRenderer.render();	
     
         _playerSprite.setCenter(_camera.position.x, _camera.position.y);
-        float teest = Gdx.graphics.getWidth();
         _cursorSprite.setCenter(_xCursor + _camera.position.x - Gdx.graphics.getWidth() / 2, _yCursor + _camera.position.y - Gdx.graphics.getHeight() / 2);
         
         // render
         _spriteBatch.setProjectionMatrix(_camera.combined);
         _spriteBatch.begin();
+        _enemies.render(_spriteBatch, _currentMap);
         _cursorSprite.draw(_spriteBatch);
         _playerSprite.draw(_spriteBatch);
         _spriteBatch.end();
@@ -158,12 +169,12 @@ public class WorldMap {
 			
 			if (Math.abs(mapObject.getRectangle().x -_camera.position.x) < 32f &&
 				Math.abs(mapObject.getRectangle().y -_camera.position.y) < 32f) {
-				String targetMap = (String)mapObject.getProperties().get("TargetMap");
+				_currentMap = (String)mapObject.getProperties().get("TargetMap");
 				
 				_camera.position.x = (Integer)mapObject.getProperties().get("StartX");
 				_camera.position.y = (Integer)mapObject.getProperties().get("StartY");
 				
-		        _tiledMap = new TmxMapLoader().load(targetMap + ".tmx");
+		        _tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
 		        
 		        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
 				break;

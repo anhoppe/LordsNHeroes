@@ -22,13 +22,26 @@ public class Enemies {
 		}
 	}
 	
-	public void render(SpriteBatch spriteBatch, String site) {
+	public void render(SpriteBatch spriteBatch, String site) {		
 		if (_enemies.containsKey(site)) {
 			List<Enemy> enemies = _enemies.get(site);
 			
 			for (Enemy enemy : enemies) {
 				enemy.render(spriteBatch);
 			}
+			
+			boolean removedEnemy = false;
+			
+			do {
+				removedEnemy = false;
+				for (Enemy enemy : enemies) {
+					if (enemy.isTerminated()) {
+						enemies.remove(enemy);
+						removedEnemy = true;
+						break;
+					}
+				}				
+			} while (removedEnemy);
 		}
 	}
 	

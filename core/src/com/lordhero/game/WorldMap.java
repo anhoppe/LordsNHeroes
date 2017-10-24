@@ -50,6 +50,7 @@ public class WorldMap {
     
     public WorldMap(int xPos, int yPos, int width, int height) {
 		_spriteBatch = new SpriteBatch();
+		
 		_playerImage = new Texture(Gdx.files.internal("My1stHero.png"));
 		_playerSprite = new Sprite(_playerImage);
 		

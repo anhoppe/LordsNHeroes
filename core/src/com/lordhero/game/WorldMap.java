@@ -1,7 +1,18 @@
 package com.lordhero.game;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,6 +57,9 @@ public class WorldMap {
 
     ICellSelector _cellSelector;
     
+    BufferedInputStream _inputStream;
+    PrintWriter _outputStream;
+    
     Enemies _enemies;
     
     public WorldMap(int xPos, int yPos, int width, int height) {
@@ -62,13 +76,57 @@ public class WorldMap {
 		
 		_currentMap = "baseMap";
 		
+		FileHandle handle = Gdx.files.internal(_currentMap + ".tmx");
+		boolean exists = handle.exists();
+
         _camera = new OrthographicCamera();
         _camera.setToOrtho(false, width, height);
         _camera.update();
         _camera.translate(new Vector2(200, 0));
-        _tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
         
+        // connect to server to receive the main map
+        connectToServer();
+        loadRemoteMap();
         _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
+        
+        
+//        Socket socket;
+//        PrintWriter out = null;
+//        BufferedReader in = null;
+//        
+//
+//		try {
+//			socket = new Socket("127.0.0.1", 12345);
+//	        out = new PrintWriter(socket.getOutputStream(), true);
+//	        BufferedInputStream in3 = new BufferedInputStream(socket.getInputStream());
+//
+//	        out.println("sendMap");
+//
+//	        byte[] fileLengthInBytes = new byte[4];
+//	        in3.read(fileLengthInBytes, 0, 4);
+//	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
+//	        
+//	        byte[] fileAsArray = new byte[fileLength];
+//	        in3.read(fileAsArray, 0, fileLength);
+//
+//	        FileOutputStream fos = new FileOutputStream("map");
+//	        fos.write(fileAsArray);
+//	        fos.flush();
+//	        fos.close();
+//	        _tiledMap =  new TmxMapLoader().load("map");
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		        
+//        
+//        
+//        //_tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
+//        
+//        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
         
         // Create the enemies object
         _enemies = new Enemies();
@@ -103,8 +161,7 @@ public class WorldMap {
 	
 	public void setCellSelector(ICellSelector cellSelector) {
 		_cellSelector = cellSelector;
-	}
-	
+	}	
 
 	private void moveCamera() {
 		if (!_collision) {
@@ -124,6 +181,40 @@ public class WorldMap {
 		}
 	}
 
+	private void connectToServer() {
+        Socket socket;
+
+		try {
+			socket = new Socket("127.0.0.1", 12345);
+	        _outputStream = new PrintWriter(socket.getOutputStream(), true);
+	        _inputStream = new BufferedInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadRemoteMap() {
+        _outputStream.println("sendMap:" + _currentMap);
+
+        byte[] fileLengthInBytes = new byte[4];
+        try {
+			_inputStream.read(fileLengthInBytes, 0, 4);
+	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
+	        
+	        byte[] fileAsArray = new byte[fileLength];
+	        _inputStream.read(fileAsArray, 0, fileLength);
+
+	        FileOutputStream fos = new FileOutputStream("map");
+	        fos.write(fileAsArray);
+	        fos.flush();
+	        fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        _tiledMap =  new TmxMapLoader().load("map");
+	}
+	
 	private void checkForCollision() {
         TiledMapTileLayer collisionObjectLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Collision");
 
@@ -175,9 +266,9 @@ public class WorldMap {
 				_camera.position.x = (Integer)mapObject.getProperties().get("StartX");
 				_camera.position.y = (Integer)mapObject.getProperties().get("StartY");
 				
-		        _tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
+				loadRemoteMap();		        
+		        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);
 		        
-		        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
 				break;
 			}
 		}

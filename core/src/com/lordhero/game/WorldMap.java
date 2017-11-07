@@ -1,18 +1,18 @@
 package com.lordhero.game;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,13 +23,19 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class WorldMap {
+import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
+import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
+
+public class WorldMap implements ISelectedCellProvider {
     private static final float _playerSpeed = 150f;
 
     private Texture _cursorImage;
@@ -55,12 +61,12 @@ public class WorldMap {
     
     private boolean _collision = false;
 
-    ICellSelector _cellSelector;
-    
     BufferedInputStream _inputStream;
     PrintWriter _outputStream;
     
     Enemies _enemies;
+
+	private int _selectedCellIndex;
     
     public WorldMap(int xPos, int yPos, int width, int height) {
 		_spriteBatch = new SpriteBatch();
@@ -76,9 +82,6 @@ public class WorldMap {
 		
 		_currentMap = "baseMap";
 		
-		FileHandle handle = Gdx.files.internal(_currentMap + ".tmx");
-		boolean exists = handle.exists();
-
         _camera = new OrthographicCamera();
         _camera.setToOrtho(false, width, height);
         _camera.update();
@@ -87,47 +90,7 @@ public class WorldMap {
         // connect to server to receive the main map
         connectToServer();
         loadRemoteMap();
-        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
-        
-        
-//        Socket socket;
-//        PrintWriter out = null;
-//        BufferedReader in = null;
-//        
-//
-//		try {
-//			socket = new Socket("127.0.0.1", 12345);
-//	        out = new PrintWriter(socket.getOutputStream(), true);
-//	        BufferedInputStream in3 = new BufferedInputStream(socket.getInputStream());
-//
-//	        out.println("sendMap");
-//
-//	        byte[] fileLengthInBytes = new byte[4];
-//	        in3.read(fileLengthInBytes, 0, 4);
-//	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
-//	        
-//	        byte[] fileAsArray = new byte[fileLength];
-//	        in3.read(fileAsArray, 0, fileLength);
-//
-//	        FileOutputStream fos = new FileOutputStream("map");
-//	        fos.write(fileAsArray);
-//	        fos.flush();
-//	        fos.close();
-//	        _tiledMap =  new TmxMapLoader().load("map");
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		        
-//        
-//        
-//        //_tiledMap = new TmxMapLoader().load(_currentMap + ".tmx");
-//        
-//        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
-        
+                
         // Create the enemies object
         _enemies = new Enemies();
     }
@@ -158,10 +121,6 @@ public class WorldMap {
         
         checkForCollision();                
 	}
-	
-	public void setCellSelector(ICellSelector cellSelector) {
-		_cellSelector = cellSelector;
-	}	
 
 	private void moveCamera() {
 		if (!_collision) {
@@ -213,6 +172,7 @@ public class WorldMap {
 		}
         
         _tiledMap =  new TmxMapLoader().load("map");
+        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
 	}
 	
 	private void checkForCollision() {
@@ -230,14 +190,14 @@ public class WorldMap {
 	}
 
 	public void setTile(int screenX, int screenY) {
+//        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Obstacles");
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Background");
         
     	int x = (int)((_xCursor + _camera.position.x - Gdx.graphics.getWidth() / 2) / backgroundLayer.getTileWidth());
     	int y = (int)((_yCursor + _camera.position.y - Gdx.graphics.getHeight() / 2) / backgroundLayer.getTileHeight());
         
-    	TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-    	cell.setTile(new StaticTiledMapTile(_cellSelector.getSelectedCellTextureRegion()));
-    	backgroundLayer.setCell(x, y, cell);
+    	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(x, y); 
+    	prevCell.setTile(getSelectedTile());
 	}
 
 	public void setCursorPosition(int screenX, int screenY) {
@@ -247,8 +207,24 @@ public class WorldMap {
 	}
 
 	public void dispose() {
+		writeCurrentMap();
 		_playerImage.dispose();
 		_tiledMap.dispose();		
+	}
+
+	private void writeCurrentMap() {
+		FileWriter fileWriter;
+		try {
+			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", "maps", _currentMap + ".tmx");
+			fileWriter = new FileWriter(path.toString(), false);
+			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
+			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
+//			tmxWriter.tmx(_tiledMap, Format.XML);
+			tmxWriter.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void enter() {
@@ -263,14 +239,56 @@ public class WorldMap {
 				Math.abs(mapObject.getRectangle().y -_camera.position.y) < 32f) {
 				_currentMap = (String)mapObject.getProperties().get("TargetMap");
 				
-				_camera.position.x = (Integer)mapObject.getProperties().get("StartX");
-				_camera.position.y = (Integer)mapObject.getProperties().get("StartY");
+				_camera.position.x = Integer.parseInt(mapObject.getProperties().get("StartX").toString());
+				_camera.position.y = Integer.parseInt(mapObject.getProperties().get("StartY").toString());
 				
 				loadRemoteMap();		        
-		        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);
 		        
 				break;
 			}
 		}
+	}
+
+	private TiledMapTile getSelectedTile() {
+		TiledMapTile selectedTile = null;
+		
+		TiledMapTileSets tileSets = _tiledMap.getTileSets();
+        Iterator<TiledMapTileSet> it = tileSets.iterator();
+
+        int count = 0;
+        while(it.hasNext()) {
+        	TiledMapTileSet tileSet = it.next();
+        	Iterator<TiledMapTile> tileIt = tileSet.iterator();
+        	
+        	while(tileIt.hasNext()) {
+        		selectedTile = tileIt.next();
+        		
+        		if (count == _selectedCellIndex) {
+        			break;
+        		}
+        		count++;
+        	}
+
+        	if (count == _selectedCellIndex) {
+    			break;
+    		}
+        }
+		
+        return selectedTile;
+	}
+	
+	@Override
+	public Image getSelectedCellImage() {
+		return new Image(getSelectedTile().getTextureRegion());
+	}
+
+	@Override
+	public void decSelectedCellIndex() {
+		_selectedCellIndex--;		
+	}
+
+	@Override
+	public void incSelectedCellIndex() {
+		_selectedCellIndex++;				
 	}
 }

@@ -9,20 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Selection;
 
-public class WorldEditor extends UiPanel implements ICellSelector {
+public class WorldEditor extends UiPanel {
 	private Selection _selection;
 
-	private Image _selectedMap;
 	private Texture _tiles;
-	
-	private int _tilesWidth;
-	private int _tilesHeight;
-	
-	private int _selectedTileIndex = 1;
 	
 	private Cell<?> _selectedTileCell;
 	
 	private TextureRegion _selectedCellTextureRegion;
+	
+	private ISelectedCellProvider _selectedCellProvider;
 	
 	public WorldEditor(Selection selection) 
 	{
@@ -31,21 +27,15 @@ public class WorldEditor extends UiPanel implements ICellSelector {
 		this._selection = selection;
 	
 	    _table.setPosition(20, 500);		   
-	
-	    _tiles = new Texture("MyTiles.png");
-	    
-	    _tilesWidth = _tiles.getWidth();
-	    _tilesHeight = _tiles.getHeight();	        
         
 	    _selectedTileCell = _table.add().size(32,32);
 
-        updateSelectedTile();
 	    _table.row();
 	    final TextButton prev = new TextButton("<<", _skin);
 	    prev.addCaptureListener(new ClickListener() {
 
 			public void clicked(InputEvent event, float x, float y) {
-				_selectedTileIndex = Math.max(0, _selectedTileIndex-1);
+				_selectedCellProvider.decSelectedCellIndex();
 				updateSelectedTile();
 				
 				event.cancel();
@@ -58,7 +48,8 @@ public class WorldEditor extends UiPanel implements ICellSelector {
 	    next.addCaptureListener(new ClickListener() {
 
 			public void clicked(InputEvent event, float x, float y) {
-				_selectedTileIndex++;
+
+				_selectedCellProvider.incSelectedCellIndex();
 				updateSelectedTile();				
 
 				event.cancel();
@@ -67,20 +58,14 @@ public class WorldEditor extends UiPanel implements ICellSelector {
 
 	    _table.add(next).size(24, 16);
 	}
-
-	@Override
-	public TextureRegion getSelectedCellTextureRegion() {		
-		return _selectedCellTextureRegion;
+	
+	public void setSelectedCellProvider(ISelectedCellProvider selectedCellProvider) {
+		_selectedCellProvider = selectedCellProvider;
+		updateSelectedTile();
 	}
 	
 	private void updateSelectedTile()
 	{
-        int xPos = _selectedTileIndex % (_tilesWidth / 32);
-        int yPos = _selectedTileIndex / (_tilesWidth / 32);
-        
-        _selectedCellTextureRegion = new TextureRegion(_tiles, xPos*32, yPos*32, 32, 32); 
-	    _selectedMap = new Image(_selectedCellTextureRegion);
-	    
-	    _selectedTileCell.setActor(_selectedMap);
+		_selectedTileCell.setActor(_selectedCellProvider.getSelectedCellImage());
 	}
 }

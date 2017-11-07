@@ -23,7 +23,9 @@ public class Main extends ApplicationAdapter implements InputProcessor {
                 
         _worldEditor = new WorldEditor(null);
 
+        // Decide for either variant...
         _worldMap.setCellSelector(_worldEditor);
+        _worldEditor.setSelectedCellProvider(_worldMap);
         
 		_inputMultiplexer = new InputMultiplexer();
 		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());

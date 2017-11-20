@@ -195,7 +195,7 @@ public class WorldMap {
 
 	public void setTile(int screenX, int screenY) {
 //        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Obstacles");
-        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Background");
+        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get(_selectedCellProvider.getLayerName());
         
         int[][] selectedCells = _selectedCellProvider.getSelectedCellIndexArray();
         int width = selectedCells.length;
@@ -207,12 +207,15 @@ public class WorldMap {
             	int yCell = (int)((_yCursor + _camera.position.y - Gdx.graphics.getHeight() / 2) / backgroundLayer.getTileHeight()) - y;
 
             	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(xCell, yCell); 
-            	prevCell.setTile(getSelectedTile(selectedCells[x][y]));
-        		
+            	
+            	if (prevCell == null)
+            	{
+            		prevCell = new TiledMapTileLayer.Cell();
+            		backgroundLayer.setCell(xCell,  yCell, prevCell);
+            	}
+            	prevCell.setTile(getSelectedTile(selectedCells[x][y]));        		
         	}
-        }
-        
-        
+        }         
 	}
 
 	public void setCursorPosition(int screenX, int screenY) {

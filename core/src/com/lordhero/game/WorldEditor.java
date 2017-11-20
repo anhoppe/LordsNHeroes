@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -34,6 +35,8 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
     int _yStartSelection = 1;
     int _xEndSelection = 1;
     int _yEndSelection = 1;
+    
+    SelectBox _layerSelection;
 
 	public WorldEditor() 
 	{
@@ -49,6 +52,15 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 		
 		_table.setPosition(30, 500);		   
         	    
+		_table.row();
+		
+		_layerSelection = new SelectBox(_skin);
+		
+		String[] layerSelection = {"Background", "Obstacles", "Collision"};
+		
+		_layerSelection.setItems(layerSelection);
+		_table.add(_layerSelection).size(200, 32);
+		
 	    _table.row();
 
 	    _actor = new Image(new Texture(Gdx.files.internal("MyTiles.png")));
@@ -100,6 +112,11 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 		}
 		
 		return selectedArray;
+	}
+	
+	@Override
+	public String getLayerName() {
+		return (String)_layerSelection.getSelected();
 	}
 
 	@Override

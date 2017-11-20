@@ -1,48 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
-<map version="1.0" orientation="orthogonal" width="128" height="128" tilewidth="32" tileheight="32">
-	<properties>
-		<property name="hexsidelength" value="0"/>
-	</properties>
-	<tileset firstgid="1" name="MyTiles" tilewidth="32" tileheight="32" spacing="0" margin="0">
-		<tileoffset x="0" y="0"/>
-		<image source="MyTiles.png" imagewidth="0" imageheight="0"/>
-	</tileset>
-	<tileset firstgid="257" name="Building" tilewidth="32" tileheight="32" spacing="0" margin="0">
-		<tileoffset x="0" y="0"/>
-		<image source="VX BuildingsTileset.png" imagewidth="0" imageheight="0"/>
-	</tileset>
-	<layer name="Background" width="128" height="128" visible="1" opacity="1.0">
-		<data encoding="base64" compression="zlib">
-eJztnc1u00AURkfsqhScBwCSBUtgjwQ8AaXtHugb8WrwSDgio5rBP+PW9f1877F0ZNlxnM/3zDQTO3GvU0rXjmha9gI5wIZDy1EgB+Af8A/4B/wD/gH/gH/AP+Af8A/4B/wD/sHef5PqriH3bdcUcB3azv9+gtLVXA6V65rK16OtLOu/ZF8sH1Zk6vXwv057KNdZZ8vg36ZNWOfAP/7xH9t/do//uP5zG7DOEgX8x0bJP5//noaxmir5n8oK8+qYGXOs5l8tz1bpO+821E6U+ptaHu+o9Tf84x//+LfOEQX8xwb/sVHyn92r5ImAmv/cBqyzRAH/sVHyz/n/2P5P4B//+I/rXy2Pd9Tq3ST6P/7tc0QB/7HBf2zwHxv8xwb/scG/D3Ldugyt74J/PaacjXHs0LduCOtjxv89Q/dtqPVYPn9L9VbL4x21eqvl8Y5SvRuxPBFQqjff/4jtXzGPd9TqrZbHO2r1VsvjHbV6q52P8o6af7U83lGrt1oe76jVWy2Pd9TqrZbHO2r1VsvjHbV6q+Xxjlq91fJ4R63eanm8o1ZvtTzeUau3Wh7vqNVbLY931Oqtlsc7avVWy+MdtXqr5fGOWr3V8tTwseVTy2eBLFuvt1qeGr60XLV8Fciy9Xqr5anhW8v3lh8CWbZeb7U83lH7vhX+49Y7Z1HJEwFF/0eBLFFQ8s/vf2z8j7G2iznjkbuFsHZgSfl/wkqm2kduI3PWz93PELX5ap7L35yHtY/cX+esn7ufNTgK1HqrNIn+Exn8xwb/scF/bPAfG/zHBv9xye7xH5Ps/yiQBez8W+cA/AP+Af+Af1gHrp3Gpkn0/8jgPzb4jw3+YxPV/6+W3wvv802x/ErgOPG/HqX/E+8FcuHfBnX3Uf3vOlhnsSaa/11njv9Y/ndp2b7/4czYNur3FInkv2wLY4+nYv4Q//meMlcCx3ui77eSkfzvinnmsljOU9kOUvp/n2NtQO2eMtH9D7m/7KxPnfnQNLRvJde1RL/+l933jQmGJuvMtcf1vOXFxHZNitX/+xgbD27Fd+n8Zfp7/vH1xHOi3LPjYoF9lFP5+E/jY+w6f9vyLtWdg8L//Dag+Lmuz3nN+4Bn/xfF/LFs7V6RNe8Dnv1Hp+Z9AP/D5Mk6x1OC/37vXf/pkftTBv/35PFSHjOl9G97KLlpuRXIjf9lyOOlvqm73e2ZmzPWufG/rP88Zs5T37Y3Cf/eyOPl2nMnHsD/PNKzfqxz4X9d/0PLWwP/D/NP/wcPePkOwB/23QOr
-		</data>
-	</layer>
-	<layer name="Obstacles" width="128" height="128" visible="1" opacity="1.0">
-		<data encoding="base64" compression="zlib">
-eJzt3WlKBDEQBlA9tMsFXI4yF1Ev4HoAtwO4/TMgQhh62t7M0nkPCgXtMWDqq0SE2dsDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGOYi1GWoq9wLqdBBqMPci5jpJtRtqLsRz9gzP05CneZexEyPoZ5CPY94ZsqeoUxvod5DfYx4ZsqeoRxxfk/J8il7hnLE+S3L2xPntyxvT5zfsrw9S9zf3AHrtcTMd25YxibDz1xi5js31GuJme/cUC+zu21md9vM7jotdVY0u9O4D/WQexEdzP80XkK95l5EB/M/jc9QX7kX0aFv/suGeUrN/Fjf/JcN85Sa+bG+Hnc3mKfUzI/19bi7wXJKnQV6PI1SZ4Ee/z9xz9cwC1hWqT1PGnq+TSnOejn+V4Rh5H7bxuS+Pm5Dqfd/0jAT2uYuAADAUP5GUIfr/dwrAABa4GwI0I6jUMcJniGfvrl+Fup85Ov99Yz9sS5jz4VT9lRLnLOpUVeuy/p5dmVBiRnRleuyHqbZ7vGunk+RAyVmzdpstj7Cr82Oz8d+D1CuIfN+yNdoj/2wLrnO+uQx5XdrPwCwyxreK5rp1vBe0QAAAAA1+QapyqqC
-		</data>
-	</layer>
-	<layer name="Collision" width="128" height="128" visible="1" opacity="1.0">
-		<data encoding="base64" compression="zlib">
-eJzt20mO00AUBuA0055xz7hn3DPuGZeIeQUNBwBOAFyluQEcAAkOAIILNHABhr8lEOluu+mobZdjf5/0R46lRE+qcl45qUwmAAAAAAAAAAAAAAAAAAAADM3D5FGyWLoQiniaPEueT1bPBfNiHF4kL5NXk9VzYfqYcZieC9PHAAAAAAAAAAAAAAAAAAAAAAAAAAAAtGcpeV26CIp5k7wtXQTFvE8+lC6CYj4nX0oXAQAAAEDvLSTbku3JjmRnsqtoRXRpd7In2ZvsS/YnB4pWRJcOJoeSw8mR5GhyrGhFdOl4ciI5mZxKTidnilY0TotpxI+TJwubf00Tvftsci45n1xILiaXZnwPtu7mn3G/NcP4N9G7LydXkqvJteR6cmPG96CMJnr37eROcje5l9xPHjRYI+3Ru8dN7x43vXs8PlWc07vnx1JNNmu5jaLozFbHn/k1Pd5/9+2bA+NRNdbGH4AqVfd7jIf7PebJu9IFUKmr/X0fa86bF2WV3t9XNy/oRpv7+1zb/dfmHgHXdv/ZI9APX2uO22aPQD/8rDluW1t7BOp6f93ctlZYr8vPgabV9f66uW2tsP473S4/Byhj+hpfrjg3JN+S76WL6Jmqa3zl3BB/3/m18jDD/1eGbqMxHtrvO3XruzGv+4Y2xhupW99Z9/2ztu8PdR1AtbVrAev/cfjxn+eMg3EHGJbf0AJqfA==
-		</data>
-	</layer>
-	<objectgroup name="Buildings">
-		<object name="Capital" type="Entry" x="577" y="3009" width="29" height="32">
-			<properties>
-				<property name="StartX" value="992"/>
-				<property name="StartY" value="64"/>
-				<property name="id" value="16"/>
-				<property name="TargetMap" value="capitalMap"/>
-			</properties>
-		</object>
-		<object name="Dungeon" type="Entry" x="354" y="3299" width="61" height="27">
-			<properties>
-				<property name="StartX" value="992"/>
-				<property name="StartY" value="1343"/>
-				<property name="id" value="18"/>
-				<property name="TargetMap" value="dungeon"/>
-			</properties>
-		</object>
-	</objectgroup>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" nextobjectid="2">
+ <tileset firstgid="1" source="MyTiles.tsx"/>
+ <tileset firstgid="257" source="data/tileset/Building.tsx"/>
+ <layer name="Background" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt17ENAzEMBEF1+vW6KzdgwIBB6Ehzgs01vOT/Oec8kiQt7tXgDdWeT23yV9zrW2lncs9fb3ar9AbpfTrHn38DPz8/Pz8//1z/xO9i/t3/RZ32T9yOn5+fn5+fn3+Kv7KJ/o7737xfR//2/fn5+ef5U1UZ7M/Pz7/JX9lEf8f9b96Pn//f/Kmbp9/Az8/Pz8/Pz8+vTb0BuE41dA==
+  </data>
+ </layer>
+ <layer name="Obstacles" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztmtuxAUEURdv/JQJ3CAApCIsM3AQ8EvBIABEgAY8ILhHg1w5A1Zzh9HSfnr2q1peeqd7VZ/pVnCOEkPgZwwmchu6IAj+wDhsFnpnDBVx66VG5NOEvzAo8s4YbuPXSo/cM4NDDezuwC3se3q3JCP6F7gQpldmXvxOSEtr1vlJ+nya+1rsy0NgfWl7vytgfanwLvuo/xP4wVWJY42M672nOi9L6j+m8F2JelH7P/Q9MCWt5tOd/a/mJLtbGn/WvC/PbgvWvS6r5d3APDzntrOWX1v8JnuElp521/FL+4RXectqlmv8OH/CZ0y7V/FKYn+dfS3D/owvz24L1TzSxNv6sf12s5ef468L81cba+Sfm///EhvQOMFWkd4CWKFL/0jvAVJHeARI7cP4nVYb1X204/s5lNedasF0L3ZNwHCucPRZeHRdLgA==
+  </data>
+ </layer>
+ <layer name="Collision" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztm0EOwiAQRWk08TgewY2X1RvoDfQGegM9hbAgURwjTDKUzv8vIflhQx8tbSGZEEhiC9ZK98MUwnFST99iyJ7vc5DyKfadAfyzZ+l/iX1XAP/sWfrfYt8dwD97lv6P2PcE8M+epT8a9JczCvSXMwr0lzMK9JczCvSXMwr0lzMKnvx3iubNvxVP/mvFuYUnfw2lf+v6GYnezz/9x4L+7dBfzjXsBzsn5/1vh/5ythrPkt7+G/D1Pxp8/vvuf0f0b4X+cq6B/z9jge6/6nz+M5q/Bp7/yNlqPEvo3w795Ww1niXc/7Tj7f4j73800F/ONXj0l9ZI2uct4f9Pg6f3vwb6yxkF+n9m1r+x/o31b3NdVT9Y//Zd/5b4Vy9s0eYaF/F794sXqhdpMQ==
+  </data>
+ </layer>
+ <objectgroup name="Buildings">
+  <object id="1" name="World" type="Entry" x="992" y="1984" width="32" height="35">
+   <properties>
+    <property name="StartX" type="int" value="577"/>
+    <property name="StartY" type="int" value="1087"/>
+    <property name="TargetMap" value="baseMap"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

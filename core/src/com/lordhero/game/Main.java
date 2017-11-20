@@ -7,7 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 
 public class Main extends ApplicationAdapter implements InputProcessor {
-	    
+	
 	private MainPanel _mainPanel;
 	private WorldEditor _worldEditor;
 	private WorldMap _worldMap;
@@ -24,7 +24,7 @@ public class Main extends ApplicationAdapter implements InputProcessor {
                 
         _worldEditor = new WorldEditor();
 
-        _worldEditor.setSelectedCellProvider(_worldMap);
+        _worldMap.setSelectedCellProvider(_worldEditor);
         
         _mainPanel = new MainPanel();
         

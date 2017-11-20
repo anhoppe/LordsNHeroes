@@ -1,4 +1,4 @@
-package com.lordhero.game;
+	package com.lordhero.game;
 
 
 import com.badlogic.gdx.Gdx;
@@ -15,7 +15,7 @@ public abstract class UiPanel {
     protected Table _table;
 	
 	public UiPanel()
-	{
+	{		
 		this._stage  = new Stage();
 		Gdx.input.setInputProcessor(_stage);
 

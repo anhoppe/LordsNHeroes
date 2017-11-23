@@ -9,8 +9,10 @@ import com.badlogic.gdx.InputProcessor;
 public class Main extends ApplicationAdapter implements InputProcessor {
 	
 	private MainPanel _mainPanel;
+	private LordSheet _lordSheet;
 	private WorldEditor _worldEditor;
 	private WorldMap _worldMap;
+	private Player _player;
 	
 	InputMultiplexer _inputMultiplexer;
     
@@ -21,10 +23,15 @@ public class Main extends ApplicationAdapter implements InputProcessor {
         
         _worldMap = new WorldMap(0, 0, (int)w, (int)h);
 		Gdx.input.setInputProcessor(this);
-                
+    
+		_player = new Player();
+		_lordSheet = new LordSheet();
+		_lordSheet.setLord(_player);
+		
         _worldEditor = new WorldEditor();
 
         _worldMap.setSelectedCellProvider(_worldEditor);
+        _worldMap.setLord(_player);
         
         _mainPanel = new MainPanel();
         
@@ -41,6 +48,7 @@ public class Main extends ApplicationAdapter implements InputProcessor {
         _worldMap.render();
         _mainPanel.draw();
         _worldEditor.draw();        
+		_lordSheet.draw();
 	}
 	
     @Override

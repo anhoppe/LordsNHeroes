@@ -30,8 +30,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
@@ -65,6 +63,8 @@ public class WorldMap {
     PrintWriter _outputStream;
     
     Enemies _enemies;
+    
+    ILord _lord;
 
 	private ISelectedCellProvider _selectedCellProvider;
     
@@ -97,6 +97,10 @@ public class WorldMap {
     
     public void setSelectedCellProvider(ISelectedCellProvider selectedCellProvider) {
     	_selectedCellProvider = selectedCellProvider;
+    }
+    
+    public void setLord(ILord lord) {
+    	_lord = lord;
     }
     
 	public void render () {
@@ -194,28 +198,31 @@ public class WorldMap {
 	}
 
 	public void setTile(int screenX, int screenY) {
-//        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Obstacles");
         TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get(_selectedCellProvider.getLayerName());
-        
+   
         int[][] selectedCells = _selectedCellProvider.getSelectedCellIndexArray();
-        int width = selectedCells.length;
-        int height = selectedCells[0].length;
+        int price = _selectedCellProvider.getSelectedCellPrice(selectedCells);
         
-        for (int x = 0; x < width; x++) {
-        	for (int y = 0; y < height; y++) {
-            	int xCell = x + (int)((_xCursor + _camera.position.x - Gdx.graphics.getWidth() / 2) / backgroundLayer.getTileWidth());
-            	int yCell = (int)((_yCursor + _camera.position.y - Gdx.graphics.getHeight() / 2) / backgroundLayer.getTileHeight()) - y;
+        if (_lord.pay(price)) {
+            int width = selectedCells.length;
+            int height = selectedCells[0].length;
+                    
+            for (int x = 0; x < width; x++) {
+            	for (int y = 0; y < height; y++) {
+                	int xCell = x + (int)((_xCursor + _camera.position.x - Gdx.graphics.getWidth() / 2) / backgroundLayer.getTileWidth());
+                	int yCell = (int)((_yCursor + _camera.position.y - Gdx.graphics.getHeight() / 2) / backgroundLayer.getTileHeight()) - y;
 
-            	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(xCell, yCell); 
-            	
-            	if (prevCell == null)
-            	{
-            		prevCell = new TiledMapTileLayer.Cell();
-            		backgroundLayer.setCell(xCell,  yCell, prevCell);
+                	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(xCell, yCell); 
+                	
+                	if (prevCell == null)
+                	{
+                		prevCell = new TiledMapTileLayer.Cell();
+                		backgroundLayer.setCell(xCell,  yCell, prevCell);
+                	}
+                	prevCell.setTile(getSelectedTile(selectedCells[x][y]));        		
             	}
-            	prevCell.setTile(getSelectedTile(selectedCells[x][y]));        		
-        	}
-        }         
+            }         
+        }
 	}
 
 	public void setCursorPosition(int screenX, int screenY) {
@@ -237,7 +244,6 @@ public class WorldMap {
 			fileWriter = new FileWriter(path.toString(), false);
 			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
 			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
-//			tmxWriter.tmx(_tiledMap, Format.XML);
 			tmxWriter.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

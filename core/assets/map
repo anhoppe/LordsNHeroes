@@ -1,29 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" nextobjectid="2">
- <tileset firstgid="1" source="MyTiles.tsx"/>
- <tileset firstgid="257" source="data/tileset/Building.tsx"/>
- <layer name="Background" width="64" height="64">
-  <data encoding="base64" compression="zlib">
-   eJzt17ENAzEMBEF1+vW6KzdgwIBB6Ehzgs01vOT/Oec8kiQt7tXgDdWeT23yV9zrW2lncs9fb3ar9AbpfTrHn38DPz8/Pz8//1z/xO9i/t3/RZ32T9yOn5+fn5+fn3+Kv7KJ/o7737xfR//2/fn5+ef5U1UZ7M/Pz7/JX9lEf8f9b96Pn//f/Kmbp9/Az8/Pz8/Pz8+vTb0BuE41dA==
-  </data>
- </layer>
- <layer name="Obstacles" width="64" height="64">
-  <data encoding="base64" compression="zlib">
-   eJztmtuxAUEURdv/JQJ3CAApCIsM3AQ8EvBIABEgAY8ILhHg1w5A1Zzh9HSfnr2q1peeqd7VZ/pVnCOEkPgZwwmchu6IAj+wDhsFnpnDBVx66VG5NOEvzAo8s4YbuPXSo/cM4NDDezuwC3se3q3JCP6F7gQpldmXvxOSEtr1vlJ+nya+1rsy0NgfWl7vytgfanwLvuo/xP4wVWJY42M672nOi9L6j+m8F2JelH7P/Q9MCWt5tOd/a/mJLtbGn/WvC/PbgvWvS6r5d3APDzntrOWX1v8JnuElp521/FL+4RXectqlmv8OH/CZ0y7V/FKYn+dfS3D/owvz24L1TzSxNv6sf12s5ef468L81cba+Sfm///EhvQOMFWkd4CWKFL/0jvAVJHeARI7cP4nVYb1X204/s5lNedasF0L3ZNwHCucPRZeHRdLgA==
-  </data>
- </layer>
- <layer name="Collision" width="64" height="64">
-  <data encoding="base64" compression="zlib">
-   eJztm0EOwiAQRWk08TgewY2X1RvoDfQGegM9hbAgURwjTDKUzv8vIflhQx8tbSGZEEhiC9ZK98MUwnFST99iyJ7vc5DyKfadAfyzZ+l/iX1XAP/sWfrfYt8dwD97lv6P2PcE8M+epT8a9JczCvSXMwr0lzMK9JczCvSXMwr0lzMKnvx3iubNvxVP/mvFuYUnfw2lf+v6GYnezz/9x4L+7dBfzjXsBzsn5/1vh/5ythrPkt7+G/D1Pxp8/vvuf0f0b4X+cq6B/z9jge6/6nz+M5q/Bp7/yNlqPEvo3w795Ww1niXc/7Tj7f4j73800F/ONXj0l9ZI2uct4f9Pg6f3vwb6yxkF+n9m1r+x/o31b3NdVT9Y//Zd/5b4Vy9s0eYaF/F794sXqhdpMQ==
-  </data>
- </layer>
- <objectgroup name="Buildings">
-  <object id="1" name="World" type="Entry" x="992" y="1984" width="32" height="35">
-   <properties>
-    <property name="StartX" type="int" value="577"/>
-    <property name="StartY" type="int" value="1087"/>
-    <property name="TargetMap" value="baseMap"/>
-   </properties>
-  </object>
- </objectgroup>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="128" height="128" tilewidth="32" tileheight="32">
+	<properties>
+		<property name="hexsidelength" value="0"/>
+	</properties>
+	<tileset firstgid="1" name="MyTiles" tilewidth="32" tileheight="32" spacing="0" margin="0">
+		<tileoffset x="0" y="0"/>
+		<image source="MyTiles.png" imagewidth="0" imageheight="0"/>
+	</tileset>
+	<tileset firstgid="257" name="Building" tilewidth="32" tileheight="32" spacing="0" margin="0">
+		<tileoffset x="0" y="0"/>
+		<image source="VX BuildingsTileset.png" imagewidth="0" imageheight="0"/>
+	</tileset>
+	<layer name="Background" width="128" height="128" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJztnc1y0zAUhTXsOgk4D0BJFiyBPTNtn6Bp0n3/nojngTeAFTwSykw0FUKy5ViOju49nvnGxHHck/tJjiLXZWeM2Qmis6wAcpA6rC0bgByE/kuyB8jQAhL9P1teAHK0QIv+2bf1+s/t22wjMv3HuLJcW26Oj3n+1+X/1rK13AFkaQ0J/h8sj5YngCytIcF/DhwPyPOf65TjAXn+x3wPoH95/nOgd93+Cf2Tef13Ju8acmy/LoDXoev5Xw0QuhrLOnNbl/nz2FbK+g9ZBY/XZ2To59H/edpDuK12Ngf912kTtXPQP/3Tv27/zj396/Xv2kDtLFqgf90g+ef3v3noqymS/6GsZFwdHX2O0fyj5WmV2Lxbqp0g9Te0PNJB62/0T//0T/9D+32PUDt7i7To3/n+EVnXzt8arfk/eP555FdkzfNAu/6d+748qb7v/7v2+2gJNP+uDfT5j/V99n89/tn/ZfrPnf/v6/+130NrIPk/kOP/AL//6fZPZPpHyyMdtHp3hv2f/uvn0AL964b+dUP/uqF/3dC/buhfBq5uPqntPvSPx5CzPjYesW0par9n+n8l9Xcbcj2Gr2+p3mh5pINWb7Q80kGqdweWRwNI9eb9n7r9I+aRDlq90fJIB63eaHmkg1ZvtPko6aD5R8sjHbR6o+WRDlq90fJIB63eaHmkg1ZvtDzSQas3Wh7poNUbLY900OqNlkc6aPVGyyMdtHqj5ZEOWr3R8kgHrd5oeaSDVm+0PNJBqzdaHumg1RstTw5XlmvLDUCW1uuNlieHW8vWcgeQpfV6o+XJ4cHyaHkCyNJ6vdHySAft963oX2+9XRaUPBpA9L8ByKIFJP+8/6eO/z7O7WLMeOS5ELUd1CT8f8JChtqHayNjto89TorcfDmv5TnntPbh+uuY7WOPcw42ALVulc6w/2iG/nVD/7qhf93Qv27oXzf0rxfnnv514vxvALKQev5r5yD0T+if0D+hf3IeeO30NFq+Z8SnM+z/p9DyPSP0P52W7xmhf0L/01ha3lreAWSh//H8tvyZ8Pr3lkvLB2/bx2CfS4D3Sf/z8Mny2fKlx/8ueB4R+p8PdPda/S88amepjTb/C29N/7r8L0zZvv/1SN8+6PNDmvyHbaHveROsT/Hv5ge3AO/3QOxeSU3+F8HasQweuyVsB8b8f8y+NoA2P6jdf8r90ttuvHVqSR17iuta15O0X/9z7mNjgtQyR47S15Ny5yc7o6v/x+gbD87lO6TE9STfeWx+MoaWv9lxUeAY4RI+/23CsUuc/33nsfnJFPQ/vg2U/l5X4vwfc57zOSDZ/0Wwnspc1/3nOm7O54Bk/9rJ+Ryg/zRuqZ1jTug/7t33byYeDxn6f8WNl9yYyZh/20PI3nIPkJv+y+DGS7HF3+/+yP5I7dz0X9a/GzO7Jbbv3tC/NNx4OXfuRAL0Pw7zJk7tXPR/Xv+px61B/6f5Z/8nEpDyOwB/AXXwHIw=
+		</data>
+	</layer>
+	<layer name="Obstacles" width="128" height="128" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJzt3ceOFDEUheEm7hnCnjR74p64J+6Jb0B4AcKjNA8CSLAlsyavyRtOCSwZy1VdrmCXXf8nHTGanp6xZPteVzXqXiwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADaeag8Uh6nHkiGbig3Uw+ip+fKC+VlwHNYM3/dUe6mHkRP75T3yoeA53RZM5imr8o35XvAc7qsGUyHXb+71PIuawbTYddvavn82PWbWj4/dv2mls/PENdvXAPma4iez7lhGMsEf3OIns+5IV9D9HzODfmid88bvXve6N15GuqsSO+O45XyOvUgPOj/cXxUPqUehAf9P44fys9Ifyuk1jT1f2pDP6lqfl2t8Y2nqf9TG/pJVfPrao1vPE17nGuDfmLW/DZ842na41wbDGeq53/2eBxj9gK3hoesNfb4eOx5GLMXuDXcXWuc49OIdf5za7i71jjHpxHr/LeqhtPj44px1gu5/0+PjytG3fetsdB1N9VrktyF1P2QfWzPl2+N2d9rM7dTfU2iREPsNXu+zBp7ojx1vuf+bJ2p3Z8qWde9Vje/xhvlred5dXPLtWAaXfeaO7/2eqh8Vr60+D2m/nAtmBd3ft318Ev5XfNc33mBa8F8VHvdnd+2+73iOy+414L0g+ny1f6m/e5q03PoB9O1qva31XTtQT+YLrPXzT2CkNpva7r24N7gcJ5tGPf3h9T+itn3dh+g3+fDrduh95B8+55+nw93/kLvIfnOf/T7fLjzN8T9Wvp9fprqftvXj+j7+Qp9Xc+Hvp+v0Nf1fOj7ZTBr4Xbg8+j7eWnq6/eU+4G/b9Vzbi3C1xTG1zQv5jHfz4S+P0CXNTUnKd6bq2Lmxffe8uYx5q5s1XvLm88XCP2cAV9toNb3U1cLxqwR5vMFQj9nwFcbqBf5eJB6APiPu8d9e37MOmDWQ6rzyJwsnX9jKeGzhEq3rPk69Gd8SvgsIaAEbfp9m8dCrTr3cS6cPs5oZYl91kdaXeaW9YCuqv8+vFHZpGxWtihb/z1m93t6f5m2KWvKdmWHslPZlXREGEPd/Z3dyh5lr7JP2a+sW4+z78tQd3/ngHJQOaQcVo4oRyOOC2kdU44rJ5STyinldNIRIaYzylnlnHJeuaBcTDoixHRJuaxcUa4q15TrSUcEAAAAlOcPGzF6gg==
+		</data>
+	</layer>
+	<layer name="Collision" width="128" height="128" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJzt20lu1EAUBuAO055xz7hn3DPuw7REzCsIHAA4AXCVcAM4QCQ4QCK4QIALBHiREuE4rsSttF3dru+T/shtpVulVJXfa6kyGgEwjZY2QhlWaq+XN8LwNO3t1RbvW+tgLPTP3qaN6n6v1weGoe0zvU19YDao4+zGGmFdfR1YFzA8m/19fX/r+8uQ6u8373vuD485BaBKXQAAAAAAACCnF5GXkYXcAyGLN5G3kXejrWvBuijD+8iHyMfR1rVQvaYM1bVQvQYAAAAAAAAAAAAAAAAAAAAAAAAAAKA7i5FPuQdBNp8jX3IPgmy+Rr7lHgTZfI/8yD0IAAAAAKbeXGRfZH/kQORg5FDWEdGnw5EjkaORY5HjkRNZR0SfTkZORU5HzkTORs5lHRF9Oh+5ELkYuRS5HLmSdURlWohC/Cryeq79eyZRu69GrkWuR25EbkZujfkZ7N2DjXl/OMb8T6J2z0duR+5E7kbuRe6P+RnkMYna/SjyOPIk8jTyLPJ8gmOkO2p32dTusqnd5VhpuKd2z47FRNpa7WJQ9Gav88/sqs735rl9a6AcTXNt/gFo0vR9j3LMwve91Bq1dstQXaNLifvk1df5vuXE/aXEffqR+3xfal3Qjy7P99nb06/LMwLj7m19Yf+m6YxAyX3hz8R115wRmA5/Etdd6+qMQKr2p9a2XmG7Pp8Dk5aq/am17XvA9v6nz+cAeVT3+GrDvVlWX8+/Ir9b/m4pmvb4+r0h/D3q/fzf9R+J/18psfffaY6H9vdI9Xcl931Dm+OdpPo7fd9/9bo/lD6Aduq9gP6/DGu7vKYM5h1gWP4BkKaMFQ==
+		</data>
+	</layer>
+	<objectgroup name="Buildings">
+		<object name="Capital" type="Entry" x="577" y="3009" width="29" height="32">
+			<properties>
+				<property name="StartX" value="992"/>
+				<property name="StartY" value="64"/>
+				<property name="id" value="16"/>
+				<property name="TargetMap" value="capitalMap"/>
+			</properties>
+		</object>
+		<object name="Dungeon" type="Entry" x="354" y="3299" width="61" height="27">
+			<properties>
+				<property name="StartX" value="992"/>
+				<property name="StartY" value="1343"/>
+				<property name="id" value="18"/>
+				<property name="TargetMap" value="dungeon"/>
+			</properties>
+		</object>
+	</objectgroup>
 </map>

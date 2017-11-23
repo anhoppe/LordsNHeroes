@@ -4,30 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class WorldEditor extends UiPanel implements ISelectedCellProvider {
-	private Cell<?> _selectedTileCell;
-	private Cell<?> _backgroundTiles;
-		
 	private Image _actor;
 	
 	private InputListener inputListener;
 	
-    private SpriteBatch _spriteBatch;
-
-    private Texture _cursorImage;
-    private Sprite _cursorSprite;
-    private Image _cursorImage2;
-    
     int _xCursor;
     int _yCursor;
     
@@ -36,17 +22,12 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
     int _xEndSelection = 1;
     int _yEndSelection = 1;
     
-    SelectBox _layerSelection;
+    SelectBox<String> _layerSelection;
 
 	public WorldEditor() 
 	{
 		super();
 		
-		_spriteBatch = new SpriteBatch();
-
-		_cursorImage2 = new Image(new Texture(Gdx.files.internal("cursor.png")));
-		_cursorImage = new Texture(Gdx.files.internal("cursor.png"));
-		_cursorSprite = new Sprite(_cursorImage);
 		_xCursor = 0;
 		_yCursor = 0;
 		
@@ -54,7 +35,7 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
         	    
 		_table.row();
 		
-		_layerSelection = new SelectBox(_skin);
+		_layerSelection = new SelectBox<String>(_skin);
 		
 		String[] layerSelection = {"Background", "Obstacles", "Collision"};
 		
@@ -87,13 +68,6 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 	    };
 	    
 	    _actor.addListener(inputListener);
-	    
-		//_stage.addActor(_cursorImage2);
-		
-		//	    
-////	    _backgroundTiles = _table.add().size(512, 512);
-//		Image image = new Image(new Texture(Gdx.files.internal("MyTiles.png")));
-//		_backgroundTiles.setActor(image);	    
 	}
 	
 	@Override
@@ -115,6 +89,29 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 	}
 	
 	@Override
+	public int getSelectedCellPrice(int[][] selectedCells) {
+		int price = 0;
+
+		if (selectedCells != null) {
+	        int width = selectedCells.length;
+	        int height = selectedCells[0].length;
+
+			int xStart = Math.min(_xStartSelection, _xEndSelection);
+			int yStart = Math.min(_yStartSelection, _yEndSelection);
+			int xEnd = Math.max(_xStartSelection, _xEndSelection);
+			int yEnd = Math.max(_yStartSelection, _yEndSelection);
+
+			for (int x = xStart; x <= xEnd; x++) {
+				for (int y = yStart; y <= yEnd; y++) {
+					price += 5;
+				}
+			}
+		}
+		
+		return price;
+	}
+	
+	@Override
 	public String getLayerName() {
 		return (String)_layerSelection.getSelected();
 	}
@@ -128,5 +125,4 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 		
 		return inputMultiplexer;
 	}
-	
 }

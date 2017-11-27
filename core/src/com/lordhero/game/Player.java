@@ -2,13 +2,15 @@ package com.lordhero.game;
 
 import java.util.LinkedList;
 
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
 public class Player implements ILord {
 	private int _money = 10000;
 	
-	private LinkedList<LordChangedListener> _lordChangedListeners;
+	private LinkedList<ChangeListener> _lordChangedListeners;
 	
 	public Player() {
-		_lordChangedListeners = new LinkedList<LordChangedListener>();
+		_lordChangedListeners = new LinkedList<ChangeListener>();
 	}
 	
 	@Override
@@ -31,13 +33,13 @@ public class Player implements ILord {
 	}
 	
 	@Override
-	public void registerChangeListener(LordChangedListener listener) {
+	public void registerChangeListener(ChangeListener listener) {
 		_lordChangedListeners.add(listener);
 	}
 	
 	private void fireChangeEvent() {
-		for (LordChangedListener listener : _lordChangedListeners) {
-			listener.onChanged();
+		for (ChangeListener listener : _lordChangedListeners) {
+			listener.changed(null, null);
 		}
 	}
 }

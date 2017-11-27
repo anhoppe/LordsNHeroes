@@ -24,6 +24,8 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
     
     SelectBox<String> _layerSelection;
 
+	InputMultiplexer inputMultiplexer = new InputMultiplexer();
+
 	public WorldEditor() 
 	{
 		super();
@@ -68,6 +70,9 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 	    };
 	    
 	    _actor.addListener(inputListener);
+	    
+		inputMultiplexer.addProcessor(super.getInputProcessor());
+		inputMultiplexer.addProcessor(_actor.getStage());
 	}
 	
 	@Override
@@ -118,11 +123,7 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 
 	@Override
 	public InputProcessor getInputProcessor()
-	{
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(super.getInputProcessor());
-		inputMultiplexer.addProcessor(_actor.getStage());
-		
+	{		
 		return inputMultiplexer;
 	}
 }

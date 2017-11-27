@@ -6,15 +6,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 
-public class Main extends ApplicationAdapter implements InputProcessor {
+public class Main extends ApplicationAdapter implements InputProcessor, IMenuSelector {
 	
 	private MainPanel _mainPanel;
 	private LordSheet _lordSheet;
 	private WorldEditor _worldEditor;
+	private NpcEditor _npcEditor;
 	private WorldMap _worldMap;
 	private Player _player;
 	
 	InputMultiplexer _inputMultiplexer;
+	
+	private static final String WorldEditor = "Map editor";
+	private static final String NpcEditor = "Npc editor";
+	
+	private String _currentLordMenu = WorldEditor; 
     
 	@Override
 	public void create () {				
@@ -27,9 +33,11 @@ public class Main extends ApplicationAdapter implements InputProcessor {
 		_player = new Player();
 		_lordSheet = new LordSheet();
 		_lordSheet.setLord(_player);
+		_lordSheet.setMenuSelector(this);
 		
         _worldEditor = new WorldEditor();
-
+        _npcEditor = new NpcEditor();        
+        
         _worldMap.setSelectedCellProvider(_worldEditor);
         _worldMap.setLord(_player);
         
@@ -37,6 +45,7 @@ public class Main extends ApplicationAdapter implements InputProcessor {
         
 		_inputMultiplexer = new InputMultiplexer();
 		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
+		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
 		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
 		_inputMultiplexer.addProcessor(this);
 
@@ -47,7 +56,13 @@ public class Main extends ApplicationAdapter implements InputProcessor {
 	public void render () {
         _worldMap.render();
         _mainPanel.draw();
-        _worldEditor.draw();        
+        
+        if (_currentLordMenu == WorldEditor) {
+            _worldEditor.draw();                	
+        }
+        else if (_currentLordMenu == NpcEditor) {
+        	_npcEditor.draw();
+        }
 		_lordSheet.draw();
 	}
 	
@@ -102,5 +117,22 @@ public class Main extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public void dispose () {
 		_worldMap.dispose();
+	}
+
+	@Override
+	public void setSelection(String selection) {
+		_currentLordMenu = selection;
+
+        if (_currentLordMenu == WorldEditor) {
+        	_inputMultiplexer.removeProcessor(_npcEditor.getInputProcessor());
+        	_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
+        }
+        else if (_currentLordMenu == NpcEditor) {
+        	_inputMultiplexer.removeProcessor(_worldEditor.getInputProcessor());
+        	_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
+        }
+        Gdx.input.setInputProcessor(_inputMultiplexer);
+
+		render();		
 	}
 }

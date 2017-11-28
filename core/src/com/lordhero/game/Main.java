@@ -23,7 +23,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	private String _currentLordMenu = WorldEditor; 
     
 	@Override
-	public void create () {				
+	public void create () {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
         
@@ -104,8 +104,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-    	_worldMap.setCursorPosition(screenX, screenY);
-        
+    	_worldMap.setCursorPosition(screenX, screenY);        
         return false;
     }
 
@@ -123,15 +122,19 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	public void setSelection(String selection) {
 		_currentLordMenu = selection;
 
+		_inputMultiplexer.clear();
         if (_currentLordMenu == WorldEditor) {
-        	_inputMultiplexer.removeProcessor(_npcEditor.getInputProcessor());
-        	_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
         }
         else if (_currentLordMenu == NpcEditor) {
-        	_inputMultiplexer.removeProcessor(_worldEditor.getInputProcessor());
-        	_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
         }
-        Gdx.input.setInputProcessor(_inputMultiplexer);
 
 		render();		
 	}

@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -63,6 +64,8 @@ public class WorldMap {
     PrintWriter _outputStream;
     
     Enemies _enemies;
+    
+    LinkedList<NpcInfo> _npcs = new LinkedList<NpcInfo>();
     
     ILord _lord;
 
@@ -195,6 +198,10 @@ public class WorldMap {
         _downBlocked = collisionObjectLayer.getCell(xPos, yPos-1) != null;
         _leftBlocked = collisionObjectLayer.getCell(xPos-1, yPos) != null;
         _rightBlocked = collisionObjectLayer.getCell(xPos+1, yPos) != null;
+	}
+	
+	public void addNpc(int screenX, int screenY) {
+		
 	}
 
 	public void setTile(int screenX, int screenY) {

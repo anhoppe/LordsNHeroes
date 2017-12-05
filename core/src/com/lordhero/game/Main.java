@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.lordhero.game.controller.EntityController;
+import com.lordhero.game.model.Entities;
 
 public class Main extends ApplicationAdapter implements InputProcessor, IMenuSelector {
 	
@@ -40,6 +42,11 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
         
         _worldMap.setSelectedCellProvider(_worldEditor);
         _worldMap.setLord(_player);
+        
+        Entities entities = new Entities();
+        EntityController entityController = new EntityController();
+        entityController.setEntities(entities);
+        _worldMap.setEntityController(entityController);
         
         _mainPanel = new MainPanel();
         

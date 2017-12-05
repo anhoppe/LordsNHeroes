@@ -1,0 +1,17 @@
+package com.lordhero.game.model;
+
+import java.util.List;
+
+import com.lordhero.game.model.IEntity;
+
+public interface IEntities {
+	public enum EntityType {
+		None,
+		Enemy,
+		Npc
+	};
+
+	void update();
+	
+	List<IEntity> getEntitiesOnSite(String site);
+}

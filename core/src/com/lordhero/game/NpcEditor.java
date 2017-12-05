@@ -14,17 +14,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.lordhero.game.model.Npc;
 
 public class NpcEditor extends UiPanel {
 
-	private static final LinkedList<NpcInfo> Npcs = new LinkedList<NpcInfo>(Arrays.asList(new NpcInfo("Hobo", 100), 
-			new NpcInfo("Blacksmith", 3500),
-			new NpcInfo("Bowyer", 2800),
-			new NpcInfo("Knight", 5000),
-			new NpcInfo("Town guard", 1000),
-			new NpcInfo("King", 10000),
-			new NpcInfo("Healer", 6000),
-			new NpcInfo("Landlord", 1500)));
+	private static final LinkedList<Npc> Npcs = new LinkedList<Npc>(Arrays.asList(new Npc("Hobo", 100), 
+			new Npc("Blacksmith", 3500),
+			new Npc("Bowyer", 2800),
+			new Npc("Knight", 5000),
+			new Npc("Town guard", 1000),
+			new Npc("King", 10000),
+			new Npc("Healer", 6000),
+			new Npc("Landlord", 1500)));
 		
 	private Cell<?> _currentNpcTile;
 	private Image _currentNpcImage;
@@ -88,7 +89,7 @@ public class NpcEditor extends UiPanel {
 
 	private void updateCurrentNpc() {
 		_currentNpcTile.setActor(new Image(new TextureRegion(_npcTexture, _currentNpcIndex*32, 0, 32, 32)));
-		NpcInfo info = Npcs.get(_currentNpcIndex);
+		Npc info = Npcs.get(_currentNpcIndex);
 		
 		_classText.setText(info.getName());
 		_priceText.setText(Integer.toString(info.getPrice()));

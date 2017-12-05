@@ -1,4 +1,4 @@
-package com.lordhero.game;
+package com.lordhero.game.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Enemy {
+public class Enemy implements IEntity {
 	private static final double MinTargetDistance = 5.0;
 
 	private static final double EnemySpeed = 2.5;
@@ -35,6 +35,33 @@ public class Enemy {
 		 _yEndPos = getRandomStartPosition();
 		 
 		 _enemySprite.setCenter((float)_xPos, (float)_yPos);
+	}
+	
+	@Override
+	public void update() {
+		if (Math.abs(_xPos - _xEndPos) < Math.abs(_yPos - _yEndPos)) {
+			if (_yPos < _yEndPos) {
+				_yPos += EnemySpeed;
+			}
+			else {
+				_yPos -= EnemySpeed;
+			}
+		}
+		
+		else {
+			if (_xPos < _xEndPos) {
+				_xPos += EnemySpeed;
+			}
+			else {
+				_xPos -= EnemySpeed;
+			}
+		}
+		
+		if ((Math.abs(_xPos - _xEndPos) * Math.abs(_xPos - _xEndPos) + Math.abs(_yPos - _yEndPos) * Math.abs(_yPos - _yEndPos)) < MinTargetDistance) {
+			_remove = true;
+		}
+		
+		_enemySprite.setCenter((float)_xPos, (float)_yPos);
 	}
 	
 	public void render(SpriteBatch spriteBatch) {
@@ -70,5 +97,11 @@ public class Enemy {
 
 	private int getRandomStartPosition() {
 		return (int) (Math.random() * 128 * 32);
+	}
+
+	@Override
+	public Sprite getSprite() {
+		// TODO Auto-generated method stub
+		return _enemySprite;
 	}
 }

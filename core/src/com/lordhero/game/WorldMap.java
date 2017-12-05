@@ -31,6 +31,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.lordhero.game.controller.EntityController;
+import com.lordhero.game.model.Npc;
+
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
@@ -63,9 +66,7 @@ public class WorldMap {
     BufferedInputStream _inputStream;
     PrintWriter _outputStream;
     
-    Enemies _enemies;
-    
-    LinkedList<NpcInfo> _npcs = new LinkedList<NpcInfo>();
+    EntityController _entityController;
     
     ILord _lord;
 
@@ -94,8 +95,10 @@ public class WorldMap {
         connectToServer();
         loadRemoteMap();
                 
-        // Create the enemies object
-        _enemies = new Enemies();
+    }
+    
+    public void setEntityController(EntityController entityController) {
+    	_entityController = entityController;
     }
     
     public void setSelectedCellProvider(ISelectedCellProvider selectedCellProvider) {
@@ -108,8 +111,6 @@ public class WorldMap {
     
 	public void render () {
 		moveCamera();
-
-        _enemies.update();
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -125,7 +126,7 @@ public class WorldMap {
         // render
         _spriteBatch.setProjectionMatrix(_camera.combined);
         _spriteBatch.begin();
-        _enemies.render(_spriteBatch, _currentMap);
+        _entityController.render(_spriteBatch, _currentMap);
         _cursorSprite.draw(_spriteBatch);
         _playerSprite.draw(_spriteBatch);
         _spriteBatch.end();

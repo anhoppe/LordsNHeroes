@@ -9,9 +9,14 @@ import com.lordhero.game.model.Enemy;
 
 public class Entities implements IEntities {
 	private Hashtable<String, List<IEntity>> _entities;
+	private IMapInfo _mapInfo;
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
+	}
+	
+	public void setMapInfo(IMapInfo mapInfo) {
+		_mapInfo = mapInfo;
 	}
 	
 	public void update() {			
@@ -76,7 +81,7 @@ public class Entities implements IEntities {
 	}
 
 	@Override
-	public List<IEntity> getEntitiesOnSite(String site) {
-		return _entities.get(site);
+	public List<IEntity> getEntitiesOnSite() {
+		return _entities.get(_mapInfo.getCurrentMap());
 	}
 }

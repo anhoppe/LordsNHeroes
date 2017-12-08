@@ -13,5 +13,5 @@ public interface IEntities {
 
 	void update();
 	
-	List<IEntity> getEntitiesOnSite(String site);
+	List<IEntity> getEntitiesOnSite();
 }

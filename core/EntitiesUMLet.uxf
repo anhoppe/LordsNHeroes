@@ -4,46 +4,12 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1390</x>
-      <y>10</y>
-      <w>210</w>
-      <h>190</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;Stereotype&gt;&gt;
-Package::FatClass
-{Some Properties}
---
--id: Long
-_-ClassAttribute: Long_
---
-#Operation(i: int): int
-/+AbstractOperation()/
---
-Responsibilities
--- Resp1
-*-- Resp2*</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1370</x>
-      <y>0</y>
-      <w>100</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>SimpleClass</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
       <x>190</x>
-      <y>400</y>
+      <y>380</y>
       <w>180</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>/IEntity/
+    <panel_attributes>/&lt;&lt;IEntity&gt;&gt;/
 --
 _image: Sprite
 --
@@ -57,7 +23,7 @@ isTerminated(): void
     <id>UMLClass</id>
     <coordinates>
       <x>480</x>
-      <y>390</y>
+      <y>370</y>
       <w>180</w>
       <h>110</h>
     </coordinates>
@@ -76,7 +42,7 @@ _entities: List&lt;IEntity&gt;
     <id>UMLClass</id>
     <coordinates>
       <x>160</x>
-      <y>580</y>
+      <y>560</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -87,7 +53,7 @@ _entities: List&lt;IEntity&gt;
     <id>UMLClass</id>
     <coordinates>
       <x>300</x>
-      <y>580</y>
+      <y>560</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -98,7 +64,7 @@ _entities: List&lt;IEntity&gt;
     <id>Relation</id>
     <coordinates>
       <x>200</x>
-      <y>470</y>
+      <y>450</y>
       <w>90</w>
       <h>130</h>
     </coordinates>
@@ -109,7 +75,7 @@ _entities: List&lt;IEntity&gt;
     <id>Relation</id>
     <coordinates>
       <x>260</x>
-      <y>470</y>
+      <y>450</y>
       <w>110</w>
       <h>130</h>
     </coordinates>
@@ -120,7 +86,7 @@ _entities: List&lt;IEntity&gt;
     <id>Relation</id>
     <coordinates>
       <x>360</x>
-      <y>440</y>
+      <y>420</y>
       <w>140</w>
       <h>30</h>
     </coordinates>
@@ -131,9 +97,9 @@ _entities: List&lt;IEntity&gt;
     <id>UMLPackage</id>
     <coordinates>
       <x>760</x>
-      <y>230</y>
+      <y>100</y>
       <w>550</w>
-      <h>370</h>
+      <h>750</h>
     </coordinates>
     <panel_attributes>Controller</panel_attributes>
     <additional_attributes/>
@@ -142,9 +108,9 @@ _entities: List&lt;IEntity&gt;
     <id>UMLPackage</id>
     <coordinates>
       <x>150</x>
-      <y>230</y>
+      <y>100</y>
       <w>550</w>
-      <h>500</h>
+      <h>750</h>
     </coordinates>
     <panel_attributes>Model</panel_attributes>
     <additional_attributes/>
@@ -153,7 +119,7 @@ _entities: List&lt;IEntity&gt;
     <id>UMLClass</id>
     <coordinates>
       <x>810</x>
-      <y>290</y>
+      <y>270</y>
       <w>180</w>
       <h>110</h>
     </coordinates>
@@ -162,6 +128,7 @@ _entities: List&lt;IEntity&gt;
 -_entities: Entities
 --
 +render(): void
++processInout(): void
 --
 	</panel_attributes>
     <additional_attributes/>
@@ -170,11 +137,11 @@ _entities: List&lt;IEntity&gt;
     <id>UMLClass</id>
     <coordinates>
       <x>450</x>
-      <y>280</y>
+      <y>260</y>
       <w>230</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>/IEntities/
+    <panel_attributes>/&lt;&lt;IEntities&gt;&gt;/
 --
 +update()
 +getEntitiesOnSite(string site): void
@@ -188,7 +155,7 @@ update(): void
     <id>Relation</id>
     <coordinates>
       <x>560</x>
-      <y>350</y>
+      <y>330</y>
       <w>30</w>
       <h>60</h>
     </coordinates>
@@ -199,7 +166,7 @@ update(): void
     <id>Relation</id>
     <coordinates>
       <x>670</x>
-      <y>320</y>
+      <y>300</y>
       <w>160</w>
       <h>40</h>
     </coordinates>
@@ -207,5 +174,89 @@ update(): void
 m1=1
 m2=1</panel_attributes>
     <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>510</x>
+      <y>590</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>/Map/
+--
+--
++getCurrentMap(): void
+-connectToServer(): void
+-loadMapFromServer(): void
+--
+	</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>590</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>/MapController/
+--
+-_map: 
+--
++render(): void
++processInput(): void
+--
+	</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>680</x>
+      <y>640</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>160</y>
+      <w>140</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>/&lt;&lt;Controller&gt;&gt;/
+--
++render() : void
++processInput(): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>920</x>
+      <y>210</y>
+      <w>200</w>
+      <h>400</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>180.0;10.0;180.0;290.0;10.0;290.0;10.0;380.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>890</x>
+      <y>210</y>
+      <w>230</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>210.0;10.0;190.0;40.0;10.0;40.0;10.0;60.0</additional_attributes>
   </element>
 </diagram>

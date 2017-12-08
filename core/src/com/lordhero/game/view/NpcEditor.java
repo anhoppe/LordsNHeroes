@@ -1,4 +1,4 @@
-package com.lordhero.game;
+package com.lordhero.game.view;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.lordhero.game.UiPanel;
 import com.lordhero.game.model.Npc;
 
 public class NpcEditor extends UiPanel {

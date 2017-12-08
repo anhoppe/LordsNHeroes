@@ -1,4 +1,4 @@
-package com.lordhero.game;
+package com.lordhero.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.lordhero.game.ISelectedCellProvider;
+import com.lordhero.game.UiPanel;
 
 public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 	private Image _actor;

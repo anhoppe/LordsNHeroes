@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 public class LordSheet extends UiPanel {
 	
-	ILord _lord;
+	IPlayer _lord;
 	
 	TextField _moneyText;
     SelectBox<String> _menuSelection;
@@ -41,7 +41,7 @@ public class LordSheet extends UiPanel {
 	    _table.add(_menuSelection).size(120, 25);
 	}
 	
-	public void setLord(ILord lord) {
+	public void setLord(IPlayer lord) {
 		_lord = lord;
 		
 		_lord.registerChangeListener(new ChangeListener() {

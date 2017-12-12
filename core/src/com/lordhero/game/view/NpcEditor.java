@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.UiPanel;
 import com.lordhero.game.model.Npc;
 
-public class NpcEditor extends UiPanel {
+public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
 
 	private static final LinkedList<Npc> Npcs = new LinkedList<Npc>(Arrays.asList(new Npc("Hobo", 100), 
 			new Npc("Blacksmith", 3500),
@@ -43,7 +47,7 @@ public class NpcEditor extends UiPanel {
 		_table.setPosition(150, 500);		   
 
 		_table.row();
-		
+				
 		final TextButton prev = new TextButton("<<", _skin);
 		_table.add(prev);
 		prev.addCaptureListener(new ClickListener() {
@@ -57,8 +61,8 @@ public class NpcEditor extends UiPanel {
 			}	   
 		});
 	
-		_npcTexture = new Texture(Gdx.files.internal("Npcs.png"));
-		
+		setupNpcTextures();
+
 		_currentNpcTile = _table.add().size(32, 32);
 		
 		_table.add(_currentNpcImage).size(32, 32);
@@ -88,10 +92,28 @@ public class NpcEditor extends UiPanel {
 		updateCurrentNpc();
 	}
 
+	@Override
+	public Npc get() {
+		return Npcs.get(_currentNpcIndex);
+	}
+	
+	private void setupNpcTextures() {
+		_npcTexture = new Texture(Gdx.files.internal("Npcs.png"));
+
+		TextureAtlas atlas = new TextureAtlas();
+		int index = 0;
+		for (Npc npc : Npcs) {
+			atlas.addRegion(npc.getName(), _npcTexture, index++*32, 0, 32, 32);
+			
+			Sprite sprite = atlas.createSprite(npc.getName());
+			npc.setSprite(sprite);
+		}
+	}
+
 	private void updateCurrentNpc() {
-		_currentNpcTile.setActor(new Image(new TextureRegion(_npcTexture, _currentNpcIndex*32, 0, 32, 32)));
 		Npc info = Npcs.get(_currentNpcIndex);
 		
+		_currentNpcTile.setActor(new Image(info.getSprite()));
 		_classText.setText(info.getName());
 		_priceText.setText(Integer.toString(info.getPrice()));
 	}

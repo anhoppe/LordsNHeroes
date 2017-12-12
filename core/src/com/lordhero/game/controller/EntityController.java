@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.lordhero.game.IGameMode;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IEntity;
 
@@ -11,11 +12,17 @@ public class EntityController implements IController {
 	
 	IEntities _entities;
 	
+	IGameMode _gameMode;
+	
 	public EntityController() {
 	}
 		
 	public void setEntities(IEntities entities) {
 		_entities = entities;
+	}
+	
+	public void setGameMode(IGameMode gameMode) {
+		_gameMode = gameMode;
 	}
   	
 	@Override
@@ -31,7 +38,11 @@ public class EntityController implements IController {
 
 	@Override
 	public boolean processMouseUp(int xPos, int yPos) {
-		// TODO Auto-generated method stub
+		if (_gameMode.get() == IGameMode.GameMode.AddNpc) {
+			_entities.addNpc(xPos, yPos);
+			return true;
+		}
+
 		return false;
 	}
 

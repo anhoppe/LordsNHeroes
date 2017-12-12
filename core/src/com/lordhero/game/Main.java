@@ -18,7 +18,7 @@ import com.lordhero.game.view.NpcEditor;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
-public class Main extends ApplicationAdapter implements InputProcessor, IMenuSelector {
+public class Main extends ApplicationAdapter implements InputProcessor, IMenuSelector, IGameMode {
 	
 	private MainPanel _mainPanel;
 	private LordSheet _lordSheet;
@@ -37,6 +37,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	private String _currentLordMenu = WorldEditor; 
     
 	private List<IController> _controllers = new LinkedList<IController>();
+	
+	private IGameMode.GameMode _gameMode = IGameMode.GameMode.BuyTiles;
 	
 	@Override
 	public void create () {
@@ -76,15 +78,18 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 
 		// Model DI
         entities.setMapInfo(_map);
-
+        entities.setSelectedNpcProvider(_npcEditor);
+        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
 		
 		// Controller DI
         mapController.setMap(_map);
         mapController.setPlayer(_player);
-
+        mapController.setGameMode(this);
+        
         entityController.setEntities(entities);
+        entityController.setGameMode(this);
 		
 		// View DI
         _worldMap.setEntities(entities);
@@ -194,14 +199,23 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
+    		_gameMode = IGameMode.GameMode.BuyTiles;
         }
         else if (_currentLordMenu == NpcEditor) {
     		_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
+    		_gameMode = IGameMode.GameMode.AddNpc;
         }
 
 		render();		
 	}
+	
+
+	@Override
+	public GameMode get() {
+		return _gameMode;
+	}
+
 }

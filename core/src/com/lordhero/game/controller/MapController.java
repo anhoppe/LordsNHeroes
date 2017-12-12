@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.lordhero.game.IGameMode;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.IMap;
 
 public class MapController implements IController {
 
-	private int _xCursor;
-	private int _yCursor;
-	
 	private IMap _map;
 	
 	private IPlayer _player;
+	
+	private IGameMode _gameMode;
 	
 	public void setMap(IMap map) {
 		_map = map;
@@ -25,6 +25,10 @@ public class MapController implements IController {
 	
 	public void setPlayer(IPlayer player) {
 		_player = player;
+	}
+	
+	public void setGameMode(IGameMode gameMode) {
+		_gameMode = gameMode;
 	}
 	
 	@Override
@@ -60,8 +64,14 @@ public class MapController implements IController {
 
 	@Override
 	public boolean processMouseUp(int xPos, int yPos) {
-		_map.setTile();
-		return true;
+		
+		if (_gameMode.get() == IGameMode.GameMode.BuyTiles)
+		{
+			_map.setTile();
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override

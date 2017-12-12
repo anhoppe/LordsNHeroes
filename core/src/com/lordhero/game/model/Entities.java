@@ -5,11 +5,13 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.Enemy;
 
 public class Entities implements IEntities {
 	private Hashtable<String, List<IEntity>> _entities;
 	private IMapInfo _mapInfo;
+	private ISelectedNpcProvider _selectedNpcProvider;
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
@@ -19,12 +21,37 @@ public class Entities implements IEntities {
 		_mapInfo = mapInfo;
 	}
 	
+	public void setSelectedNpcProvider(ISelectedNpcProvider selectedNpcProvider) {
+		_selectedNpcProvider = selectedNpcProvider;
+	}
+	
 	public void update() {			
 		create();
 		
 		updateEntities();
 		
 		delete();
+	}
+
+	@Override
+	public List<IEntity> getEntitiesOnSite() {
+		return _entities.get(_mapInfo.getCurrentMap());
+	}
+
+	@Override
+	public void addNpc(int xPos, int yPos) {
+		String site = _mapInfo.getCurrentMap();
+		
+		List<IEntity> entitiesOnSite;
+		if (!_entities.containsKey(site)) {
+			entitiesOnSite = new LinkedList<IEntity>();
+			_entities.put(site,  entitiesOnSite);
+		}
+		else {
+			entitiesOnSite = _entities.get(site);
+		}				
+		
+		entitiesOnSite.add(new Npc(_selectedNpcProvider.get(), xPos, yPos));		
 	}
 
 	private void create() {
@@ -78,10 +105,5 @@ public class Entities implements IEntities {
 				entity.update();
 		    }
 		}			
-	}
-
-	@Override
-	public List<IEntity> getEntitiesOnSite() {
-		return _entities.get(_mapInfo.getCurrentMap());
 	}
 }

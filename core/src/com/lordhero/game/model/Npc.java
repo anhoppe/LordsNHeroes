@@ -8,13 +8,21 @@ public class Npc implements IEntity {
 	
 	private int _price;
 
-	private Texture _texture;
-	
+	private Sprite _sprite;
+
 	public Npc(String name, int price) {
 		_name = name;
 		_price = price;
 	}
 	
+	public Npc(Npc npc, int xPos, int yPos) {
+		_name = npc._name;
+		_price = npc._price;
+		_sprite = new Sprite(npc._sprite);
+		
+		_sprite.setCenter((float)xPos, (float)yPos);
+	}
+
 	public String getName() {
 		return _name;
 	}
@@ -22,30 +30,23 @@ public class Npc implements IEntity {
 	public int getPrice() {
 		return _price;
 	}
-	
-	public void setTexture(Texture texture) {
-		_texture = texture;
-	}
-	
-	public Texture getTexture() {
-		return _texture;
-	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public boolean isTerminated() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Sprite getSprite() {
-		// TODO Auto-generated method stub
-		return null;
+		return _sprite;
+	}
+	
+	public void setSprite(Sprite sprite) {
+		_sprite = sprite;
 	}
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -22,15 +23,6 @@ import com.lordhero.game.UiPanel;
 import com.lordhero.game.model.Npc;
 
 public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
-
-	private static final LinkedList<Npc> Npcs = new LinkedList<Npc>(Arrays.asList(new Npc("Hobo", 100), 
-			new Npc("Blacksmith", 3500),
-			new Npc("Bowyer", 2800),
-			new Npc("Knight", 5000),
-			new Npc("Town guard", 1000),
-			new Npc("King", 10000),
-			new Npc("Healer", 6000),
-			new Npc("Landlord", 1500)));
 		
 	private Cell<?> _currentNpcTile;
 	private Image _currentNpcImage;
@@ -71,7 +63,7 @@ public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
 		_table.add(next);
 		next.addCaptureListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (_currentNpcIndex < (Npcs.size() - 1)) {
+				if (_currentNpcIndex < (Npc.Templates.size() - 1)) {
 					_currentNpcIndex++;
 				}
 				updateCurrentNpc();
@@ -94,7 +86,7 @@ public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
 
 	@Override
 	public Npc get() {
-		return Npcs.get(_currentNpcIndex);
+		return Npc.Templates.get(_currentNpcIndex);
 	}
 	
 	private void setupNpcTextures() {
@@ -102,7 +94,7 @@ public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
 
 		TextureAtlas atlas = new TextureAtlas();
 		int index = 0;
-		for (Npc npc : Npcs) {
+		for (Npc npc : Npc.Templates) {
 			atlas.addRegion(npc.getName(), _npcTexture, index++*32, 0, 32, 32);
 			
 			Sprite sprite = atlas.createSprite(npc.getName());
@@ -111,7 +103,7 @@ public class NpcEditor extends UiPanel implements ISelectedNpcProvider {
 	}
 
 	private void updateCurrentNpc() {
-		Npc info = Npcs.get(_currentNpcIndex);
+		Npc info = Npc.Templates.get(_currentNpcIndex);
 		
 		_currentNpcTile.setActor(new Image(info.getSprite()));
 		_classText.setText(info.getName());

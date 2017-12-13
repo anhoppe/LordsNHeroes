@@ -98,10 +98,6 @@ public class WorldMap {
         _playerSprite.draw(_spriteBatch);
         _spriteBatch.end();        
 	}
-	
-	public void addNpc(int screenX, int screenY) {
-		
-	}
 
 	public void dispose() {
 		_playerImage.dispose();

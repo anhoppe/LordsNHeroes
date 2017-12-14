@@ -42,6 +42,10 @@ public class EntityController implements IController {
 			_entities.addNpc(xPos, yPos);
 			return true;
 		}
+		else if (_gameMode.get() == IGameMode.GameMode.SelectMapItems) {
+			_entities.selectEntity(xPos, yPos);
+			return true;
+		}
 
 		return false;
 	}

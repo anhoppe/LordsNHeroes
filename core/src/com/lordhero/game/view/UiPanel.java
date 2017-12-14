@@ -1,4 +1,4 @@
-	package com.lordhero.game;
+	package com.lordhero.game.view;
 
 
 import com.badlogic.gdx.Gdx;

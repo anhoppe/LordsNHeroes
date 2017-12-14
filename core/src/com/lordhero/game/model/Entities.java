@@ -7,11 +7,14 @@ import java.util.List;
 
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.Enemy;
+import com.lordhero.game.view.INpcSelectionReceiver;
 
 public class Entities implements IEntities {
 	private Hashtable<String, List<IEntity>> _entities;
 	private IMapInfo _mapInfo;
 	private ISelectedNpcProvider _selectedNpcProvider;
+	
+	private INpcSelectionReceiver _npcSelectionReceiver;
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
@@ -23,6 +26,10 @@ public class Entities implements IEntities {
 	
 	public void setSelectedNpcProvider(ISelectedNpcProvider selectedNpcProvider) {
 		_selectedNpcProvider = selectedNpcProvider;
+	}
+	
+	public void setNpcSelectionReceiver(INpcSelectionReceiver receiver) {
+		_npcSelectionReceiver = receiver;
 	}
 	
 	public void update() {			
@@ -52,6 +59,20 @@ public class Entities implements IEntities {
 		}				
 		
 		entitiesOnSite.add(new Npc(_selectedNpcProvider.get(), xPos, yPos));		
+	}
+
+	@Override
+	public void selectEntity(int xPos, int yPos) {
+		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
+
+		for (IEntity entity : entitiesOnSite) {
+			if (entity.isAt(xPos, yPos)) {
+				if (entity instanceof Npc) {
+					_npcSelectionReceiver.select((Npc)entity);
+					break;
+				}
+			}
+		}
 	}
 
 	private void create() {

@@ -9,4 +9,6 @@ public interface IEntity {
 	boolean isTerminated();
 
 	Sprite getSprite();
+
+	boolean isAt(int xPos, int yPos);
 }

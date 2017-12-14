@@ -13,8 +13,10 @@ import com.lordhero.game.controller.IController;
 import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.Entities;
 import com.lordhero.game.model.Map;
+import com.lordhero.game.view.LordSheet;
 import com.lordhero.game.view.MainPanel;
 import com.lordhero.game.view.NpcEditor;
+import com.lordhero.game.view.NpcView;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
@@ -24,6 +26,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	private LordSheet _lordSheet;
 	private WorldEditor _worldEditor;
 	private NpcEditor _npcEditor;
+	private NpcView _npcView;
 	private WorldMap _worldMap;
 	private Player _player;
 	
@@ -31,8 +34,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	
 	InputMultiplexer _inputMultiplexer;
 	
-	private static final String WorldEditor = "Map editor";
-	private static final String NpcEditor = "Npc editor";
+	private static final String WorldEditor = "Edit map";
+	private static final String NpcEditor = "Add npc";
+	private static final String SelectMap = "Select";
 	
 	private String _currentLordMenu = WorldEditor; 
     
@@ -48,7 +52,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 		// Create UI components
 		_lordSheet = new LordSheet();		
         _worldEditor = new WorldEditor();
-        _npcEditor = new NpcEditor();        
+        _npcEditor = new NpcEditor();
+        _npcView = new NpcView();
         _mainPanel = new MainPanel();
 
         // Create models
@@ -123,6 +128,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
         else if (_currentLordMenu == NpcEditor) {
         	_npcEditor.draw();
         }
+        else if (_currentLordMenu == SelectMap) {
+        	_npcView.draw();
+        }
+        
 		_lordSheet.draw();
 	}
 	
@@ -207,6 +216,13 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
     		_gameMode = IGameMode.GameMode.AddNpc;
+        }
+        else if (_currentLordMenu == SelectMap) {
+    		_inputMultiplexer.addProcessor(_npcView.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+    		_gameMode = IGameMode.GameMode.SelectMapItems;
         }
 
 		render();		

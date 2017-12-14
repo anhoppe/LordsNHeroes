@@ -2,7 +2,6 @@ package com.lordhero.game.view;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.lordhero.game.UiPanel;
 
 public class MainPanel extends UiPanel {
 	

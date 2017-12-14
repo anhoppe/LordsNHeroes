@@ -1,4 +1,4 @@
-package com.lordhero.game;
+package com.lordhero.game.view;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.lordhero.game.IMenuSelector;
+import com.lordhero.game.IPlayer;
 
 public class LordSheet extends UiPanel {
 	
@@ -31,7 +33,7 @@ public class LordSheet extends UiPanel {
 		_table.add(new Label("Menu: ", _skin));
 		
 	    _menuSelection = new SelectBox<String>(_skin);
-	    _menuSelection.setItems(new String[] {"Map editor", "Npc editor"});
+	    _menuSelection.setItems(new String[] {"Editor map", "Add npc", "Select"});
 	    _menuSelection.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {

@@ -6,17 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Enemy implements IEntity {
+public class Enemy extends EntityBase {
 	private static final double MinTargetDistance = 5.0;
 
 	private static final double EnemySpeed = 2.5;
 
 	private static Texture _monsterTileSet = new Texture(Gdx.files.internal("data/tileset/Monsters.png"));
-		
-	private Sprite _enemySprite;
-	
-	private double _xPos;
-	private double _yPos;
 	
 	private int _xEndPos;
 	private int _yEndPos;
@@ -26,7 +21,7 @@ public class Enemy implements IEntity {
 	public Enemy() {
 		 TextureRegion region = new TextureRegion(_monsterTileSet, 0, 0, 32, 32);
 		 
-		 _enemySprite = new Sprite(region);
+		 _sprite = new Sprite(region);
 		 
 		 _xPos = getRandomStartPosition();
 		 _yPos = getRandomStartPosition();
@@ -34,7 +29,7 @@ public class Enemy implements IEntity {
 		 _xEndPos = getRandomStartPosition();
 		 _yEndPos = getRandomStartPosition();
 		 
-		 _enemySprite.setCenter((float)_xPos, (float)_yPos);
+		 _sprite.setCenter((float)_xPos, (float)_yPos);
 	}
 	
 	@Override
@@ -61,10 +56,10 @@ public class Enemy implements IEntity {
 			_remove = true;
 		}
 		
-		_enemySprite.setCenter((float)_xPos, (float)_yPos);
+		_sprite.setCenter((float)_xPos, (float)_yPos);
 	}
 	
-	public void render(SpriteBatch spriteBatch) {
+	/*public void render(SpriteBatch spriteBatch) {
 		if (Math.abs(_xPos - _xEndPos) < Math.abs(_yPos - _yEndPos)) {
 			if (_yPos < _yEndPos) {
 				_yPos += EnemySpeed;
@@ -87,9 +82,9 @@ public class Enemy implements IEntity {
 			_remove = true;
 		}
 		
-		_enemySprite.setCenter((float)_xPos, (float)_yPos);		
-		_enemySprite.draw(spriteBatch);
-	}
+		_sprite.setCenter((float)_xPos, (float)_yPos);		
+		_sprite.draw(spriteBatch);
+	}*/
 
 	public boolean isTerminated() {
 		return _remove;		
@@ -97,11 +92,5 @@ public class Enemy implements IEntity {
 
 	private int getRandomStartPosition() {
 		return (int) (Math.random() * 128 * 32);
-	}
-
-	@Override
-	public Sprite getSprite() {
-		// TODO Auto-generated method stub
-		return _enemySprite;
 	}
 }

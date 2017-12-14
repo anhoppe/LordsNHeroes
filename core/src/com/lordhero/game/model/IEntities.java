@@ -16,4 +16,6 @@ public interface IEntities {
 	List<IEntity> getEntitiesOnSite();
 	
 	void addNpc(int xPos, int yPos);
+
+	void selectEntity(int xPos, int yPos);
 }

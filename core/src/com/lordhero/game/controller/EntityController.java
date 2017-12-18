@@ -37,13 +37,13 @@ public class EntityController implements IController {
 	}
 
 	@Override
-	public boolean processMouseUp(int xPos, int yPos) {
+	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
 		if (_gameMode.get() == IGameMode.GameMode.AddNpc) {
-			_entities.addNpc(xPos, yPos);
+			_entities.addNpc(xCursor, yCursor);
 			return true;
 		}
 		else if (_gameMode.get() == IGameMode.GameMode.SelectMapItems) {
-			_entities.selectEntity(xPos, yPos);
+			_entities.selectEntity(xCursor, yCursor);
 			return true;
 		}
 

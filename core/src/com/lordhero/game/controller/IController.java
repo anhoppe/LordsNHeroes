@@ -10,6 +10,6 @@ public interface IController {
 	void update();
 	
 	boolean processKeyUp(int keyCode);
-	boolean processMouseUp(int xPos, int yPos);
+	boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor);
 	boolean processMouseMove(int xPos, int yPos);
 }

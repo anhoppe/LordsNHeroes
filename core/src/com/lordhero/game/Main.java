@@ -84,17 +84,19 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 		// Model DI
         entities.setMapInfo(_map);
         entities.setSelectedNpcProvider(_npcEditor);
-        
+        entities.setNpcSelectionReceiver(_npcView);
+        entities.setPlayer(_player);
+       
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
-		
+        
 		// Controller DI
         mapController.setMap(_map);
         mapController.setPlayer(_player);
         mapController.setGameMode(this);
-        
+
         entityController.setEntities(entities);
-        entityController.setGameMode(this);
+        entityController.setGameMode(this);       
 		
 		// View DI
         _worldMap.setEntities(entities);
@@ -164,7 +166,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		for (IController controller : _controllers) {
-			if (controller.processMouseUp(screenX, screenY)) {
+			if (controller.processMouseUp(screenX, screenY, _map.getCursorX(), _map.getCursorY())) {
 				break;
 			}
 		}

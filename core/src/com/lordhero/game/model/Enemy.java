@@ -59,33 +59,6 @@ public class Enemy extends EntityBase {
 		_sprite.setCenter((float)_xPos, (float)_yPos);
 	}
 	
-	/*public void render(SpriteBatch spriteBatch) {
-		if (Math.abs(_xPos - _xEndPos) < Math.abs(_yPos - _yEndPos)) {
-			if (_yPos < _yEndPos) {
-				_yPos += EnemySpeed;
-			}
-			else {
-				_yPos -= EnemySpeed;
-			}
-		}
-		
-		else {
-			if (_xPos < _xEndPos) {
-				_xPos += EnemySpeed;
-			}
-			else {
-				_xPos -= EnemySpeed;
-			}
-		}
-		
-		if ((Math.abs(_xPos - _xEndPos) * Math.abs(_xPos - _xEndPos) + Math.abs(_yPos - _yEndPos) * Math.abs(_yPos - _yEndPos)) < MinTargetDistance) {
-			_remove = true;
-		}
-		
-		_sprite.setCenter((float)_xPos, (float)_yPos);		
-		_sprite.draw(spriteBatch);
-	}*/
-
 	public boolean isTerminated() {
 		return _remove;		
 	}

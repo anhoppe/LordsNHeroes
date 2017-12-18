@@ -21,8 +21,8 @@ public abstract class EntityBase implements IEntity {
 
 	@Override
 	public boolean isAt(int xPos, int yPos) {
-		if (xPos >= _xPos && xPos <= (_xPos+32) &&
-				yPos >= _yPos && yPos <= (yPos+32)) {
+		if (Math.abs(xPos - _xPos) <= 32  &&
+			Math.abs(yPos - _yPos) <= 32) {
 			return true;
 		}
 		

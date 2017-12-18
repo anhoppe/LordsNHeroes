@@ -62,6 +62,9 @@ public class Npc extends EntityBase {
 		_productionProbabilityPerMinute = npc._productionProbabilityPerMinute;
 		
 		_sprite = new Sprite(npc._sprite);
+	
+		_xPos = xPos;
+		_yPos = yPos;
 		
 		_sprite.setCenter((float)xPos, (float)yPos);
 	}

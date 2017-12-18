@@ -77,10 +77,7 @@ public class WorldMap {
         TiledMapRenderer tiledMapRenderer = _map.getTiledMapRenderer();        
         tiledMapRenderer.setView(_camera);
         tiledMapRenderer.render();    
-        
-        _playerSprite.setCenter(xCamera, yCamera);
-        _cursorSprite.setCenter(xCursor + xCamera - Gdx.graphics.getWidth() / 2, yCursor + yCamera - Gdx.graphics.getHeight() / 2);
-        
+           
         // render
         _spriteBatch.setProjectionMatrix(_camera.combined);
         _spriteBatch.begin();
@@ -94,7 +91,12 @@ public class WorldMap {
 			}		
 		}
 
+//      _cursorSprite.setCenter(xCursor + xCamera - Gdx.graphics.getWidth() / 2, yCursor + yCamera - Gdx.graphics.getHeight() / 2);
+      _cursorSprite.setCenter(xCursor, yCursor);
+		
         _cursorSprite.draw(_spriteBatch);
+
+        _playerSprite.setCenter(xCamera, yCamera);
         _playerSprite.draw(_spriteBatch);
         _spriteBatch.end();        
 	}

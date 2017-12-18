@@ -63,7 +63,7 @@ public class MapController implements IController {
 	}
 
 	@Override
-	public boolean processMouseUp(int xPos, int yPos) {
+	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
 		
 		if (_gameMode.get() == IGameMode.GameMode.BuyTiles)
 		{

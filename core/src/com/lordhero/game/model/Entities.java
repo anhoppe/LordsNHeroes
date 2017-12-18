@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.Enemy;
 import com.lordhero.game.view.INpcSelectionReceiver;
@@ -13,6 +14,7 @@ public class Entities implements IEntities {
 	private Hashtable<String, List<IEntity>> _entities;
 	private IMapInfo _mapInfo;
 	private ISelectedNpcProvider _selectedNpcProvider;
+	private IPlayer _player;
 	
 	private INpcSelectionReceiver _npcSelectionReceiver;
 	
@@ -30,6 +32,10 @@ public class Entities implements IEntities {
 	
 	public void setNpcSelectionReceiver(INpcSelectionReceiver receiver) {
 		_npcSelectionReceiver = receiver;
+	}
+	
+	public void setPlayer(IPlayer player)  {
+		_player = player;
 	}
 	
 	public void update() {			
@@ -79,7 +85,7 @@ public class Entities implements IEntities {
 		String site = null;
 		List<IEntity> entitiesOnSite;
 		
-		if (Math.random() < 0.01) {
+		if (Math.random() < 0.0001) {
 			site = "baseMap";		
 			if (!_entities.containsKey(site)) {
 				entitiesOnSite = new LinkedList<IEntity>();

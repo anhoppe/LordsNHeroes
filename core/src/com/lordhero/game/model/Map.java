@@ -85,8 +85,8 @@ public class Map implements IMap, IMapInfo {
 
 	@Override
 	public void setCursorPosition(int xPos, int yPos) {
-		_xCursor = xPos;
-		_yCursor = yPos;		
+		_xCursor = ((xPos - Gdx.graphics.getWidth() / 2) + (int)_player.getX()) / 32 * 32 + 16;
+		_yCursor = (Gdx.graphics.getHeight() / 2 - yPos + (int)_player.getY()) / 32 * 32 + 16;		
 	}
 
 	@Override
@@ -188,8 +188,8 @@ public class Map implements IMap, IMapInfo {
                     
             for (int x = 0; x < width; x++) {
             	for (int y = 0; y < height; y++) {
-                	int xCell = x + (int)((_xCursor + _player.getX() - Gdx.graphics.getWidth() / 2) / backgroundLayer.getTileWidth());
-                	int yCell = (int)((_yCursor + _player.getY() - Gdx.graphics.getHeight() / 2) / backgroundLayer.getTileHeight()) - y;
+                	int xCell = x + (int)(_xCursor / backgroundLayer.getTileWidth());
+                	int yCell = (int)(_yCursor / backgroundLayer.getTileHeight()) - y;
 
                 	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(xCell, yCell); 
                 	

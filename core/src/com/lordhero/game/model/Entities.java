@@ -85,7 +85,7 @@ public class Entities implements IEntities {
 		String site = null;
 		List<IEntity> entitiesOnSite;
 		
-		if (Math.random() < 0.0001) {
+		if (Math.random() < 0.01) {
 			site = "baseMap";		
 			if (!_entities.containsKey(site)) {
 				entitiesOnSite = new LinkedList<IEntity>();

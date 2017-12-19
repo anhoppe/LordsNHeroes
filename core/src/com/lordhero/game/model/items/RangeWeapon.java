@@ -11,15 +11,16 @@ public class RangeWeapon implements IItem {
 	
 	public static RangeWeapon[] Templates = new RangeWeapon[] {
 			new RangeWeapon("Sling shot", Type.SlingShot),
-			new RangeWeapon("Boe", Type.Bow)
+			new RangeWeapon("Bow", Type.Bow)
 	};
 	
 	private String _name;
 	
 	private Type _type;
 		
-	public RangeWeapon(String string, Type slingshot) {
-		// TODO Auto-generated constructor stub
+	public RangeWeapon(String name, Type type) {
+		_name = name;
+		_type = type;
 	}
 
 	public RangeWeapon(RangeWeapon rangeWeapon) {
@@ -28,7 +29,7 @@ public class RangeWeapon implements IItem {
 	}
 
 	public static RangeWeapon Create() {
-		int index = ThreadLocalRandom.current().nextInt(0, Templates.length - 1);
+		int index = ThreadLocalRandom.current().nextInt(0, Templates.length);
 		
 		return new RangeWeapon(Templates[index]);
 	}

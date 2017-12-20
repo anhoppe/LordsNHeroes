@@ -1,27 +1,49 @@
 package com.lordhero.game.view;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.lordhero.game.IMenuSelector;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.lordhero.game.IGameMode;
+import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IPlayer;
+import com.lordhero.game.controller.IMapController;
 
 public class LordSheet extends UiPanel {
+	private static final String EditMapMode = "Editor map";
+	private static final String AddNpcMode = "Add npc";
+	private static final String SelectMode = "Select";
 	
 	IPlayer _lord;
 	
 	TextField _moneyText;
     SelectBox<String> _menuSelection;
 		
-    IMenuSelector _menuSelector;
+    IGameMode _gameMode;
+    
+    IMapController _mapController;
     
 	public LordSheet() {
 		super();
 		
 		_table.setPosition(100, 900);
+		
+		_table.row();
+		
+		Button visitWorld = new Button(_skin);
+		
+		_table.add(visitWorld).size(60, 25);
+		visitWorld.addCaptureListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				_mapController.visitWorld();
+			}
+		});
 		
 		_table.row();
 		_table.add(new Label("Money", _skin));
@@ -33,16 +55,30 @@ public class LordSheet extends UiPanel {
 		_table.add(new Label("Menu: ", _skin));
 		
 	    _menuSelection = new SelectBox<String>(_skin);
-	    _menuSelection.setItems(new String[] {"Editor map", "Add npc", "Select"});
+	    _menuSelection.setItems(new String[] {EditMapMode, AddNpcMode, SelectMode});
 	    _menuSelection.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				_menuSelector.setSelection(_menuSelection.getSelected());
+				_gameMode.set(getModeFromString(_menuSelection.getSelected()));
 			}});
 	    
 	    _table.add(_menuSelection).size(120, 25);
 	}
 	
+	private GameMode getModeFromString(String selected) {
+		if (selected == EditMapMode) {
+			return GameMode.BuyTiles;			
+		}
+		else if (selected == AddNpcMode) {
+			return GameMode.AddNpc;
+		}
+		else if (selected == SelectMode) {
+			return GameMode.SelectMapItems;
+		}
+		
+		return GameMode.None;
+	}
+
 	public void setLord(IPlayer lord) {
 		_lord = lord;
 		
@@ -57,8 +93,12 @@ public class LordSheet extends UiPanel {
 		updateSheet();
 	}
 	
-	public void setMenuSelector(IMenuSelector menuSelector) {
-		_menuSelector = menuSelector;
+	public void setGameMode(IGameMode gameMode) {
+		_gameMode = gameMode;
+	}
+	
+	public void setMapController(IMapController mapController) {
+		_mapController = mapController;
 	}
 	
 	private void updateSheet() {

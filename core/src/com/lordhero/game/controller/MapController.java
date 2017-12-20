@@ -11,7 +11,7 @@ import com.lordhero.game.IGameMode;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.IMap;
 
-public class MapController implements IController {
+public class MapController implements IController, IMapController {
 
 	private IMap _map;
 	
@@ -78,5 +78,11 @@ public class MapController implements IController {
 	public boolean processMouseMove(int xPos, int yPos) {
 		_map.setCursorPosition(xPos, yPos);
 		return true;
+	}
+
+	@Override
+	public void visitWorld() {
+		_map.visitWorld();
+		
 	}
 }

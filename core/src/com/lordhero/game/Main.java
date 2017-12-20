@@ -1,7 +1,11 @@
 package com.lordhero.game;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +17,7 @@ import com.lordhero.game.controller.IController;
 import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.Entities;
 import com.lordhero.game.model.Map;
+import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
 import com.lordhero.game.view.MainPanel;
 import com.lordhero.game.view.NpcEditor;
@@ -20,37 +25,67 @@ import com.lordhero.game.view.NpcView;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
-public class Main extends ApplicationAdapter implements InputProcessor, IMenuSelector, IGameMode {
+public class Main extends ApplicationAdapter implements InputProcessor, IGameMode {
 	
+	// Model objects
+	private Player _player;
+	private Map _map;
+	
+	// Controller objects
+	
+	// View objects
 	private MainPanel _mainPanel;
 	private LordSheet _lordSheet;
 	private WorldEditor _worldEditor;
 	private NpcEditor _npcEditor;
 	private NpcView _npcView;
-	private WorldMap _worldMap;
-	private Player _player;
-	
-	private Map _map;
-	
+	private WorldMap _worldMap;	
+	private HeroSheet _heroSheet;
+
+	// Others...
 	InputMultiplexer _inputMultiplexer;
-	
-	private static final String WorldEditor = "Edit map";
-	private static final String NpcEditor = "Add npc";
-	private static final String SelectMap = "Select";
-	
-	private String _currentLordMenu = WorldEditor; 
     
 	private List<IController> _controllers = new LinkedList<IController>();
 	
 	private IGameMode.GameMode _gameMode = IGameMode.GameMode.BuyTiles;
 	
+	private int _homePort;
+	private int _visitorPort;
+	
+	public Main(String configPath) {
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+			input = new FileInputStream(configPath);
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			_homePort = Integer.parseInt(prop.getProperty("homeport"));
+			_visitorPort = Integer.parseInt(prop.getProperty("visitorport"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	@Override
 	public void create () {
 		//////////////////////////////////////////////////////////////////
 		// Instantiation
 		
 		// Create UI components
-		_lordSheet = new LordSheet();		
+		_lordSheet = new LordSheet();
+		_heroSheet = new HeroSheet();
         _worldEditor = new WorldEditor();
         _npcEditor = new NpcEditor();
         _npcView = new NpcView();
@@ -58,7 +93,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 
         // Create models
 		_player = new Player();
-		_map = new Map();
+		_map = new Map(_homePort, _visitorPort);
         Entities entities = new Entities();
         
 		// Create controllers
@@ -77,10 +112,6 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
         ///////////////////////////////////////////////////////////////////
         // Poor man's DI
         
-        // UI DI
-		_lordSheet.setLord(_player);
-		_lordSheet.setMenuSelector(this);
-
 		// Model DI
         entities.setMapInfo(_map);
         entities.setSelectedNpcProvider(_npcEditor);
@@ -89,6 +120,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
+        _map.setGameMode(this);
         
 		// Controller DI
         mapController.setMap(_map);
@@ -99,10 +131,14 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
         entityController.setGameMode(this);       
 		
 		// View DI
-        _worldMap.setEntities(entities);
+		_lordSheet.setLord(_player);
+		_lordSheet.setGameMode(this);
+		_lordSheet.setMapController(mapController);
+
+		_worldMap.setEntities(entities);
         _worldMap.setMap(_map);
         _worldMap.setPlayer(_player);
-
+        
         ///////////////////////////////////////////////////////////////////
         // set input multiplexer
 		_inputMultiplexer = new InputMultiplexer();
@@ -124,17 +160,22 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 		_worldMap.render();
         _mainPanel.draw();
         
-        if (_currentLordMenu == WorldEditor) {
+        if (_gameMode == GameMode.BuyTiles) {
             _worldEditor.draw();                	
         }
-        else if (_currentLordMenu == NpcEditor) {
+        else if (_gameMode == GameMode.AddNpc) {
         	_npcEditor.draw();
         }
-        else if (_currentLordMenu == SelectMap) {
+        else if (_gameMode == GameMode.SelectMapItems) {
         	_npcView.draw();
         }
         
-		_lordSheet.draw();
+        if (_gameMode == GameMode.Play) {
+        	_heroSheet.draw();
+        }
+        else {
+    		_lordSheet.draw();
+        }
 	}
 	
     @Override
@@ -198,42 +239,42 @@ public class Main extends ApplicationAdapter implements InputProcessor, IMenuSel
 	public void dispose () {
 		_worldMap.dispose();
 		_map.dispose();
-	}
-
-	@Override
-	public void setSelection(String selection) {
-		_currentLordMenu = selection;
-
-		_inputMultiplexer.clear();
-        if (_currentLordMenu == WorldEditor) {
-    		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
-    		_inputMultiplexer.addProcessor(this);
-    		_gameMode = IGameMode.GameMode.BuyTiles;
-        }
-        else if (_currentLordMenu == NpcEditor) {
-    		_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
-    		_inputMultiplexer.addProcessor(this);
-    		_gameMode = IGameMode.GameMode.AddNpc;
-        }
-        else if (_currentLordMenu == SelectMap) {
-    		_inputMultiplexer.addProcessor(_npcView.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
-    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
-    		_inputMultiplexer.addProcessor(this);
-    		_gameMode = IGameMode.GameMode.SelectMapItems;
-        }
-
-		render();		
-	}
-	
+	}	
 
 	@Override
 	public GameMode get() {
 		return _gameMode;
 	}
 
+	@Override
+	public void set(GameMode gameMode) {
+		_gameMode = gameMode;
+		
+		_inputMultiplexer.clear();
+        if (_gameMode == GameMode.BuyTiles) {
+    		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        }
+        else if (_gameMode == GameMode.AddNpc) {
+    		_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        }
+        else if (_gameMode == GameMode.SelectMapItems) {
+    		_inputMultiplexer.addProcessor(_npcView.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        } 
+        else if (_gameMode == GameMode.Play) {
+        	_inputMultiplexer.addProcessor(_heroSheet.getInputProcessor());
+        	_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        }
+
+		render();		
+	}
 }

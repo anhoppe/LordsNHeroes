@@ -5,8 +5,11 @@ public interface IGameMode {
 		None,
 		BuyTiles,
 		AddNpc,
-		SelectMapItems
+		SelectMapItems,
+		Play
 	}
 	
 	GameMode get();
+
+	void set(GameMode gameMode);
 }

@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 1024;
 		config.title = "Lords'n'Heroes";
-		new LwjglApplication(new Main(), config);
+		new LwjglApplication(new Main(arg[0]), config);
 	}
 }

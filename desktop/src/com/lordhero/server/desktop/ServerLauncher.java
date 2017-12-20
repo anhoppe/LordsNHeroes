@@ -11,6 +11,6 @@ public class ServerLauncher {
 		config.height = 768;
 		config.title = "LnH Server";
 		
-		new LwjglApplication(new Main(), config);
+		new LwjglApplication(new Main(arg[0]), config);
 	}
 }

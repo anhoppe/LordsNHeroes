@@ -14,4 +14,5 @@ public interface IMap {
 	void enter();
 	void setTile();
 	void setCursorPosition(int xPos, int yPos);
+	void visitWorld();
 }

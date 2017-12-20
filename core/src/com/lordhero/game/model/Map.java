@@ -23,6 +23,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.lordhero.game.IGameMode;
+import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedCellProvider;
 
@@ -30,6 +32,9 @@ import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
 public class Map implements IMap, IMapInfo {
+	private static final String SendMap = "sendMap";
+	private static final String RequestWorldName = "requestWorldName";
+	private static final String CloseConnection = "closeConnection";
 	
     private BufferedInputStream _inputStream;
     private PrintWriter _outputStream;
@@ -46,11 +51,20 @@ public class Map implements IMap, IMapInfo {
     private int _yCursor;
     
 	private ISelectedCellProvider _selectedCellProvider;
+	
+	private IGameMode _gameMode;
+	
+	private String _worldName;
+	private int _homePort;
+	private int _visitorPort;
 
-	public Map() {
+	public Map(int homePort, int visitorPort) {
+		_homePort = homePort;
+		_visitorPort = visitorPort;
+		
 		_currentMap = "baseMap";
-
-		connectToServer();
+		
+		connectToServer(homePort);
 		loadRemoteMap();
 	}
 
@@ -60,6 +74,10 @@ public class Map implements IMap, IMapInfo {
 	
     public void setSelectedCellProvider(ISelectedCellProvider selectedCellProvider) {
     	_selectedCellProvider = selectedCellProvider;
+    }
+    
+    public void setGameMode(IGameMode gameMode) {
+    	_gameMode = gameMode;
     }
 
 	@Override
@@ -82,7 +100,6 @@ public class Map implements IMap, IMapInfo {
 		return _yCursor;
 	}
 
-
 	@Override
 	public void setCursorPosition(int xPos, int yPos) {
 		_xCursor = ((xPos - Gdx.graphics.getWidth() / 2) + (int)_player.getX()) / 32 * 32 + 16;
@@ -104,53 +121,29 @@ public class Map implements IMap, IMapInfo {
         		collisionObjectLayer.getCell(xPos+1, yPos) != null);
 	}
 
-	private void connectToServer() {
-        Socket socket;
-
+	@Override
+	public void visitWorld() {
+		_outputStream.println(CloseConnection);
+		
+		// Do I know hot to implement proper network connections ?
 		try {
-			socket = new Socket("127.0.0.1", 12345);
-	        _outputStream = new PrintWriter(socket.getOutputStream(), true);
-	        _inputStream = new BufferedInputStream(socket.getInputStream());
-		} catch (IOException e) {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	private void loadRemoteMap() {
-        _outputStream.println("sendMap:" + _currentMap);
-
-        byte[] fileLengthInBytes = new byte[4];
-        try {
-			_inputStream.read(fileLengthInBytes, 0, 4);
-	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
-	        
-	        byte[] fileAsArray = new byte[fileLength];
-	        _inputStream.read(fileAsArray, 0, fileLength);
-
-	        FileOutputStream fos = new FileOutputStream("map");
-	        fos.write(fileAsArray);
-	        fos.flush();
-	        fos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        _tiledMap =  new TmxMapLoader().load("map");
-        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
-	}
-
-	private void writeCurrentMap() {
-		FileWriter fileWriter;
+		
 		try {
-			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", "maps", _currentMap + ".tmx");
-			fileWriter = new FileWriter(path.toString(), false);
-			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
-			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
-			tmxWriter.flush();
+			_inputStream.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		_outputStream.close();
+		
+		_gameMode.set(GameMode.Play);
+		connectToServer(_visitorPort);
+		loadRemoteMap();
 	}
 
 	@Override
@@ -207,6 +200,68 @@ public class Map implements IMap, IMapInfo {
 	public void dispose() {
 		writeCurrentMap();
 		_tiledMap.dispose();		
+	}
+
+	private void connectToServer(int port) {
+        Socket socket;
+
+		try {
+			socket = new Socket("127.0.0.1", port);
+	        _outputStream = new PrintWriter(socket.getOutputStream(), true);
+	        _inputStream = new BufferedInputStream(socket.getInputStream());
+
+	        // Read the name of the world the client is connected to
+	        _outputStream.println(RequestWorldName);
+
+	        byte[] fileLengthInBytes = new byte[4];
+	        _inputStream.read(fileLengthInBytes, 0, 4);
+	        int worldNameLength = new BigInteger(fileLengthInBytes).intValue();
+	        
+	        byte[] worldNameAsArray = new byte[worldNameLength];
+	        _inputStream.read(worldNameAsArray, 0, worldNameLength);
+	        
+	        _worldName = new String(worldNameAsArray, "UTF-8");
+	        
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadRemoteMap() {
+        _outputStream.println("sendMap:" + _currentMap);
+
+        byte[] fileLengthInBytes = new byte[4];
+        try {
+			_inputStream.read(fileLengthInBytes, 0, 4);
+	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
+	        
+	        byte[] fileAsArray = new byte[fileLength];
+	        _inputStream.read(fileAsArray, 0, fileLength);
+
+	        FileOutputStream fos = new FileOutputStream("map");
+	        fos.write(fileAsArray);
+	        fos.flush();
+	        fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        _tiledMap =  new TmxMapLoader().load("map");
+        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
+	}
+
+	private void writeCurrentMap() {
+		FileWriter fileWriter;
+		try {
+			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _worldName, "maps", _currentMap + ".tmx");
+			fileWriter = new FileWriter(path.toString(), false);
+			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
+			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
+			tmxWriter.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private TiledMapTile getSelectedTile(int selectedCellIndex) {

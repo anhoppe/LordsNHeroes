@@ -3,7 +3,9 @@ package com.lordhero.server;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,21 +18,66 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
+import java.util.Properties;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 public class Main implements ApplicationListener {
 
-	private static final int PortNumber = 12345;
-	private static final String CommandSendMap = "sendMap";
+	private static final String SendMap = "sendMap";
+	private static final String RequestWorldName = "requestWorldName";
+	private static final String CloseConnection = "closeConnection";
+
+	private int _port;
 	
+	private String _worldName;
+
 	private Path _mapPath;
+	
+	public Main(String configPath) {
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+			input = new FileInputStream(configPath);
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			_worldName =  prop.getProperty("worldname");
+			_port = Integer.parseInt(prop.getProperty("port"));
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	@Override
-	public void create() {
+	public void create() {		
 		Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes");
+		if (!Files.exists(path)) {
+			try {
+				Files.createDirectory(path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		path = Paths.get(path.toString(), _worldName);
 		
 		if (!Files.exists(path)) {
 			try {
@@ -41,7 +88,7 @@ public class Main implements ApplicationListener {
 			}
 		}
 
-		_mapPath = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", "maps");
+		_mapPath = Paths.get(path.toString(), "maps");
 		
 		if (!Files.exists(_mapPath)) {
 			try {
@@ -76,30 +123,46 @@ public class Main implements ApplicationListener {
 		}		
 		
 	    try {
-			ServerSocket serverSocket = new ServerSocket(PortNumber);
-		    Socket clientSocket = serverSocket.accept();
-		    BufferedOutputStream outputStream = new BufferedOutputStream(clientSocket.getOutputStream());
-		    BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
-			
-			String receivedMessage;
-			
-			while ((receivedMessage = inputStream.readLine()) != null) {
-				String[] tokens = receivedMessage.split(":");
-				if (tokens[0].equals(CommandSendMap)) {
-		
-					Path mapToLoad = Paths.get(_mapPath.toString(), tokens[1] + ".tmx");
-					FileHandle mapHandle = Gdx.files.internal(mapToLoad.toString());
+	    	while (true) {
+				ServerSocket serverSocket = new ServerSocket(_port);
+			    Socket clientSocket = serverSocket.accept();
+			    BufferedOutputStream outputStream = new BufferedOutputStream(clientSocket.getOutputStream());
+			    BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
+				
+				String receivedMessage;
+				
+				while ((receivedMessage = inputStream.readLine()) != null) {
+					String[] tokens = receivedMessage.split(":");
+					if (tokens[0].equals(SendMap)) {		
+						Path mapToLoad = Paths.get(_mapPath.toString(), tokens[1] + ".tmx");
+						FileHandle mapHandle = Gdx.files.internal(mapToLoad.toString());
 
-					byte[] fileLengthAsByteArray = new byte[4];
-			        int fileLength = (int)mapHandle.length();
-			        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
-			        outputStream.write(fileLengthAsByteArray);
-			        outputStream.flush();
-					
-					outputStream.write(mapHandle.readBytes(), 0, fileLength);
-					outputStream.flush();					
+						byte[] fileLengthAsByteArray = new byte[4];
+				        int fileLength = (int)mapHandle.length();
+				        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
+				        outputStream.write(fileLengthAsByteArray);
+				        outputStream.flush();
+						
+						outputStream.write(mapHandle.readBytes(), 0, fileLength);
+						outputStream.flush();					
+					}
+					else if (tokens[0].equals(RequestWorldName)) {
+						byte[] worldNameAsByteArray = _worldName.getBytes();
+
+						byte[] fileLengthAsByteArray = new byte[4];
+						ByteBuffer.wrap(fileLengthAsByteArray).putInt(worldNameAsByteArray.length);
+						
+						outputStream.write(fileLengthAsByteArray);
+						outputStream.flush();
+						
+						outputStream.write(worldNameAsByteArray, 0, worldNameAsByteArray.length);
+						outputStream.flush();
+					}
+					else if (tokens[0].equals(CloseConnection)) {
+						break;
+					}
 				}
-			}			
+	    	}
 		} catch (IOException ioEx) {
 			System.out.println(ioEx.getMessage());
 		}		

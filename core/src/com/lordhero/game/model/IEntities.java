@@ -18,4 +18,8 @@ public interface IEntities {
 	void addNpc(int xPos, int yPos);
 
 	void selectEntity(int xPos, int yPos);
+	
+	void load();
+	
+	void save();
 }

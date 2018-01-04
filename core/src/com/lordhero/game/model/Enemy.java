@@ -19,17 +19,15 @@ public class Enemy extends EntityBase {
 	private boolean _remove = false;
 	
 	public Enemy() {
-		 TextureRegion region = new TextureRegion(_monsterTileSet, 0, 0, 32, 32);
 		 
-		 _sprite = new Sprite(region);
+		_xPos = getRandomStartPosition();
+		_yPos = getRandomStartPosition();
 		 
-		 _xPos = getRandomStartPosition();
-		 _yPos = getRandomStartPosition();
-		 
-		 _xEndPos = getRandomStartPosition();
-		 _yEndPos = getRandomStartPosition();
-		 
-		 _sprite.setCenter((float)_xPos, (float)_yPos);
+		_xEndPos = getRandomStartPosition();
+		_yEndPos = getRandomStartPosition();
+
+		restore();
+
 	}
 	
 	@Override
@@ -63,7 +61,19 @@ public class Enemy extends EntityBase {
 		return _remove;		
 	}
 
+	// Can be overwritten by derived class in order to restore non-serializable members
+	@Override
+	public void restore() {
+		TextureRegion region = new TextureRegion(_monsterTileSet, 0, 0, 32, 32);
+		 
+		_sprite = new Sprite(region);
+		 
+		_sprite.setCenter((float)_xPos, (float)_yPos);
+	}
+
 	private int getRandomStartPosition() {
 		return (int) (Math.random() * 128 * 32);
 	}
+	
+
 }

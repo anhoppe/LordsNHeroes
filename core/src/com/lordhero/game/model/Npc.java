@@ -91,4 +91,15 @@ public class Npc extends EntityBase {
 	public void setSprite(Sprite sprite) {
 		_sprite = sprite;
 	}
+	
+	@Override
+	public void restore() {
+		for (Npc npc : Templates) {
+			if (npc._type == _type) {
+				_sprite = new Sprite(npc._sprite);
+				_sprite.setCenter((float)_xPos, (float)_yPos);
+				break;
+			}
+		}
+	}
 }

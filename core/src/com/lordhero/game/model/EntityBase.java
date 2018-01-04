@@ -1,10 +1,12 @@
 package com.lordhero.game.model;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public abstract class EntityBase implements IEntity {
+public abstract class EntityBase implements IEntity, Serializable {
 
-	protected Sprite _sprite;
+	protected transient Sprite _sprite;
 	
 	protected double _xPos;
 	protected double _yPos;

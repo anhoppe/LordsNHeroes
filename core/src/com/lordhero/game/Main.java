@@ -30,6 +30,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	// Model objects
 	private Player _player;
 	private Map _map;
+	private Entities _entities;
 	
 	// Controller objects
 	
@@ -94,7 +95,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         // Create models
 		_player = new Player();
 		_map = new Map(_homePort, _visitorPort);
-        Entities entities = new Entities();
+		
+        _entities = new Entities();
         
 		// Create controllers
         EntityController entityController = new EntityController();
@@ -113,10 +115,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         // Poor man's DI
         
 		// Model DI
-        entities.setMapInfo(_map);
-        entities.setSelectedNpcProvider(_npcEditor);
-        entities.setNpcSelectionReceiver(_npcView);
-        entities.setPlayer(_player);
+        _entities.setMapInfo(_map);
+        _entities.setSelectedNpcProvider(_npcEditor);
+        _entities.setNpcSelectionReceiver(_npcView);
+        _entities.setPlayer(_player);
        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
@@ -127,7 +129,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         mapController.setPlayer(_player);
         mapController.setGameMode(this);
 
-        entityController.setEntities(entities);
+        entityController.setEntities(_entities);
         entityController.setGameMode(this);       
 		
 		// View DI
@@ -135,7 +137,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_lordSheet.setGameMode(this);
 		_lordSheet.setMapController(mapController);
 
-		_worldMap.setEntities(entities);
+		_worldMap.setEntities(_entities);
         _worldMap.setMap(_map);
         _worldMap.setPlayer(_player);
         
@@ -239,6 +241,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	public void dispose () {
 		_worldMap.dispose();
 		_map.dispose();
+		_entities.save();
 	}	
 
 	@Override

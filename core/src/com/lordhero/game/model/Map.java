@@ -146,6 +146,32 @@ public class Map implements IMap, IMapInfo {
 		loadRemoteMap();
 	}
 
+
+	@Override
+	public void goHome() {
+		_outputStream.println(CloseConnection);
+		
+		// Do I know hot to implement proper network connections ?
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			_inputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		_outputStream.close();
+		
+		_gameMode.set(GameMode.BuyTiles);
+		connectToServer(_homePort);
+		loadRemoteMap();
+	}
+
 	@Override
 	public void enter() {
         MapLayer layer = (MapLayer)_tiledMap.getLayers().get("Buildings");
@@ -157,6 +183,11 @@ public class Map implements IMap, IMapInfo {
 			
 			if (Math.abs(mapObject.getRectangle().x -_player.getX()) < 32f &&
 				Math.abs(mapObject.getRectangle().y -_player.getY()) < 32f) {
+
+				if (_gameMode.get() != GameMode.Play) {
+					writeCurrentMap();
+				}
+				
 				_currentMap = (String)mapObject.getProperties().get("TargetMap");
 				
 				_player.setPosition(Integer.parseInt(mapObject.getProperties().get("StartX").toString()), 

@@ -85,4 +85,9 @@ public class MapController implements IController, IMapController {
 		_map.visitWorld();
 		
 	}
+
+	@Override
+	public void goHome() {
+		_map.goHome();		
+	}
 }

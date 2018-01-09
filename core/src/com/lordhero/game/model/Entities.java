@@ -93,6 +93,24 @@ public class Entities implements IEntities {
 	}
 	
 	@Override
+	public INpc getNpcInRange(int xPos, int yPos) {
+		INpc npcInRange = null;
+		
+		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
+
+		for (IEntity entity : entitiesOnSite) {
+			if (entity.isInRange(xPos, yPos)) {
+				if (entity instanceof Npc) {
+					npcInRange = (Npc)entity;
+					break;
+				}
+			}
+		}
+		
+		return npcInRange;
+	}
+	
+	@Override
 	public void load() {
 		String path = "c:/temp/teest";
 

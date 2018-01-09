@@ -1,6 +1,7 @@
 package com.lordhero.game.model;
 
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.lordhero.game.INetwork;
 
 public interface IMap {
 
@@ -11,9 +12,8 @@ public interface IMap {
 	
 	// Setters for controller
 	void checkForCollision();
-	void enter();
+	boolean enter();
 	void setTile();
 	void setCursorPosition(int xPos, int yPos);
-	void visitWorld();
-	void goHome();
+	void loadRemoteMap(INetwork _network);
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.lordhero.game.INetwork.ConnectionType;
 import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.IController;
 import com.lordhero.game.controller.MapController;
@@ -50,8 +51,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	
 	private IGameMode.GameMode _gameMode = IGameMode.GameMode.BuyTiles;
 	
-	private int _homePort;
-	private int _visitorPort;
+	private INetwork _network;
+	private String _worldName;
 	
 	public Main(String configPath) {
 		Properties prop = new Properties();
@@ -64,8 +65,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 			prop.load(input);
 
 			// get the property value and print it out
-			_homePort = Integer.parseInt(prop.getProperty("homeport"));
-			_visitorPort = Integer.parseInt(prop.getProperty("visitorport"));
+			int homePort = Integer.parseInt(prop.getProperty("homeport"));
+			int visitorPort = Integer.parseInt(prop.getProperty("visitorport"));
+			_network = new Network(this, homePort, visitorPort);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -81,6 +83,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 
 	@Override
 	public void create () {
+		
+		// 1st thing is connecting to the local server
+		_network.connectToServer(ConnectionType.Local);
+
 		//////////////////////////////////////////////////////////////////
 		// Instantiation
 		
@@ -94,7 +100,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 
         // Create models
 		_player = new Player();
-		_map = new Map(_homePort, _visitorPort);
+		_map = new Map();
 		
         _entities = new Entities();
         
@@ -128,9 +134,11 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         mapController.setMap(_map);
         mapController.setPlayer(_player);
         mapController.setGameMode(this);
-
+        mapController.setNetwork(_network);
+        
         entityController.setEntities(_entities);
         entityController.setGameMode(this);       
+		entityController.setPlayer(_player);
 		
 		// View DI
 		_lordSheet.setLord(_player);
@@ -140,6 +148,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_worldMap.setEntities(_entities);
         _worldMap.setMap(_map);
         _worldMap.setPlayer(_player);
+        
+        ///////////////////////////////////////////////////////////////////
+        // Required initialization
+        _map.loadRemoteMap(_network);
         
         ///////////////////////////////////////////////////////////////////
         // set input multiplexer
@@ -248,6 +260,11 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	public GameMode get() {
 		return _gameMode;
 	}
+	
+	@Override
+	public boolean is(GameMode gameMode) {
+		return _gameMode == gameMode;
+	}
 
 	@Override
 	public void set(GameMode gameMode) {
@@ -279,5 +296,16 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         }
 
 		render();		
+	}
+
+	@Override
+	public String getWorldName() {
+		return _worldName;
+	}
+
+	@Override
+	public void setWorldName(String worldName) {
+		_worldName = worldName;
+		
 	}
 }

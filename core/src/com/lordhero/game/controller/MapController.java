@@ -1,5 +1,7 @@
 package com.lordhero.game.controller;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -7,8 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.lordhero.game.INetwork.ConnectionType;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IPlayer;
+import com.lordhero.game.IGameMode.GameMode;
+import com.lordhero.game.INetwork;
 import com.lordhero.game.model.IMap;
 
 public class MapController implements IController, IMapController {
@@ -18,6 +23,8 @@ public class MapController implements IController, IMapController {
 	private IPlayer _player;
 	
 	private IGameMode _gameMode;
+	
+	private INetwork _network;
 	
 	public void setMap(IMap map) {
 		_map = map;
@@ -29,6 +36,10 @@ public class MapController implements IController, IMapController {
 	
 	public void setGameMode(IGameMode gameMode) {
 		_gameMode = gameMode;
+	}
+	
+	public void setNetwork(INetwork network) {
+		_network = network;
 	}
 	
 	@Override
@@ -57,7 +68,9 @@ public class MapController implements IController, IMapController {
 	public boolean processKeyUp(int keyCode) {
     	if (keyCode == Input.Keys.E)
     	{
-    		_map.enter();
+    		if (_map.enter()) {
+    			_map.loadRemoteMap(_network);
+    		}
     	}
 		return false;
 	}
@@ -82,12 +95,19 @@ public class MapController implements IController, IMapController {
 
 	@Override
 	public void visitWorld() {
-		_map.visitWorld();
+		_network.connectToServer(ConnectionType.Remote);
 		
+		_gameMode.set(GameMode.Play);
+
+		_map.loadRemoteMap(_network);	
 	}
 
 	@Override
 	public void goHome() {
-		_map.goHome();		
+		_network.connectToServer(ConnectionType.Local);
+		
+		_gameMode.set(GameMode.BuyTiles);
+
+		_map.loadRemoteMap(_network);
 	}
 }

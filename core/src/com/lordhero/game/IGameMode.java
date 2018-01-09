@@ -10,6 +10,12 @@ public interface IGameMode {
 	}
 	
 	GameMode get();
+	
+	boolean is(GameMode gameMode);
 
 	void set(GameMode gameMode);
+	
+	String getWorldName();
+	
+	void setWorldName(String worldName);
 }

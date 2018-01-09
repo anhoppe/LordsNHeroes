@@ -19,6 +19,8 @@ public interface IEntities {
 
 	void selectEntity(int xPos, int yPos);
 	
+	INpc getNpcInRange(int xPos, int yPos);
+
 	void load();
 	
 	void save();

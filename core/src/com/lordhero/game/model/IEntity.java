@@ -12,6 +12,8 @@ public interface IEntity {
 
 	boolean isAt(int xPos, int yPos);
 	
+	boolean isInRange(int xPos, int yPos);
+	
 	// Can be overwritten by derived class in order to restore non-serializable members
 	void restore();
 }

@@ -25,6 +25,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
+import com.lordhero.game.INetwork;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedCellProvider;
 
@@ -33,12 +34,7 @@ import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
 public class Map implements IMap, IMapInfo {
 	private static final String SendMap = "sendMap";
-	private static final String RequestWorldName = "requestWorldName";
-	private static final String CloseConnection = "closeConnection";
 	
-    private BufferedInputStream _inputStream;
-    private PrintWriter _outputStream;
-
     private TiledMapRenderer _tiledMapRenderer;
 
     private String _currentMap;
@@ -54,18 +50,8 @@ public class Map implements IMap, IMapInfo {
 	
 	private IGameMode _gameMode;
 	
-	private String _worldName;
-	private int _homePort;
-	private int _visitorPort;
-
-	public Map(int homePort, int visitorPort) {
-		_homePort = homePort;
-		_visitorPort = visitorPort;
-		
+	public Map() {		
 		_currentMap = "baseMap";
-		
-		connectToServer(homePort);
-		loadRemoteMap();
 	}
 
 	public void setPlayer(IPlayer player) {
@@ -122,58 +108,9 @@ public class Map implements IMap, IMapInfo {
 	}
 
 	@Override
-	public void visitWorld() {
-		_outputStream.println(CloseConnection);
+	public boolean enter() {
+		boolean entered = false;
 		
-		// Do I know hot to implement proper network connections ?
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			_inputStream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		_outputStream.close();
-		
-		_gameMode.set(GameMode.Play);
-		connectToServer(_visitorPort);
-		loadRemoteMap();
-	}
-
-
-	@Override
-	public void goHome() {
-		_outputStream.println(CloseConnection);
-		
-		// Do I know hot to implement proper network connections ?
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			_inputStream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		_outputStream.close();
-		
-		_gameMode.set(GameMode.BuyTiles);
-		connectToServer(_homePort);
-		loadRemoteMap();
-	}
-
-	@Override
-	public void enter() {
         MapLayer layer = (MapLayer)_tiledMap.getLayers().get("Buildings");
 
         MapObjects objects = layer.getObjects();
@@ -192,12 +129,14 @@ public class Map implements IMap, IMapInfo {
 				
 				_player.setPosition(Integer.parseInt(mapObject.getProperties().get("StartX").toString()), 
 						Integer.parseInt(mapObject.getProperties().get("StartY").toString()));
-				
-				loadRemoteMap();		        
+		
+				entered = true;
 		        
 				break;
 			}
 		}
+		
+		return entered;
 	}
 
 	public void setTile() {
@@ -228,47 +167,11 @@ public class Map implements IMap, IMapInfo {
         }
 	}
 
-	public void dispose() {
-		writeCurrentMap();
-		_tiledMap.dispose();		
-	}
-
-	private void connectToServer(int port) {
-        Socket socket;
-
-		try {
-			socket = new Socket("127.0.0.1", port);
-	        _outputStream = new PrintWriter(socket.getOutputStream(), true);
-	        _inputStream = new BufferedInputStream(socket.getInputStream());
-
-	        // Read the name of the world the client is connected to
-	        _outputStream.println(RequestWorldName);
-
-	        byte[] fileLengthInBytes = new byte[4];
-	        _inputStream.read(fileLengthInBytes, 0, 4);
-	        int worldNameLength = new BigInteger(fileLengthInBytes).intValue();
-	        
-	        byte[] worldNameAsArray = new byte[worldNameLength];
-	        _inputStream.read(worldNameAsArray, 0, worldNameLength);
-	        
-	        _worldName = new String(worldNameAsArray, "UTF-8");
-	        
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
-	private void loadRemoteMap() {
-        _outputStream.println("sendMap:" + _currentMap);
-
-        byte[] fileLengthInBytes = new byte[4];
+	public void loadRemoteMap(INetwork network) {		
+		byte[] fileAsArray = network.requestMap(_currentMap);
+		
         try {
-			_inputStream.read(fileLengthInBytes, 0, 4);
-	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
-	        
-	        byte[] fileAsArray = new byte[fileLength];
-	        _inputStream.read(fileAsArray, 0, fileLength);
-
 	        FileOutputStream fos = new FileOutputStream("map");
 	        fos.write(fileAsArray);
 	        fos.flush();
@@ -281,10 +184,16 @@ public class Map implements IMap, IMapInfo {
         _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
 	}
 
+	public void dispose() {
+		writeCurrentMap();
+		_tiledMap.dispose();		
+	}
+
+
 	private void writeCurrentMap() {
 		FileWriter fileWriter;
 		try {
-			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _worldName, "maps", _currentMap + ".tmx");
+			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _gameMode.getWorldName(), "maps", _currentMap + ".tmx");
 			fileWriter = new FileWriter(path.toString(), false);
 			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
 			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);

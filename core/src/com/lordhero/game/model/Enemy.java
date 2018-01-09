@@ -18,8 +18,7 @@ public class Enemy extends EntityBase {
 	
 	private boolean _remove = false;
 	
-	public Enemy() {
-		 
+	public Enemy() {		 
 		_xPos = getRandomStartPosition();
 		_yPos = getRandomStartPosition();
 		 
@@ -27,7 +26,6 @@ public class Enemy extends EntityBase {
 		_yEndPos = getRandomStartPosition();
 
 		restore();
-
 	}
 	
 	@Override

@@ -43,6 +43,7 @@ public class LordSheet extends UiPanel {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				_mapController.visitWorld();
+				//_entityController.visitWorld();
 			}
 		});
 		

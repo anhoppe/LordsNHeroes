@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.lordhero.game.model.items.IItemFactory;
 import com.lordhero.game.model.items.IItem;
 
-public class Npc extends EntityBase {
+public class Npc extends EntityBase implements INpc {
 	public enum Type {
 		None,
 		Hobo,
@@ -67,6 +67,11 @@ public class Npc extends EntityBase {
 		_yPos = yPos;
 		
 		_sprite.setCenter((float)xPos, (float)yPos);
+	}
+	
+	@Override
+	public void talk() {
+		
 	}
 
 	public String getName() {

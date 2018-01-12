@@ -17,12 +17,14 @@ import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.IController;
 import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.Entities;
+import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.Map;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
 import com.lordhero.game.view.MainPanel;
 import com.lordhero.game.view.NpcEditor;
 import com.lordhero.game.view.NpcView;
+import com.lordhero.game.view.PurchaseSheet;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
@@ -43,6 +45,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private NpcView _npcView;
 	private WorldMap _worldMap;	
 	private HeroSheet _heroSheet;
+	private PurchaseSheet _purchaseSheet;
 
 	// Others...
 	InputMultiplexer _inputMultiplexer;
@@ -91,6 +94,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		// Instantiation
 		
 		// Create UI components
+		_purchaseSheet = new PurchaseSheet();
 		_lordSheet = new LordSheet();
 		_heroSheet = new HeroSheet();
         _worldEditor = new WorldEditor();
@@ -145,9 +149,15 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_lordSheet.setGameMode(this);
 		_lordSheet.setMapController(mapController);
 
+		_heroSheet.setHero(_player);
+		_heroSheet.setMapController(mapController);
+		
 		_worldMap.setEntities(_entities);
         _worldMap.setMap(_map);
         _worldMap.setPlayer(_player);
+        
+        _purchaseSheet.setGameMode(this);
+        _purchaseSheet.setPlayer(_player);
         
         ///////////////////////////////////////////////////////////////////
         // Required initialization
@@ -172,23 +182,27 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		}
 		
 		_worldMap.render();
-        _mainPanel.draw();
         
-        if (_gameMode == GameMode.BuyTiles) {
-            _worldEditor.draw();                	
-        }
-        else if (_gameMode == GameMode.AddNpc) {
-        	_npcEditor.draw();
-        }
-        else if (_gameMode == GameMode.SelectMapItems) {
-        	_npcView.draw();
-        }
         
         if (_gameMode == GameMode.Play) {
         	_heroSheet.draw();
         }
+        else if (_gameMode == GameMode.Conversation) {
+        	_purchaseSheet.draw();
+        }
         else {
+            _mainPanel.draw();
     		_lordSheet.draw();
+
+            if (_gameMode == GameMode.BuyTiles) {
+                _worldEditor.draw();                	
+            }
+            else if (_gameMode == GameMode.AddNpc) {
+            	_npcEditor.draw();
+            }
+            else if (_gameMode == GameMode.SelectMapItems) {
+            	_npcView.draw();
+            }
         }
 	}
 	
@@ -267,7 +281,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	}
 
 	@Override
-	public void set(GameMode gameMode) {
+	public void set(GameMode gameMode, IEntity entity) {
 		_gameMode = gameMode;
 		
 		_inputMultiplexer.clear();
@@ -294,6 +308,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         	_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
         }
+        else if (_gameMode == GameMode.Conversation) {
+        	_inputMultiplexer.addProcessor(_purchaseSheet.getInputProcessor());
+        }
 
 		render();		
 	}
@@ -308,4 +325,5 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_worldName = worldName;
 		
 	}
+
 }

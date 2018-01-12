@@ -2,7 +2,7 @@ package com.lordhero.game.model.items;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RangeWeapon implements IItem {
+public class RangeWeapon extends ItemBase {
 	public enum Type {
 		None,
 		SlingShot,
@@ -10,17 +10,18 @@ public class RangeWeapon implements IItem {
 	}
 	
 	public static RangeWeapon[] Templates = new RangeWeapon[] {
-			new RangeWeapon("Sling shot", Type.SlingShot),
-			new RangeWeapon("Bow", Type.Bow)
+			new RangeWeapon("Sling shot", Type.SlingShot, 500),
+			new RangeWeapon("Bow", Type.Bow, 800)
 	};
 	
 	private String _name;
 	
 	private Type _type;
 		
-	public RangeWeapon(String name, Type type) {
+	public RangeWeapon(String name, Type type, int price) {
 		_name = name;
 		_type = type;
+		_price = price;
 	}
 
 	public RangeWeapon(RangeWeapon rangeWeapon) {

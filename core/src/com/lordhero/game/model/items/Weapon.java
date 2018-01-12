@@ -2,15 +2,15 @@ package com.lordhero.game.model.items;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Weapon implements IItem {
+public class Weapon extends ItemBase {
 
 	public static Weapon[] WeaponTemplates = new Weapon[] {
-		new Weapon("Knife", Type.Knife),
-		new Weapon("Dagger", Type.Dagger),
-		new Weapon("Axe", Type.Axe),
-		new Weapon("Saber", Type.Saber),
-		new Weapon("Sword", Type.Sword),
-		new Weapon("TwoHander", Type.TwoHander)
+		new Weapon("Knife", Type.Knife, 100),
+		new Weapon("Dagger", Type.Dagger, 150),
+		new Weapon("Axe", Type.Axe, 1200),
+		new Weapon("Saber", Type.Saber, 1500),
+		new Weapon("Sword", Type.Sword, 3500),
+		new Weapon("TwoHander", Type.TwoHander, 5000)
 	};
 	
 	enum Type {
@@ -23,18 +23,18 @@ public class Weapon implements IItem {
 		TwoHander
 	}
 	
-	private String _name;	
-	
 	private Type _type;
 	
-	public Weapon(String name, Type type) {
+	public Weapon(String name, Type type, int price) {
 		_name = name;
 		_type = type;
+		_price = price;
 	}
 	
 	public Weapon(Weapon weapon) {
 		_name = weapon._name;
 		_type = weapon._type;
+		_price = weapon._price;
 	}
 
 	public static Weapon Create() {

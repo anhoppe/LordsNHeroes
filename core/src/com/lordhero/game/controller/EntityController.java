@@ -42,11 +42,16 @@ public class EntityController implements IController {
 
 	@Override
 	public boolean processKeyUp(int keyCode) {
-		if (keyCode == Input.Keys.T && _gameMode.is(GameMode.Play)) {
-			INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());
-			
-			npc.talk();
+		if (_gameMode.is(GameMode.Play)) {
+			if (keyCode == Input.Keys.T) {
+				INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());				
+				if (npc != null) {
+					_gameMode.set(GameMode.Conversation, npc);
+					return true;					
+				}
+			}
 		}
+		
 		return false;
 	}
 

@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import com.lordhero.game.model.items.IItemFactory;
+import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.items.IItem;
 
 public class Npc extends EntityBase implements INpc {
@@ -22,6 +24,13 @@ public class Npc extends EntityBase implements INpc {
 		Healer,
 		Landlord,
 		Knight
+	}
+	
+	private enum ConversationMode {
+		None,
+		Init,
+		Buy, 
+		SelectItemToBuy,
 	}
 	
 	public static final LinkedList<Npc> Templates = new LinkedList<Npc>(Arrays.asList(
@@ -46,6 +55,8 @@ public class Npc extends EntityBase implements INpc {
 	
 	private List<IItem> _items = new LinkedList<IItem>();
 	
+	ConversationMode _conversationMode = ConversationMode.None;
+	
 	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
 
 	public Npc(String name, int price, Type type, double productionProbabilityPerMinute) {
@@ -67,11 +78,6 @@ public class Npc extends EntityBase implements INpc {
 		_yPos = yPos;
 		
 		_sprite.setCenter((float)xPos, (float)yPos);
-	}
-	
-	@Override
-	public void talk() {
-		
 	}
 
 	public String getName() {

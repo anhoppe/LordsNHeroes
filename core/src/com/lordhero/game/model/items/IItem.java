@@ -4,4 +4,5 @@ import java.io.Serializable;
 
 public interface IItem extends Serializable {
 	String getName();
+	int getPrice();
 }

@@ -97,7 +97,7 @@ public class MapController implements IController, IMapController {
 	public void visitWorld() {
 		_network.connectToServer(ConnectionType.Remote);
 		
-		_gameMode.set(GameMode.Play);
+		_gameMode.set(GameMode.Play, null);
 
 		_map.loadRemoteMap(_network);	
 	}
@@ -106,7 +106,7 @@ public class MapController implements IController, IMapController {
 	public void goHome() {
 		_network.connectToServer(ConnectionType.Local);
 		
-		_gameMode.set(GameMode.BuyTiles);
+		_gameMode.set(GameMode.BuyTiles, null);
 
 		_map.loadRemoteMap(_network);
 	}

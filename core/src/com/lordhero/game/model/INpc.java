@@ -1,5 +1,9 @@
 package com.lordhero.game.model;
 
-public interface INpc {
-	void talk();
+import java.util.List;
+
+import com.lordhero.game.IPlayer;
+
+public interface INpc extends IEntity {
+
 }

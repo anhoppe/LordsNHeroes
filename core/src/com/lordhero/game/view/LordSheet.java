@@ -61,7 +61,7 @@ public class LordSheet extends UiPanel {
 	    _menuSelection.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				_gameMode.set(getModeFromString(_menuSelection.getSelected()));
+				_gameMode.set(getModeFromString(_menuSelection.getSelected()), null);
 			}});
 	    
 	    _table.add(_menuSelection).size(120, 25);

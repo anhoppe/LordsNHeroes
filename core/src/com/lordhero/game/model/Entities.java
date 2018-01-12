@@ -101,7 +101,7 @@ public class Entities implements IEntities {
 		for (IEntity entity : entitiesOnSite) {
 			if (entity.isInRange(xPos, yPos)) {
 				if (entity instanceof Npc) {
-					npcInRange = (Npc)entity;
+					npcInRange = (INpc)entity;
 					break;
 				}
 			}

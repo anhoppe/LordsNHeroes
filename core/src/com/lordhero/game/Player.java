@@ -1,10 +1,13 @@
 package com.lordhero.game;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.lordhero.game.model.INpc;
+import com.lordhero.game.model.items.IItem;
 
 public class Player implements IPlayer {
     private static final float _playerSpeed = 150f;
@@ -20,9 +23,14 @@ public class Player implements IPlayer {
 	private boolean _downBlocked;
 	private boolean _leftBlocked;
 	private boolean _rightBlocked;
+	
+	private INpc _conversationPartner;
+	
+	private List<IItem> _items;
 		
 	public Player() {
 		_lordChangedListeners = new LinkedList<ChangeListener>();
+		_items = new LinkedList<IItem>();
 		
 		_xPos = 30;
 		_yPos = 30;
@@ -99,7 +107,23 @@ public class Player implements IPlayer {
 	public void registerChangeListener(ChangeListener listener) {
 		_lordChangedListeners.add(listener);
 	}
-	
+
+	@Override
+	public void addItem(IItem item) {
+		_items.add(item);		
+	}
+
+	@Override
+	public void startTalk(INpc npc) {
+		_conversationPartner = npc;		
+		fireChangeEvent();
+	}
+
+	@Override
+	public INpc getConversationPartner() {
+		return _conversationPartner;
+	}
+
 	private void fireChangeEvent() {
 		for (ChangeListener listener : _lordChangedListeners) {
 			listener.changed(null, null);

@@ -110,6 +110,7 @@ public class Player implements IPlayer {
 
 	@Override
 	public void addItem(IItem item) {
+		_money -= item.getPrice();
 		_items.add(item);		
 	}
 

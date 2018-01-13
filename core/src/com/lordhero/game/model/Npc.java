@@ -35,8 +35,8 @@ public class Npc extends EntityBase implements INpc {
 	
 	public static final LinkedList<Npc> Templates = new LinkedList<Npc>(Arrays.asList(
 			new Npc("Hobo", 100, Npc.Type.Hobo, 0), 
-			new Npc("Blacksmith", 5000, Npc.Type.Blacksmith, 0.01),
-			new Npc("Bowyer", 4000, Npc.Type.Bowyer, 0.05),
+			new Npc("Blacksmith", 5000, Npc.Type.Blacksmith, 0.005),
+			new Npc("Bowyer", 4000, Npc.Type.Bowyer, 0.008),
 			new Npc("Warrior", 6000, Npc.Type.Warrior, 0),
 			new Npc("Town guard", 4500, Npc.Type.TownGuard, 0),
 			new Npc("King", 20000, Npc.Type.King, 0),
@@ -51,7 +51,7 @@ public class Npc extends EntityBase implements INpc {
 	
 	private Type _type;
 	
-	private double _productionProbabilityPerMinute;
+	private double _productionProbability;
 	
 	private List<IItem> _items = new LinkedList<IItem>();
 	
@@ -63,14 +63,14 @@ public class Npc extends EntityBase implements INpc {
 		_name = name;
 		_price = price;
 		_type = type;
-		_productionProbabilityPerMinute = productionProbabilityPerMinute;
+		_productionProbability = productionProbabilityPerMinute;
 	}
 	
 	public Npc(Npc npc, int xPos, int yPos) {
 		_name = npc._name;
 		_price = npc._price;
 		_type = npc._type;
-		_productionProbabilityPerMinute = npc._productionProbabilityPerMinute;
+		_productionProbability = npc._productionProbability;
 		
 		_sprite = new Sprite(npc._sprite);
 	
@@ -79,22 +79,15 @@ public class Npc extends EntityBase implements INpc {
 		
 		_sprite.setCenter((float)xPos, (float)yPos);
 	}
-
-	public String getName() {
-		return _name;
-	}
 	
-	public int getPrice() {
-		return _price;
-	}
-	
+	@Override
 	public List<IItem> getItems() {
 		return _items;
 	}
 
 	@Override
 	public void update() {
-		if (Math.random() < _productionProbabilityPerMinute) {
+		if (Math.random() < _productionProbability) {
 			_items.add(ItemFactory.produce(_type));
 		}
 	}
@@ -112,5 +105,13 @@ public class Npc extends EntityBase implements INpc {
 				break;
 			}
 		}
+	}
+
+	public String getName() {
+		return _name;
+	}
+	
+	public int getPrice() {
+		return _price;
 	}
 }

@@ -18,6 +18,7 @@ import com.lordhero.game.controller.IController;
 import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.Entities;
 import com.lordhero.game.model.IEntity;
+import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.Map;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
@@ -309,7 +310,11 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
     		_inputMultiplexer.addProcessor(this);
         }
         else if (_gameMode == GameMode.Conversation) {
-        	_inputMultiplexer.addProcessor(_purchaseSheet.getInputProcessor());
+        	if (entity instanceof INpc) {
+            	_purchaseSheet.setNpc((INpc)entity);        		
+        	}
+        		
+        	_inputMultiplexer.addProcessor(_purchaseSheet.getInputProcessor());        	
         }
 
 		render();		

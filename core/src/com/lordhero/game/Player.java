@@ -111,7 +111,7 @@ public class Player implements IPlayer {
 	@Override
 	public void addItem(IItem item) {
 		_money -= item.getPrice();
-		_items.add(item);		
+		_items.add(item);
 	}
 
 	@Override
@@ -123,6 +123,11 @@ public class Player implements IPlayer {
 	@Override
 	public INpc getConversationPartner() {
 		return _conversationPartner;
+	}
+
+	@Override
+	public List<IItem> getItems() {
+		return _items;
 	}
 
 	private void fireChangeEvent() {

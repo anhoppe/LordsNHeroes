@@ -10,7 +10,8 @@ public interface IGameMode {
 		AddNpc,
 		SelectMapItems,
 		Play, 
-		Conversation
+		Conversation, 
+		CharacterSheet
 	}
 	
 	GameMode get();

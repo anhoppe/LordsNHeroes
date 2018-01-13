@@ -20,6 +20,7 @@ import com.lordhero.game.model.Entities;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.Map;
+import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
 import com.lordhero.game.view.MainPanel;
@@ -47,6 +48,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private WorldMap _worldMap;	
 	private HeroSheet _heroSheet;
 	private PurchaseSheet _purchaseSheet;
+	private CharacterSheet _characterSheet;
 
 	// Others...
 	InputMultiplexer _inputMultiplexer;
@@ -95,6 +97,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		// Instantiation
 		
 		// Create UI components
+		_characterSheet = new CharacterSheet();
 		_purchaseSheet = new PurchaseSheet();
 		_lordSheet = new LordSheet();
 		_heroSheet = new HeroSheet();
@@ -159,6 +162,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         
         _purchaseSheet.setGameMode(this);
         _purchaseSheet.setPlayer(_player);
+       
+        _characterSheet.setGameMode(this);
+        _characterSheet.setPlayer(_player);
         
         ///////////////////////////////////////////////////////////////////
         // Required initialization
@@ -190,6 +196,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         }
         else if (_gameMode == GameMode.Conversation) {
         	_purchaseSheet.draw();
+        }
+        else if (_gameMode == GameMode.CharacterSheet) {
+        	_characterSheet.draw();
         }
         else {
             _mainPanel.draw();
@@ -315,6 +324,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         	}
         		
         	_inputMultiplexer.addProcessor(_purchaseSheet.getInputProcessor());        	
+        }
+        else if (_gameMode == GameMode.CharacterSheet) {
+        	_characterSheet.update();
+        	_inputMultiplexer.addProcessor(_characterSheet.getInputProcessor());
         }
 
 		render();		

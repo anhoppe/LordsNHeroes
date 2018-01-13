@@ -50,6 +50,11 @@ public class EntityController implements IController {
 					return true;					
 				}
 			}
+			
+			else if (keyCode == Input.Keys.C) {
+				_gameMode.set(GameMode.CharacterSheet, null);
+				return true;
+			}
 		}
 		
 		return false;

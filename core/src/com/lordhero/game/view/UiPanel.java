@@ -20,7 +20,7 @@ public abstract class UiPanel {
 		Gdx.input.setInputProcessor(_stage);
 
         _skin = new Skin(Gdx.files.internal("data/uiskin.json"), new TextureAtlas("data/uiskin.atlas"));
-        _table = new Table();
+        _table = new Table();        
         _stage.addActor(_table);
 	}
 	

@@ -55,7 +55,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
     
 	private List<IController> _controllers = new LinkedList<IController>();
 	
-	private IGameMode.GameMode _gameMode = IGameMode.GameMode.BuyTiles;
+	private IGameMode.GameMode _gameMode = IGameMode.GameMode.None;
 	
 	private INetwork _network;
 	private String _worldName;
@@ -137,12 +137,13 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
         _map.setGameMode(this);
+                
         
 		// Controller DI
         mapController.setMap(_map);
         mapController.setPlayer(_player);
         mapController.setGameMode(this);
-        mapController.setNetwork(_network);
+        mapController.setNetwork(_network);        
         
         entityController.setEntities(_entities);
         entityController.setGameMode(this);       
@@ -159,6 +160,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_worldMap.setEntities(_entities);
         _worldMap.setMap(_map);
         _worldMap.setPlayer(_player);
+        _worldMap.setGameMode(this);
         
         _purchaseSheet.setGameMode(this);
         _purchaseSheet.setPlayer(_player);
@@ -173,23 +175,19 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         ///////////////////////////////////////////////////////////////////
         // set input multiplexer
 		_inputMultiplexer = new InputMultiplexer();
-		_inputMultiplexer.addProcessor(_worldEditor.getInputProcessor());
-		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
-		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
-		_inputMultiplexer.addProcessor(this);
+		
+		set(GameMode.BuyTiles, null);
 
         Gdx.input.setInputProcessor(_inputMultiplexer);
     }
 
 	@Override
 	public void render () {
-
 		for (IController controller : _controllers) {
 			controller.update();
 		}
 		
-		_worldMap.render();
-        
+		_worldMap.render();        
         
         if (_gameMode == GameMode.Play) {
         	_heroSheet.draw();

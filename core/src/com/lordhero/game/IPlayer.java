@@ -24,8 +24,10 @@ public interface IPlayer {
 	float getVelocity();
 	
 	void setCollisions(boolean upBlocked, boolean downBlocked, boolean leftBlocked, boolean rightBlocked);
+
+	void setViewAngle(float angleDeg);
 	
-	void move(Direction direction);
+	void moveAbsolute(Direction direction);
 	
 	void setPosition(float x, float y);
 	
@@ -35,10 +37,6 @@ public interface IPlayer {
 	
 	void registerChangeListener(ChangeListener listener);
 	
-	INpc getConversationPartner();
-	
-	void startTalk(INpc npc);
-	
 	void addItem(IItem item);
 	
 	List<IItem> getItems();
@@ -46,4 +44,6 @@ public interface IPlayer {
 	void setWeapon(Weapon weapon);
 
 	void setRangedWeapon(RangeWeapon rangeWeapon);
+
+	void moveDirection(Direction up);
 }

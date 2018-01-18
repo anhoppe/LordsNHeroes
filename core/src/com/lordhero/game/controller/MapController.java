@@ -18,6 +18,8 @@ import com.lordhero.game.model.IMap;
 
 public class MapController implements IController, IMapController {
 
+	private static final float AngleSpeed = 1.0f;
+
 	private IMap _map;
 	
 	private IPlayer _player;
@@ -43,27 +45,17 @@ public class MapController implements IController, IMapController {
 	}
 	
 	@Override
-	public void update() {
-		movePlayer();
+	public void update() {		
+		if (_gameMode.is(GameMode.Play)) {
+			movePlayer();
+		}
+		else {
+			moveLord();
+		}
 
         _map.checkForCollision();
 	}
 	
-	private void movePlayer() {
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            _player.move(IPlayer.Direction.Up);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            _player.move(IPlayer.Direction.Down);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            _player.move(IPlayer.Direction.Left);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            _player.move(IPlayer.Direction.Right);
-		}
-	}
-
 	@Override
 	public boolean processKeyUp(int keyCode) {
     	if (keyCode == Input.Keys.E)
@@ -88,9 +80,16 @@ public class MapController implements IController, IMapController {
 	}
 
 	@Override
-	public boolean processMouseMove(int xPos, int yPos) {
-		_map.setCursorPosition(xPos, yPos);
-		return true;
+	public boolean processMouseMove(int xPos, int yPos) {		
+		if (_gameMode.is(GameMode.Play)) {
+			float angleDeg = xPos / AngleSpeed;
+			_player.setViewAngle(angleDeg);
+			return true;
+		}
+		else {
+			_map.setCursorPosition(xPos, yPos);			
+			return true;
+		}
 	}
 
 	@Override
@@ -110,4 +109,39 @@ public class MapController implements IController, IMapController {
 
 		_map.loadRemoteMap(_network);
 	}
+	
+
+	private void moveLord() {
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            _player.moveAbsolute(IPlayer.Direction.Up);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            _player.moveAbsolute(IPlayer.Direction.Down);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            _player.moveAbsolute(IPlayer.Direction.Left);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            _player.moveAbsolute(IPlayer.Direction.Right);
+		}
+	}
+	
+	private void movePlayer() {
+		_player.setViewAngle(Gdx.input.getX() * AngleSpeed);
+
+		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            _player.moveDirection(IPlayer.Direction.Up);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            _player.moveDirection(IPlayer.Direction.Down);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            _player.moveDirection(IPlayer.Direction.Left);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            _player.moveDirection(IPlayer.Direction.Right);
+		}			
+		
+	}
+
 }

@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.lordhero.game.IGameMode;
+import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.MapController;
@@ -30,6 +32,7 @@ public class WorldMap {
     private IPlayer _player;
     private IMap _map;
     private IEntities _entities;
+    private IGameMode _gameMode;
     
 	private OrthographicCamera _camera;
 
@@ -58,6 +61,10 @@ public class WorldMap {
 
     public void setEntities(IEntities entities) {
     	_entities = entities;
+    }
+    
+    public void setGameMode(IGameMode gameMode) {
+    	_gameMode = gameMode;
     }
     
 	public void render () {
@@ -96,8 +103,11 @@ public class WorldMap {
 		
         _cursorSprite.draw(_spriteBatch);
 
-        _playerSprite.setCenter(xCamera, yCamera);
-        _playerSprite.draw(_spriteBatch);
+        if (_gameMode.is(GameMode.Play)) {
+            _playerSprite.setCenter(xCamera, yCamera);
+            _playerSprite.draw(_spriteBatch);
+        }
+
         _spriteBatch.end();        
 	}
 

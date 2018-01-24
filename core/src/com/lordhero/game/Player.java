@@ -10,12 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
 public class Player implements IPlayer {
-    private static final float _playerSpeed = 150f;
-    private static final float _lordSpeed = 300;
+    private static final float PlayerSpeed = 150f;
+    private static final float LordSpeed = 300;
     
     private int _money = 10000;
 	
@@ -44,8 +45,10 @@ public class Player implements IPlayer {
 		_xPos = 30;
 		_yPos = 30;
 		
-		_weapon = null;
+		_weapon = Weapon.Create(0);
 		_rangedWeapon = null;
+		
+		_items.add(_weapon);
 	}
 	
 	@Override
@@ -79,7 +82,7 @@ public class Player implements IPlayer {
 	
 	@Override
 	public float getVelocity() {
-		return _playerSpeed;
+		return PlayerSpeed;
 	}
 
 	@Override
@@ -106,16 +109,16 @@ public class Player implements IPlayer {
 		float delta = Gdx.graphics.getDeltaTime();
 
 		if (direction == Direction.Up && !_upBlocked) {
-            _yPos += _lordSpeed * delta;
+            _yPos += LordSpeed * delta;
 		}
 		if (direction == Direction.Down && !_downBlocked) {
-            _yPos -= _lordSpeed * delta;
+            _yPos -= LordSpeed * delta;
 		}
 		if (direction == Direction.Left && !_leftBlocked) {
-            _xPos -= _lordSpeed * delta;
+            _xPos -= LordSpeed * delta;
 		}
 		if (direction == Direction.Right && !_rightBlocked) {
-            _xPos += _lordSpeed * delta;
+            _xPos += LordSpeed * delta;
 		}
 	}
 
@@ -181,6 +184,11 @@ public class Player implements IPlayer {
 	public void setWeapon(Weapon weapon) {
 		_weapon = weapon;	
 	}
+	
+	@Override 
+	public IWeapon getWeapon() {
+		return _weapon;
+	}
 
 	@Override
 	public void setRangedWeapon(RangeWeapon rangeWeapon) {
@@ -193,4 +201,10 @@ public class Player implements IPlayer {
 			listener.changed(null, null);
 		}
 	}
+
+	@Override
+	public float getRotation() {
+		return _viewAngleDeg;
+	}
+
 }

@@ -237,7 +237,13 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    	return false;
+		for (IController controller : _controllers) {
+			if (controller.processMouseDown(screenX, screenY, _map.getCursorX(), _map.getCursorY())) {
+				break;
+			}
+		}
+
+		return false;
     }
 
     @Override

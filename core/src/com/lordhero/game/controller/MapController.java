@@ -15,6 +15,7 @@ import com.lordhero.game.IPlayer;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.model.IMap;
+import com.lordhero.game.model.items.IWeapon;
 
 public class MapController implements IController, IMapController {
 
@@ -65,6 +66,13 @@ public class MapController implements IController, IMapController {
     		}
     	}
 		return false;
+	}
+
+	@Override
+	public boolean processMouseDown(int xScreen, int yScreen, int xCursor, int yCursor) {
+		IWeapon weapon = _player.getWeapon();
+		weapon.startAttack();
+		return true;
 	}
 
 	@Override
@@ -143,5 +151,4 @@ public class MapController implements IController, IMapController {
 		}			
 		
 	}
-
 }

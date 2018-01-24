@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
@@ -41,9 +42,13 @@ public interface IPlayer {
 	
 	List<IItem> getItems();
 
+	IWeapon getWeapon();
+
 	void setWeapon(Weapon weapon);
 
 	void setRangedWeapon(RangeWeapon rangeWeapon);
 
 	void moveDirection(Direction up);
+
+	float getRotation();
 }

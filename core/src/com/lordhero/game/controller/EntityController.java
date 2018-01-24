@@ -61,6 +61,12 @@ public class EntityController implements IController {
 	}
 
 	@Override
+	public boolean processMouseDown(int xScreen, int yScreen, int xCursor, int yCursor) {
+		// TODO Auto-generated method stub
+		return false;
+	}	
+
+	@Override
 	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
 		if (_gameMode.get() == IGameMode.GameMode.AddNpc) {
 			_entities.addNpc(xCursor, yCursor);
@@ -78,5 +84,5 @@ public class EntityController implements IController {
 	public boolean processMouseMove(int xPos, int yPos) {
 		// TODO Auto-generated method stub
 		return false;
-	}	
+	}
 }

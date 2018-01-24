@@ -6,10 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IPlayer;
@@ -18,6 +21,7 @@ import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.IMap;
+import com.lordhero.game.model.items.IWeapon;
 
 public class WorldMap {
 
@@ -26,6 +30,7 @@ public class WorldMap {
     
 	private Texture _playerImage;
 	private Sprite _playerSprite;
+	
 
     private SpriteBatch _spriteBatch;
         
@@ -33,7 +38,7 @@ public class WorldMap {
     private IMap _map;
     private IEntities _entities;
     private IGameMode _gameMode;
-    
+        
 	private OrthographicCamera _camera;
 
     public WorldMap(int width, int height) {
@@ -48,7 +53,7 @@ public class WorldMap {
 		_playerSprite = new Sprite(_playerImage);
 		
 		_cursorImage = new Texture(Gdx.files.internal("cursor.png"));
-		_cursorSprite = new Sprite(_cursorImage);		
+		_cursorSprite = new Sprite(_cursorImage);
     }
     
     public void setPlayer(IPlayer player) {
@@ -98,14 +103,24 @@ public class WorldMap {
 			}		
 		}
 
-//      _cursorSprite.setCenter(xCursor + xCamera - Gdx.graphics.getWidth() / 2, yCursor + yCamera - Gdx.graphics.getHeight() / 2);
       _cursorSprite.setCenter(xCursor, yCursor);
 		
         _cursorSprite.draw(_spriteBatch);
 
         if (_gameMode.is(GameMode.Play)) {
+
+        	_playerSprite.setRotation(_player.getRotation());
             _playerSprite.setCenter(xCamera, yCamera);
             _playerSprite.draw(_spriteBatch);
+            
+            // Animation test
+            IWeapon weapon = _player.getWeapon();
+            
+            if (weapon.attacks()) {
+            	TextureRegion weaponTexture = weapon.getWeaponAnimation();
+            
+                _spriteBatch.draw(weaponTexture, xCamera, yCamera, 0f, 0f, 32f, 32f, 1f, 1f, _player.getRotation());            	
+            }
         }
 
         _spriteBatch.end();        

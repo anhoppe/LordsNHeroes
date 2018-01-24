@@ -11,5 +11,6 @@ public interface IController {
 	
 	boolean processKeyUp(int keyCode);
 	boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor);
+	boolean processMouseDown(int xScreen, int yScreen, int xCursor, int yCursor);
 	boolean processMouseMove(int xPos, int yPos);
 }

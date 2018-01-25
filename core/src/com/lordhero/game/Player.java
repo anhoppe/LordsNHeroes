@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.lordhero.game.model.INpc;
+import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
@@ -191,9 +191,30 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	public void startAttack() {
+		if (_weapon != null) {
+			_weapon.startAttack();
+		}		
+	}
+
+	@Override
+	public void evaluateAttack(IEntities entities) {
+		if (_weapon != null && _weapon.attacks()) {
+			Vector2 vec = new Vector2(0, 1);
+			Matrix3 rotMatrix = new Matrix3();
+			rotMatrix.idt();
+			
+			rotMatrix.setToRotation(_viewAngleDeg);
+			vec.mul(rotMatrix);
+			vec.scl(_weapon.getRange());
+			
+			entities.hitEntity((int)(_xPos + vec.x), (int)(_yPos + vec.y), _weapon);
+		}		
+	}
+
+	@Override
 	public void setRangedWeapon(RangeWeapon rangeWeapon) {
-		_rangedWeapon = rangeWeapon;
-		
+		_rangedWeapon = rangeWeapon;		
 	}
 
 	private void fireChangeEvent() {
@@ -207,4 +228,14 @@ public class Player implements IPlayer {
 		return _viewAngleDeg;
 	}
 
+	@Override
+	public TextureRegion getWeaponAnimationFrame() {
+		TextureRegion weaponAnimation = null;
+		
+		if (_weapon != null && _weapon.attacks()) {
+			weaponAnimation = _weapon.getWeaponAnimation();
+		}
+		
+		return weaponAnimation;
+	}
 }

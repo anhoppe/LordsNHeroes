@@ -2,8 +2,9 @@ package com.lordhero.game;
 
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.lordhero.game.model.INpc;
+import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
@@ -51,4 +52,11 @@ public interface IPlayer {
 	void moveDirection(Direction up);
 
 	float getRotation();
+
+	void startAttack();
+
+	void evaluateAttack(IEntities _entities);
+
+	TextureRegion getWeaponAnimationFrame();
+
 }

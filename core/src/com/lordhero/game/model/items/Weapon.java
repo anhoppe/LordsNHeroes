@@ -6,17 +6,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class Weapon extends ItemBase implements IWeapon {
 
 	public static Weapon[] WeaponTemplates = new Weapon[] {
-		new Weapon("Knife", Type.Knife, 100),
-		new Weapon("Dagger", Type.Dagger, 150),
-		new Weapon("Axe", Type.Axe, 1200),
-		new Weapon("Saber", Type.Saber, 1500),
-		new Weapon("Sword", Type.Sword, 3500),
-		new Weapon("TwoHander", Type.TwoHander, 5000)
+		new Weapon("Knife", Type.Knife, 100, 25),
+		new Weapon("Dagger", Type.Dagger, 150, 25),
+		new Weapon("Axe", Type.Axe, 1200, 25),
+		new Weapon("Saber", Type.Saber, 1500, 25),
+		new Weapon("Sword", Type.Sword, 3500, 25),
+		new Weapon("TwoHander", Type.TwoHander, 5000, 25)
 	};
 	
 	enum Type {
@@ -29,28 +30,31 @@ public class Weapon extends ItemBase implements IWeapon {
 		TwoHander
 	}
 	
-	private static final float HitFrameRate = 1f / 5f; 
+	private static final float HitFrameRate = 1f / 8f; 
 	private static final float HitFrameCount = 5;
-	
-    float _elapsedTime;
+
 
 	private Type _type;	
-	
+		
+	private int _range;
+
 	private Texture _thrustImage;	
-	private Animation<TextureRegion> _hitAnimation;
-	
+	private Animation<TextureRegion> _hitAnimation;	
 	private boolean _isAttacking;
+    private float _elapsedTime;
 	
-	public Weapon(String name, Type type, int price) {
+	public Weapon(String name, Type type, int price, int range) {
 		_name = name;
 		_type = type;
 		_price = price;
+		_range = range;
 	}
 	
 	public Weapon(Weapon weapon) {
 		_name = weapon._name;
 		_type = weapon._type;
 		_price = weapon._price;
+		_range = weapon._range;
 		
 		// Create the weapons animation object		
 		_thrustImage = new Texture(Gdx.files.internal("Thrust.png"));
@@ -63,7 +67,7 @@ public class Weapon extends ItemBase implements IWeapon {
 			}
 		}
 		
-		_hitAnimation = new Animation<TextureRegion>(HitFrameRate, animationArray);
+		_hitAnimation = new Animation<TextureRegion>(HitFrameRate, animationArray);		
 	}
 
 	public static Weapon Create() {
@@ -78,17 +82,21 @@ public class Weapon extends ItemBase implements IWeapon {
 	public String getName() {
 		return _name;
 	}
+
+	public float getRange() {		
+		return _range;
+	}
 	
 	@Override
 	public void startAttack() {
 		_isAttacking = true;
 		_elapsedTime = 0f;
-	}	
+	}
 	
 	@Override
 	public TextureRegion getWeaponAnimation() {
 		_elapsedTime += Gdx.graphics.getDeltaTime();
-		
+				
 		if (_hitAnimation.isAnimationFinished(_elapsedTime)) {
 			_isAttacking = false;
 		}
@@ -100,5 +108,4 @@ public class Weapon extends ItemBase implements IWeapon {
 	public boolean attacks() {		
 		return _isAttacking;
 	}
-
 }

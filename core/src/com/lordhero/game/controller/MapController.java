@@ -14,6 +14,7 @@ import com.lordhero.game.IGameMode;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
+import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IMap;
 import com.lordhero.game.model.items.IWeapon;
 
@@ -25,6 +26,8 @@ public class MapController implements IController, IMapController {
 	
 	private IPlayer _player;
 	
+	private IEntities _entities;
+	
 	private IGameMode _gameMode;
 	
 	private INetwork _network;
@@ -35,6 +38,10 @@ public class MapController implements IController, IMapController {
 	
 	public void setPlayer(IPlayer player) {
 		_player = player;
+	}
+	
+	public void setEntities(IEntities entities) {
+		_entities = entities;
 	}
 	
 	public void setGameMode(IGameMode gameMode) {
@@ -55,6 +62,8 @@ public class MapController implements IController, IMapController {
 		}
 
         _map.checkForCollision();
+        
+        _player.evaluateAttack(_entities);
 	}
 	
 	@Override
@@ -70,14 +79,15 @@ public class MapController implements IController, IMapController {
 
 	@Override
 	public boolean processMouseDown(int xScreen, int yScreen, int xCursor, int yCursor) {
-		IWeapon weapon = _player.getWeapon();
-		weapon.startAttack();
-		return true;
+		if (_gameMode.is(IGameMode.GameMode.Play)) {
+			_player.startAttack();
+			return true;			
+		}
+		return false;
 	}
 
 	@Override
 	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
-		
 		if (_gameMode.get() == IGameMode.GameMode.BuyTiles)
 		{
 			_map.setTile();

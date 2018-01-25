@@ -17,6 +17,7 @@ import java.util.Set;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.Enemy;
+import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
 
 public class Entities implements IEntities {
@@ -90,6 +91,21 @@ public class Entities implements IEntities {
 				}
 			}
 		}
+	}	
+
+	@Override
+	public void hitEntity(int xPos, int yPos, IWeapon hitWeapon) {
+		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
+
+		for (IEntity entity : entitiesOnSite) {
+			if (entity.isAt(xPos, yPos)) {
+				if (entity instanceof Enemy) {
+					Enemy enemy = (Enemy)entity;
+					
+					enemy.terminate();
+				}
+			}
+		}		
 	}
 	
 	@Override

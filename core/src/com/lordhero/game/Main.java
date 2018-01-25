@@ -142,6 +142,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		// Controller DI
         mapController.setMap(_map);
         mapController.setPlayer(_player);
+        mapController.setEntities(_entities);
         mapController.setGameMode(this);
         mapController.setNetwork(_network);        
         

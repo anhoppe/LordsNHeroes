@@ -72,6 +72,8 @@ public class Enemy extends EntityBase {
 	private int getRandomStartPosition() {
 		return (int) (Math.random() * 128 * 32);
 	}
-	
 
+	public void terminate() {
+		_remove = true;		
+	}	
 }

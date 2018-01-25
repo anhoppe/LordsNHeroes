@@ -31,7 +31,6 @@ public class WorldMap {
 	private Texture _playerImage;
 	private Sprite _playerSprite;
 	
-
     private SpriteBatch _spriteBatch;
         
     private IPlayer _player;
@@ -97,30 +96,27 @@ public class WorldMap {
 		List<IEntity> entitiesOnSite = _entities.getEntitiesOnSite();
 		
 		if (entitiesOnSite != null) {
-			for (IEntity entity : entitiesOnSite) {					
+			for (IEntity entity : entitiesOnSite) {
 				Sprite sprite = entity.getSprite();
 				sprite.draw(_spriteBatch);
 			}		
 		}
 
-      _cursorSprite.setCenter(xCursor, yCursor);
+		_cursorSprite.setCenter(xCursor, yCursor);
 		
         _cursorSprite.draw(_spriteBatch);
 
         if (_gameMode.is(GameMode.Play)) {
-
         	_playerSprite.setRotation(_player.getRotation());
             _playerSprite.setCenter(xCamera, yCamera);
             _playerSprite.draw(_spriteBatch);
             
             // Animation test
-            IWeapon weapon = _player.getWeapon();
-            
-            if (weapon.attacks()) {
-            	TextureRegion weaponTexture = weapon.getWeaponAnimation();
-            
-                _spriteBatch.draw(weaponTexture, xCamera, yCamera, 0f, 0f, 32f, 32f, 1f, 1f, _player.getRotation());            	
-            }
+        	TextureRegion weaponTexture = _player.getWeaponAnimationFrame();
+        
+        	if (weaponTexture != null) {
+                _spriteBatch.draw(weaponTexture, xCamera, yCamera, 0f, 0f, 32f, 32f, 1f, 1f, _player.getRotation());        		
+        	}
         }
 
         _spriteBatch.end();        

@@ -86,7 +86,7 @@ public class Npc extends EntityBase implements INpc {
 	}
 
 	@Override
-	public void update() {
+	public void update(IPlayer player) {
 		if (Math.random() < _productionProbability) {
 			_items.add(ItemFactory.produce(_type));
 		}

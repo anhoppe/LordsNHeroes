@@ -1,10 +1,11 @@
 package com.lordhero.game.model;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.lordhero.game.IPlayer;
 
-public interface IEntity {
+public interface IEntity extends IMovable {
 
-	void update();
+	void update(IPlayer player);
 
 	boolean isTerminated();
 

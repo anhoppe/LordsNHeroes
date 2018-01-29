@@ -5,12 +5,13 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lordhero.game.model.IEntities;
+import com.lordhero.game.model.IMovable;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
-public interface IPlayer {
+public interface IPlayer extends IMovable {
 	public enum Direction {
 		None,
 		Up,
@@ -50,8 +51,6 @@ public interface IPlayer {
 	void setRangedWeapon(RangeWeapon rangeWeapon);
 
 	void moveDirection(Direction up);
-
-	float getRotation();
 
 	void startAttack();
 

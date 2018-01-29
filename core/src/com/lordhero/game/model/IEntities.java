@@ -2,6 +2,7 @@ package com.lordhero.game.model;
 
 import java.util.List;
 
+import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.items.IWeapon;
 
@@ -12,7 +13,7 @@ public interface IEntities {
 		Npc
 	};
 
-	void update();
+	void update(IPlayer player);
 	
 	List<IEntity> getEntitiesOnSite();
 	

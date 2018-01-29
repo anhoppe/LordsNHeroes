@@ -49,11 +49,12 @@ public class Entities implements IEntities {
 	public void setPlayer(IPlayer player)  {
 		_player = player;
 	}
-	
-	public void update() {			
+
+	@Override
+	public void update(IPlayer player) {			
 		create();
 		
-		updateEntities();
+		updateEntities(player);
 		
 		delete();
 	}
@@ -218,7 +219,7 @@ public class Entities implements IEntities {
 		}			
 	}
 	
-	private void updateEntities() {
+	private void updateEntities(IPlayer player) {
 		Enumeration<String> enumKey = _entities.keys();
 		while(enumKey.hasMoreElements()) {
 		    String key = enumKey.nextElement();
@@ -226,7 +227,7 @@ public class Entities implements IEntities {
 		    List<IEntity> entitiesOnSite = _entities.get(key);
 
 			for (IEntity entity : entitiesOnSite) {
-				entity.update();
+				entity.update(player);
 		    }
 		}			
 	}

@@ -15,6 +15,7 @@ import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
 public class Player implements IPlayer {
+	private static final int IsAtDistance = 32;
     private static final float PlayerSpeed = 150f;
     private static final float LordSpeed = 300;
     
@@ -37,6 +38,8 @@ public class Player implements IPlayer {
 	private Weapon _weapon;
 
 	private RangeWeapon _rangedWeapon;
+	
+	private int _hitPoints = 100;
 		
 	public Player() {
 		_lordChangedListeners = new LinkedList<ChangeListener>();
@@ -237,5 +240,23 @@ public class Player implements IPlayer {
 		}
 		
 		return weaponAnimation;
+	}
+
+	@Override
+	public void hit(int x, int y, IWeapon weapon) {
+		if (isAt(x, y)) {
+			_hitPoints -= weapon.hit();
+		}		
+	}
+	
+	private boolean isAt(int xPos, int yPos) {
+		return distanceTo(xPos, yPos) < IsAtDistance;
+	}
+
+	private int distanceTo(int xPos, int yPos) {
+		int xDist = (int) Math.abs(xPos - _xPos);
+		int yDist = (int) Math.abs(yPos - _yPos);
+			
+		return Math.max(xDist,  yDist);
 	}
 }

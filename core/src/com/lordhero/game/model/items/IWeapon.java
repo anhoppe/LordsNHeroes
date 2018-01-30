@@ -10,4 +10,6 @@ public interface IWeapon {
 
 	boolean attacks();
 
+	int hit();
+
 }

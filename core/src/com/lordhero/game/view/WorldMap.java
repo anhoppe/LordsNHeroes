@@ -99,6 +99,12 @@ public class WorldMap {
 			for (IEntity entity : entitiesOnSite) {
 				Sprite sprite = entity.getSprite();
 				sprite.draw(_spriteBatch);
+								
+		    	TextureRegion weaponTexture = entity.getWeaponAnimationFrame();
+		        
+		    	if (weaponTexture != null) {
+	                _spriteBatch.draw(weaponTexture, entity.getX(), entity.getY(), 0f, 0f, 32f, 32f, 1f, 1f, entity.getRotation());        				    		
+		    	}
 			}		
 		}
 

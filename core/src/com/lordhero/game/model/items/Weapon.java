@@ -10,6 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class Weapon extends ItemBase implements IWeapon {
+	
+	int _diceRollCount = 1;
+	int _diceSpots = 6;
+	int _diceStatic = 2;
 
 	public static Weapon[] WeaponTemplates = new Weapon[] {
 		new Weapon("Knife", Type.Knife, 100, 25),
@@ -107,5 +111,17 @@ public class Weapon extends ItemBase implements IWeapon {
 	@Override
 	public boolean attacks() {		
 		return _isAttacking;
+	}
+
+	@Override
+	public int hit() {
+		int damage = 0;
+		for (int i = 0; i < _diceRollCount; i++) {
+			damage += ThreadLocalRandom.current().nextInt(1, _diceSpots + 1);
+		}
+		
+		damage += _diceStatic;
+		
+		return damage;
 	}
 }

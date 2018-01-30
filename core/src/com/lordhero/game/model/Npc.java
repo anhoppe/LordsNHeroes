@@ -7,7 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.lordhero.game.model.items.IItemFactory;
 import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.items.IItem;
@@ -105,6 +105,11 @@ public class Npc extends EntityBase implements INpc {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public TextureRegion getWeaponAnimationFrame() {
+		return null;
 	}
 
 	public String getName() {

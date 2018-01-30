@@ -26,6 +26,16 @@ public abstract class EntityBase implements IEntity, Serializable {
 	public Sprite getSprite() {		
 		return _sprite;
 	}
+	
+	@Override
+	public float getX() {
+		return _xPos;
+	}
+	
+	@Override
+	public float getY() {
+		return _yPos;
+	}
 
 	@Override
 	public boolean isAt(int xPos, int yPos) {

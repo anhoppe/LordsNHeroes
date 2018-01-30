@@ -58,4 +58,6 @@ public interface IPlayer extends IMovable {
 
 	TextureRegion getWeaponAnimationFrame();
 
+	void hit(int x, int y, IWeapon weapon);
+
 }

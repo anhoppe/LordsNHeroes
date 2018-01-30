@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.items.Weapon;
 
 public class Enemy extends EntityBase {
 	enum Mode {
@@ -19,6 +21,7 @@ public class Enemy extends EntityBase {
 
 	private static final float TranslationSpeed = 2.5f;
 	private static final float RotationSpeedDeg = 2f;
+	private static final float MeeleAttackDist = 50f;
 	private static final float FightingDist = 30f;
 	
 	private static final float SpotRange = 250f;
@@ -29,6 +32,8 @@ public class Enemy extends EntityBase {
 	private int _yEndPos;
 	
 	private Mode _mode = Mode.Wander;
+	
+	private Weapon _weapon = Weapon.Create(0);
 	
 	public Enemy() {		 
 		_xPos = getRandomStartPosition();
@@ -75,15 +80,45 @@ public class Enemy extends EntityBase {
 			}
 			
 			// Move if enemy is already looking into player direction
-			if (Math.abs(dir.angle() - _viewDirection) < 180f && dist > FightingDist) {
+			else if (Math.abs(dir.angle() - _viewDirection) < 180f && dist > FightingDist) {
 				dir.scl(TranslationSpeed);
 				_xPos += dir.x;
 				_yPos += dir.y;				
-			}						
+			}
+		
+			// hit player if already in range and the distance is ok
+			if (dist <= MeeleAttackDist && !_weapon.attacks()) {
+				_weapon.startAttack();
+			}
+			
+			// check if attack is already going on, then evaluate the damage
+			else if (_weapon.attacks()) {
+				Vector2 vec = new Vector2(0, 1);
+				Matrix3 rotMatrix = new Matrix3();
+				rotMatrix.idt();
+				
+				rotMatrix.setToRotation(_viewDirection);
+				vec.mul(rotMatrix);
+				vec.scl(_weapon.getRange());
+
+				player.hit((int)(_xPos + vec.x), (int)(_yPos + vec.y), _weapon);
+			}
 		}
 						
 		_sprite.setCenter((float)_xPos, (float)_yPos);
 		_sprite.setRotation(_viewDirection);
+	}
+
+
+	@Override
+	public TextureRegion getWeaponAnimationFrame() {
+		TextureRegion animation = null;
+		
+		if (_weapon.attacks()) {
+			animation = _weapon.getWeaponAnimation();
+		}
+		
+		return animation;
 	}
 
 	public boolean isTerminated() {

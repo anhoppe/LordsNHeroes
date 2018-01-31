@@ -37,7 +37,6 @@ public class Weapon extends ItemBase implements IWeapon {
 	private static final float HitFrameRate = 1f / 8f; 
 	private static final float HitFrameCount = 5;
 
-
 	private Type _type;	
 		
 	private int _range;
@@ -45,6 +44,8 @@ public class Weapon extends ItemBase implements IWeapon {
 	private Texture _thrustImage;	
 	private Animation<TextureRegion> _hitAnimation;	
 	private boolean _isAttacking;
+	private boolean _hasHit;
+	
     private float _elapsedTime;
 	
 	public Weapon(String name, Type type, int price, int range) {
@@ -87,13 +88,14 @@ public class Weapon extends ItemBase implements IWeapon {
 		return _name;
 	}
 
-	public float getRange() {		
+	public float getRange() {
 		return _range;
 	}
 	
 	@Override
 	public void startAttack() {
 		_isAttacking = true;
+		_hasHit = false;
 		_elapsedTime = 0f;
 	}
 	
@@ -116,11 +118,14 @@ public class Weapon extends ItemBase implements IWeapon {
 	@Override
 	public int hit() {
 		int damage = 0;
-		for (int i = 0; i < _diceRollCount; i++) {
-			damage += ThreadLocalRandom.current().nextInt(1, _diceSpots + 1);
+		if (!_hasHit) {
+			for (int i = 0; i < _diceRollCount; i++) {
+				damage += ThreadLocalRandom.current().nextInt(1, _diceSpots + 1);
+			}
+			
+			damage += _diceStatic;
+			_hasHit = true;
 		}
-		
-		damage += _diceStatic;
 		
 		return damage;
 	}

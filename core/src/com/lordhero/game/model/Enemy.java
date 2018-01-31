@@ -35,6 +35,8 @@ public class Enemy extends EntityBase {
 	
 	private Weapon _weapon = Weapon.Create(0);
 	
+	private int _hitPoints = 20;
+	
 	public Enemy() {		 
 		_xPos = getRandomStartPosition();
 		_yPos = getRandomStartPosition();
@@ -109,7 +111,6 @@ public class Enemy extends EntityBase {
 		_sprite.setRotation(_viewDirection);
 	}
 
-
 	@Override
 	public TextureRegion getWeaponAnimationFrame() {
 		TextureRegion animation = null;
@@ -151,5 +152,14 @@ public class Enemy extends EntityBase {
 
 	public void terminate() {
 		_mode = Mode.Terminate;		
+	}
+
+	public void hit(int hit) {
+		_hitPoints -= hit;
+		
+		if (_hitPoints < 0) {
+			terminate();
+		}
+		
 	}
 }

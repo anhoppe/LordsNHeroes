@@ -102,8 +102,7 @@ public class Entities implements IEntities {
 			if (entity.isAt(xPos, yPos)) {
 				if (entity instanceof Enemy) {
 					Enemy enemy = (Enemy)entity;
-					
-					enemy.terminate();
+					enemy.hit(hitWeapon.hit());
 				}
 			}
 		}		

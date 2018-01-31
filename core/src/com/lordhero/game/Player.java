@@ -53,6 +53,11 @@ public class Player implements IPlayer {
 		
 		_items.add(_weapon);
 	}
+
+	@Override
+	public int getHitPoints() {
+		return _hitPoints;
+	}
 	
 	@Override
 	public int getMoney() {

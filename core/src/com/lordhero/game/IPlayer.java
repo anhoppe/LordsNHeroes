@@ -33,6 +33,8 @@ public interface IPlayer extends IMovable {
 	void moveAbsolute(Direction direction);
 	
 	void setPosition(float x, float y);
+
+	int getHitPoints();
 	
 	int getMoney();
 	

@@ -188,7 +188,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 			controller.update();
 		}
 		
-		_worldMap.render();        
+		_worldMap.render();
         
         if (_gameMode == GameMode.Play) {
         	_heroSheet.draw();
@@ -204,7 +204,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
     		_lordSheet.draw();
 
             if (_gameMode == GameMode.BuyTiles) {
-                _worldEditor.draw();                	
+                _worldEditor.draw();
             }
             else if (_gameMode == GameMode.AddNpc) {
             	_npcEditor.draw();
@@ -317,7 +317,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
-        } 
+        }
         else if (_gameMode == GameMode.Play) {
         	_inputMultiplexer.addProcessor(_heroSheet.getInputProcessor());
         	_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
@@ -326,8 +326,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         else if (_gameMode == GameMode.Conversation) {
         	if (entity instanceof INpc) {
             	_purchaseSheet.setNpc((INpc)entity);        		
-        	}
-        		
+        	}        		
         	_inputMultiplexer.addProcessor(_purchaseSheet.getInputProcessor());        	
         }
         else if (_gameMode == GameMode.CharacterSheet) {
@@ -345,8 +344,6 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 
 	@Override
 	public void setWorldName(String worldName) {
-		_worldName = worldName;
-		
+		_worldName = worldName;		
 	}
-
 }

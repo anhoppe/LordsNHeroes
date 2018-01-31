@@ -72,8 +72,14 @@ public class MapController implements IController, IMapController {
     	{
     		if (_map.enter()) {
     			_map.loadRemoteMap(_network);
+    			return true;
     		}
-    	}
+    	}		
+		else if (_gameMode.is(GameMode.Play) && keyCode == Input.Keys.C) {
+			_gameMode.set(GameMode.CharacterSheet, null);
+			return true;
+		}
+
 		return false;
 	}
 

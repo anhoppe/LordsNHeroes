@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -34,55 +35,26 @@ public class CharacterSheet extends UiPanel {
 	private SelectBox<String> _rangedWeaponSelection;
 	private java.util.List<RangeWeapon> _rangedWeapons;
 	
+	private TextField _hitPointsText;
+	
 	public CharacterSheet() {
 		_table.setPosition(500,  500);
 		
 		_itemList = new List<String>(_skin);
 		_meleeWeapons = new LinkedList<Weapon>();
-		_rangedWeapons = new LinkedList<RangeWeapon>();
+		_rangedWeapons = new LinkedList<RangeWeapon>();		
+		
+		Table statsTable = new Table();
+		statsTable.add(new Label("Hit points", _skin));
+		_hitPointsText = new TextField("", _skin);
+		statsTable.add(_hitPointsText);
+		_table.add(statsTable);
+		
+		_table.row();
 		
 		// Items list view to the left
-		Table itemsTable = new Table();
-		_table.addActor(itemsTable);
-		
-		itemsTable.add(new ScrollPane(_itemList)).size(200, 500);
-
-		_table.add(itemsTable);
-
-		// applied items to the right
-		Table appliedItemsTable = new Table();		
-		_table.addActor(appliedItemsTable);
-		
-		appliedItemsTable.add(new Label("Melee weapon: ", _skin));
-		
-		_meleeWeaponSelection = new SelectBox<String>(_skin);
-		_meleeWeaponSelection.addCaptureListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				int index = _meleeWeaponSelection.getSelectedIndex();
-				_player.setWeapon(_meleeWeapons.get(index));
-				
-			}				
-		});
-	    appliedItemsTable.add(_meleeWeaponSelection);
-	    
-	    appliedItemsTable.row();
-	    
-		appliedItemsTable.add(new Label("Ranged weapon: ", _skin));
-		
-	    _rangedWeaponSelection = new SelectBox<String>(_skin);
-	    _rangedWeaponSelection.addCaptureListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				int index = _rangedWeaponSelection.getSelectedIndex();
-				_player.setRangedWeapon(_rangedWeapons.get(index));
-				
-			}				
-		});
-	    appliedItemsTable.add(_rangedWeaponSelection);
-
-	    _table.add(appliedItemsTable);
-	    
+		addItemsTable();
+					    
 	    // at the bottom the exit button
 		_table.row();
 		
@@ -109,6 +81,7 @@ public class CharacterSheet extends UiPanel {
 	public void update() {		
 		java.util.List<IItem> items = _player.getItems();
 
+		_hitPointsText.setText(Integer.toString(_player.getHitPoints()));
 		updateItemsList(items);
 		updateMeleeWeaponsList(items);
 		updateRangedWeapongs(items);
@@ -153,6 +126,49 @@ public class CharacterSheet extends UiPanel {
 		}
 		
 		_rangedWeaponSelection.setItems(itemArray);
+	}
+	
+	private void addItemsTable() {
+		Table itemsTable = new Table();
+		_table.addActor(itemsTable);
+		
+		itemsTable.add(new ScrollPane(_itemList)).size(200, 500);
+		
+		_table.add(itemsTable);
+		
+		// applied items to the right
+		Table appliedItemsTable = new Table();		
+		_table.addActor(appliedItemsTable);
+		
+		appliedItemsTable.add(new Label("Melee weapon: ", _skin));
+		
+		_meleeWeaponSelection = new SelectBox<String>(_skin);
+		_meleeWeaponSelection.addCaptureListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				int index = _meleeWeaponSelection.getSelectedIndex();
+				_player.setWeapon(_meleeWeapons.get(index));
+				
+			}				
+		});
+		appliedItemsTable.add(_meleeWeaponSelection);
+		
+		appliedItemsTable.row();
+		
+		appliedItemsTable.add(new Label("Ranged weapon: ", _skin));
+		
+		_rangedWeaponSelection = new SelectBox<String>(_skin);
+		_rangedWeaponSelection.addCaptureListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				int index = _rangedWeaponSelection.getSelectedIndex();
+				_player.setRangedWeapon(_rangedWeapons.get(index));
+				
+			}				
+		});
+		appliedItemsTable.add(_rangedWeaponSelection);
+
+	    _table.add(appliedItemsTable);
 	}
 }
  

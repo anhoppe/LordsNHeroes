@@ -1,8 +1,15 @@
 package com.lordhero.game;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -11,6 +18,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.INetwork.ConnectionType;
 import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.IController;
@@ -31,6 +39,16 @@ import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
 public class Main extends ApplicationAdapter implements InputProcessor, IGameMode {
+	 private static final java.util.Map<IGameMode.SaveType, String> SaveTypeFolder;
+	    static {
+	        java.util.Map<IGameMode.SaveType, String> aMap = new HashMap<IGameMode.SaveType, String>();
+	        aMap.put(SaveType.None, "illegal");
+	        aMap.put(SaveType.Map, "maps");
+	        aMap.put(SaveType.Entities, "");
+	        SaveTypeFolder = Collections.unmodifiableMap(aMap);
+	    }
+	    
+//	private static final String[] SaveTypeFolder = {"illegal", "map", "entities"};
 	
 	// Model objects
 	private Player _player;
@@ -280,7 +298,25 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	public void dispose () {
 		_worldMap.dispose();
 		_map.dispose();
-		_entities.save();
+		
+		Path path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "entities.xml");
+		FileOutputStream outputStream;
+		try {
+			outputStream = new FileOutputStream(path.toString());
+			XmlWriter writer = new XmlWriter(new OutputStreamWriter(outputStream));
+			
+			_player.write(writer);
+			_entities.save(writer);		
+			writer.flush();
+			outputStream.flush();
+			outputStream.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 		
 	}	
 
 	@Override
@@ -343,5 +379,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	@Override
 	public void setWorldName(String worldName) {
 		_worldName = worldName;		
+	}
+
+	@Override
+	public Path getSaveFolder(SaveType saveType) {
+		return Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _worldName, SaveTypeFolder.get(saveType));
 	}
 }

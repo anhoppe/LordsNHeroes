@@ -1,5 +1,6 @@
 package com.lordhero.game.model.items;
 
+import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.badlogic.gdx.Gdx;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlWriter;
 
 public class Weapon extends ItemBase implements IWeapon {
 	
@@ -128,5 +130,12 @@ public class Weapon extends ItemBase implements IWeapon {
 		}
 		
 		return damage;
+	}
+	
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("Weapon").attribute("Type", _type).attribute("Range", _range);
+		super.write(writer);
+		writer.pop();
 	}
 }

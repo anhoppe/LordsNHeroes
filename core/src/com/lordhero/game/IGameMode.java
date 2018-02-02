@@ -1,5 +1,7 @@
 package com.lordhero.game;
 
+import java.nio.file.Path;
+
 import com.lordhero.game.model.IEntity;
 
 public interface IGameMode {
@@ -13,6 +15,12 @@ public interface IGameMode {
 		CharacterSheet
 	}
 	
+	public enum SaveType {
+		None,
+		Map,
+		Entities
+	}
+	
 	GameMode get();
 	
 	boolean is(GameMode gameMode);
@@ -22,4 +30,6 @@ public interface IGameMode {
 	String getWorldName();
 	
 	void setWorldName(String worldName);
+	
+	Path getSaveFolder(SaveType saveType);
 }

@@ -1,12 +1,8 @@
 package com.lordhero.game.model;
 
-import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.math.BigInteger;
-import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -25,9 +21,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
+import com.lordhero.game.IGameMode.SaveType;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedCellProvider;
-import com.lordhero.game.model.IPlayer;
 
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
@@ -192,7 +188,7 @@ public class Map implements IMap, IMapInfo {
 	private void writeCurrentMap() {
 		FileWriter fileWriter;
 		try {
-			Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _gameMode.getWorldName(), "maps", _currentMap + ".tmx");
+			Path path = Paths.get(_gameMode.getSaveFolder(SaveType.Map).toString(), _currentMap + ".tmx");
 			fileWriter = new FileWriter(path.toString(), false);
 			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
 			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);

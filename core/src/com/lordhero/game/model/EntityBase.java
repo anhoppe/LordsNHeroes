@@ -1,20 +1,22 @@
 package com.lordhero.game.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.Weapon;
 
-public abstract class EntityBase implements IEntity, Serializable {
+public abstract class EntityBase implements IEntity {
 
 	private static final int InRangeDistance = 100;
 
 	private static final int IsAtDistance = 32;
 
-	protected transient Sprite _sprite;
+	protected Sprite _sprite;
 	
 	protected float _xPos;
 	protected float _yPos;
@@ -63,6 +65,15 @@ public abstract class EntityBase implements IEntity, Serializable {
 	public float getRotation() {
 		return _viewDirectionDeg;
 	}
+	
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("EntityBase").
+		attribute("XPos", Float.toString(_xPos)).
+		attribute("YPos", Float.toString(_yPos)).
+		attribute("ViewDirection", Float.toString(_viewDirectionDeg));
+		writer.pop();
+	}	
 	
 	protected Vector2 getHitPosition() {
 		Vector2 hitPosition = null;

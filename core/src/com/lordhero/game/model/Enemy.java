@@ -1,5 +1,7 @@
 package com.lordhero.game.model;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.Weapon;
 
@@ -148,6 +151,14 @@ public class Enemy extends EntityBase implements INonPlayer {
 		if (_hitPoints < 0) {
 			terminate();
 		}		
+	}
+	
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("Enemy").attribute("XEndPos", _xEndPos).attribute("YEndPos", _yEndPos).attribute("Mode", _mode).attribute("HitPoints", _hitPoints);
+
+		super.write(writer);
+		writer.pop();
 	}
 
 	@Override

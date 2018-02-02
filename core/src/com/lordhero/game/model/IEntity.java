@@ -1,7 +1,10 @@
 package com.lordhero.game.model;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.IPlayer;
 
 public interface IEntity {
@@ -22,6 +25,8 @@ public interface IEntity {
 	void restore();
 
 	TextureRegion getWeaponAnimationFrame();
+	
+	void write(XmlWriter writer) throws IOException;
 	
 	void dispose();
 

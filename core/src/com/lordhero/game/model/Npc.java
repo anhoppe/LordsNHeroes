@@ -1,11 +1,13 @@
 package com.lordhero.game.model;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
 
@@ -21,13 +23,6 @@ public class Npc extends EntityBase implements INpc {
 		Healer,
 		Landlord,
 		Knight
-	}
-	
-	private enum ConversationMode {
-		None,
-		Init,
-		Buy, 
-		SelectItemToBuy,
 	}
 	
 	public static final LinkedList<Npc> Templates = new LinkedList<Npc>(Arrays.asList(
@@ -51,8 +46,6 @@ public class Npc extends EntityBase implements INpc {
 	private double _productionProbability;
 	
 	private List<IItem> _items = new LinkedList<IItem>();
-	
-	ConversationMode _conversationMode = ConversationMode.None;
 	
 	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
 
@@ -126,5 +119,22 @@ public class Npc extends EntityBase implements INpc {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("Npc").
+		attribute("Name", _name).
+		attribute("Price", _price).
+		attribute("Type", _type).
+		attribute("ProductionProbability", _productionProbability);
+		
+		super.write(writer);
+
+		for (IItem item : _items) {
+			item.write(writer);
+		}
+				
+		writer.pop();
 	}
 }

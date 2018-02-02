@@ -1,5 +1,6 @@
 package com.lordhero.game.model;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IWeapon;
@@ -19,9 +21,7 @@ import com.lordhero.game.model.items.Weapon;
 public class Player extends EntityBase implements IPlayer {
 	private static final int IsAtDistance = 32;
     private static final float PlayerSpeed = 150f;
-    private static final float LordSpeed = 300;
-    
-    private int _money = 10000;
+    private static final float LordSpeed = 300;    
 	
 	private LinkedList<ChangeListener> _lordChangedListeners;
 		    
@@ -32,11 +32,13 @@ public class Player extends EntityBase implements IPlayer {
 	private boolean _leftBlocked;
 	private boolean _rightBlocked;
 	
-	private List<IItem> _items;
-
-	private RangeWeapon _rangedWeapon;
+    private int _money = 10000;
 	
 	private int _hitPoints = 100;
+
+    private List<IItem> _items;
+
+	private RangeWeapon _rangedWeapon;
 		
 	public Player() {
 		_image = new Texture(Gdx.files.internal("My1stHero.png"));
@@ -242,6 +244,17 @@ public class Player extends EntityBase implements IPlayer {
 		if (isAt(x, y)) {
 			_hitPoints -= weapon.hit();
 		}		
+	}
+	
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("Player").attribute("Money", _money).attribute("HitPoints", _hitPoints);
+		super.write(writer);
+		
+		for (IItem item : _items) {
+			item.write(writer);
+		}
+		writer.pop();
 	}
 
 	@Override

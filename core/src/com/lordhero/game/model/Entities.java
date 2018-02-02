@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
@@ -125,7 +126,6 @@ public class Entities implements IEntities {
 		if (!Files.exists(Paths.get(path))) {
 		  return;
 		}
-		
 		try {
 	         FileInputStream fis = new FileInputStream(path);
 	         ObjectInputStream ois = new ObjectInputStream(fis);
@@ -155,19 +155,17 @@ public class Entities implements IEntities {
 	}
 	
 	@Override
-	public void save() {
-		String path = "c:/temp/teest";
-		
-		try {
-			FileOutputStream fos = new FileOutputStream(path);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(_entities);
-			oos.close();
-			fos.close();
-		} 
-		catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
+	public void save(XmlWriter writer) throws IOException {
+		Set<String> keys = _entities.keySet();
+        for(String key : keys) {
+        	writer.element(key);
+        	
+        	List<IEntity> entities = _entities.get(key);
+        	for (IEntity entity : entities) {
+        		entity.write(writer);
+        	}
+        	writer.pop();
+        }		
 	}
 
 	private void create() {

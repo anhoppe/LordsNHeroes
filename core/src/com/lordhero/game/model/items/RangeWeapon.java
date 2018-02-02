@@ -1,6 +1,9 @@
 package com.lordhero.game.model.items;
 
+import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.badlogic.gdx.utils.XmlWriter;
 
 public class RangeWeapon extends ItemBase {
 	public enum Type {
@@ -39,4 +42,12 @@ public class RangeWeapon extends ItemBase {
 	public String getName() {
 		return _name;
 	}
+	
+	@Override
+	public void write(XmlWriter writer) throws IOException {
+		writer.element("RangedWeapon").attribute("Name", _name).attribute("Type", _type);
+		super.write(writer);
+		writer.pop();
+	}
+
 }

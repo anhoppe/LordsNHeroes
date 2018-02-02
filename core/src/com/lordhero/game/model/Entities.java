@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -14,9 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedNpcProvider;
-import com.lordhero.game.model.Enemy;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
 
@@ -24,7 +21,6 @@ public class Entities implements IEntities {
 	private Hashtable<String, List<IEntity>> _entities;
 	private IMapInfo _mapInfo;
 	private ISelectedNpcProvider _selectedNpcProvider;
-	private IPlayer _player;
 	
 	private INpcSelectionReceiver _npcSelectionReceiver;
 	
@@ -44,10 +40,6 @@ public class Entities implements IEntities {
 	
 	public void setNpcSelectionReceiver(INpcSelectionReceiver receiver) {
 		_npcSelectionReceiver = receiver;
-	}
-	
-	public void setPlayer(IPlayer player)  {
-		_player = player;
 	}
 
 	@Override
@@ -207,13 +199,15 @@ public class Entities implements IEntities {
 		    do {
 		    	removedEnemy = false;
 				for (IEntity entity : entitiesOnSite) {
-					if (entity.isTerminated()) {
-						entitiesOnSite.remove(entity);
-						removedEnemy = true;
-						break;
+					if (entity instanceof INonPlayer) {
+						if (((INonPlayer)entity).isTerminated()) {
+							entitiesOnSite.remove(entity);
+							entity.dispose();
+							removedEnemy = true;
+							break;
+						}						
 					}
-			    }
-		    	
+			    }		    	
 		    } while (removedEnemy);
 		}			
 	}
@@ -226,7 +220,9 @@ public class Entities implements IEntities {
 		    List<IEntity> entitiesOnSite = _entities.get(key);
 
 			for (IEntity entity : entitiesOnSite) {
-				entity.update(player);
+				if (entity instanceof INonPlayer) {
+					((INonPlayer)entity).update(player);
+				}
 		    }
 		}			
 	}

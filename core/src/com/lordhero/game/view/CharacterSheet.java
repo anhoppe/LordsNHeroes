@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.lordhero.game.IGameMode;
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.RangeWeapon;

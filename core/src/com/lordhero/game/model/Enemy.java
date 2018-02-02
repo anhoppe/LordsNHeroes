@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.lordhero.game.IPlayer;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.Weapon;
 
-public class Enemy extends EntityBase {
+public class Enemy extends EntityBase implements INonPlayer {
 	enum Mode {
 		None,
 		Wander,
@@ -27,13 +28,11 @@ public class Enemy extends EntityBase {
 	private static final float SpotRange = 250f;
 
 	private static Texture _monsterTileSet = new Texture(Gdx.files.internal("data/tileset/Monsters.png"));
-	
+
 	private int _xEndPos;
 	private int _yEndPos;
 	
 	private Mode _mode = Mode.Wander;
-	
-	private Weapon _weapon = Weapon.Create(0);
 	
 	private int _hitPoints = 20;
 	
@@ -53,7 +52,7 @@ public class Enemy extends EntityBase {
 			Vector2 dir = new Vector2((float)(_xEndPos - _xPos), (float)(_yEndPos - _yPos));
 			
 			dir.nor();
-			_viewDirection = dir.angle();
+			_viewDirectionDeg = dir.angle();
 			dir.scl(TranslationSpeed);
 			_xPos += dir.x;
 			_yPos += dir.y;
@@ -72,17 +71,17 @@ public class Enemy extends EntityBase {
 			dir.nor();
 			
 			// Rotate into player direction if angle is too large
-			if (Math.abs(dir.angle() - _viewDirection) > 45f) {
-				if (dir.angle() > _viewDirection) {
-					_viewDirection += RotationSpeedDeg;
+			if (Math.abs(dir.angle() - _viewDirectionDeg) > 45f) {
+				if (dir.angle() > _viewDirectionDeg) {
+					_viewDirectionDeg += RotationSpeedDeg;
 				}
 				else {
-					_viewDirection -= RotationSpeedDeg;
+					_viewDirectionDeg -= RotationSpeedDeg;
 				}
 			}
 			
 			// Move if enemy is already looking into player direction
-			else if (Math.abs(dir.angle() - _viewDirection) < 180f && dist > FightingDist) {
+			else if (Math.abs(dir.angle() - _viewDirectionDeg) < 180f && dist > FightingDist) {
 				dir.scl(TranslationSpeed);
 				_xPos += dir.x;
 				_yPos += dir.y;				
@@ -99,7 +98,7 @@ public class Enemy extends EntityBase {
 				Matrix3 rotMatrix = new Matrix3();
 				rotMatrix.idt();
 				
-				rotMatrix.setToRotation(_viewDirection);
+				rotMatrix.setToRotation(_viewDirectionDeg);
 				vec.mul(rotMatrix);
 				vec.scl(_weapon.getRange());
 
@@ -108,18 +107,7 @@ public class Enemy extends EntityBase {
 		}
 						
 		_sprite.setCenter((float)_xPos, (float)_yPos);
-		_sprite.setRotation(_viewDirection);
-	}
-
-	@Override
-	public TextureRegion getWeaponAnimationFrame() {
-		TextureRegion animation = null;
-		
-		if (_weapon.attacks()) {
-			animation = _weapon.getWeaponAnimation();
-		}
-		
-		return animation;
+		_sprite.setRotation(_viewDirectionDeg);
 	}
 
 	public boolean isTerminated() {
@@ -159,7 +147,10 @@ public class Enemy extends EntityBase {
 		
 		if (_hitPoints < 0) {
 			terminate();
-		}
-		
+		}		
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

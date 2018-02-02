@@ -1,13 +1,10 @@
 package com.lordhero.game;
 
 import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
-
-import com.badlogic.gdx.ApplicationAdapter;
 
 public class Network implements INetwork {
 

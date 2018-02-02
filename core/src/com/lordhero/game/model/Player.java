@@ -1,9 +1,11 @@
-package com.lordhero.game;
+package com.lordhero.game.model;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +16,7 @@ import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
-public class Player implements IPlayer {
+public class Player extends EntityBase implements IPlayer {
 	private static final int IsAtDistance = 32;
     private static final float PlayerSpeed = 150f;
     private static final float LordSpeed = 300;
@@ -22,26 +24,24 @@ public class Player implements IPlayer {
     private int _money = 10000;
 	
 	private LinkedList<ChangeListener> _lordChangedListeners;
-	
-	private float _xPos;
-	private float _yPos;
-		
+		    
+	private Texture _image;
+
 	private boolean _upBlocked;
 	private boolean _downBlocked;
 	private boolean _leftBlocked;
 	private boolean _rightBlocked;
 	
-	private float _viewAngleDeg;
-	
 	private List<IItem> _items;
-
-	private Weapon _weapon;
 
 	private RangeWeapon _rangedWeapon;
 	
 	private int _hitPoints = 100;
 		
 	public Player() {
+		_image = new Texture(Gdx.files.internal("My1stHero.png"));
+		_sprite = new Sprite(_image);
+
 		_lordChangedListeners = new LinkedList<ChangeListener>();
 		_items = new LinkedList<IItem>();
 		
@@ -94,6 +94,12 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	public void restore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void setPosition(float x, float y) {
 		_xPos = x;
 		_yPos = y;	
@@ -109,7 +115,8 @@ public class Player implements IPlayer {
 	
 	@Override
 	public void setViewAngle(float viewAngle) {
-		_viewAngleDeg = viewAngle;
+		_viewDirectionDeg = viewAngle;
+		_sprite.setRotation(_viewDirectionDeg);
 	}
 
 	@Override
@@ -139,7 +146,7 @@ public class Player implements IPlayer {
 
 		Vector2 a_velocityVec = new Vector2(0f, 1f);
 		
-		float viewAngleDeg = _viewAngleDeg;
+		float viewAngleDeg = _viewDirectionDeg;
 		
 		if (direction == Direction.Down) {
 			viewAngleDeg += 180f;
@@ -207,17 +214,11 @@ public class Player implements IPlayer {
 
 	@Override
 	public void evaluateAttack(IEntities entities) {
-		if (_weapon != null && _weapon.attacks()) {
-			Vector2 vec = new Vector2(0, 1);
-			Matrix3 rotMatrix = new Matrix3();
-			rotMatrix.idt();
-			
-			rotMatrix.setToRotation(_viewAngleDeg);
-			vec.mul(rotMatrix);
-			vec.scl(_weapon.getRange());
-			
-			entities.hitEntity((int)(_xPos + vec.x), (int)(_yPos + vec.y), _weapon);
-		}		
+		Vector2 hitPosition = getHitPosition();
+		
+		if (hitPosition != null) {
+			entities.hitEntity((int)(hitPosition.x), (int)(hitPosition.y), _weapon);			
+		}
 	}
 
 	@Override
@@ -233,18 +234,7 @@ public class Player implements IPlayer {
 
 	@Override
 	public float getRotation() {
-		return _viewAngleDeg;
-	}
-
-	@Override
-	public TextureRegion getWeaponAnimationFrame() {
-		TextureRegion weaponAnimation = null;
-		
-		if (_weapon != null && _weapon.attacks()) {
-			weaponAnimation = _weapon.getWeaponAnimation();
-		}
-		
-		return weaponAnimation;
+		return _viewDirectionDeg;
 	}
 
 	@Override
@@ -253,15 +243,9 @@ public class Player implements IPlayer {
 			_hitPoints -= weapon.hit();
 		}		
 	}
-	
-	private boolean isAt(int xPos, int yPos) {
-		return distanceTo(xPos, yPos) < IsAtDistance;
-	}
 
-	private int distanceTo(int xPos, int yPos) {
-		int xDist = (int) Math.abs(xPos - _xPos);
-		int yDist = (int) Math.abs(yPos - _yPos);
-			
-		return Math.max(xDist,  yDist);
-	}
+	@Override
+	public void dispose() {
+		_image.dispose();		
+	}	
 }

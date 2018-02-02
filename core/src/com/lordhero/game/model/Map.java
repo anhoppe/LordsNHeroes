@@ -26,8 +26,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
-import com.lordhero.game.IPlayer;
 import com.lordhero.game.ISelectedCellProvider;
+import com.lordhero.game.model.IPlayer;
 
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
@@ -188,7 +188,6 @@ public class Map implements IMap, IMapInfo {
 		writeCurrentMap();
 		_tiledMap.dispose();		
 	}
-
 
 	private void writeCurrentMap() {
 		FileWriter fileWriter;

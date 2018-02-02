@@ -1,16 +1,11 @@
 package com.lordhero.game.controller;
 
-import java.util.List;
-
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
-import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.IEntities;
-import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.INpc;
+import com.lordhero.game.model.IPlayer;
 
 public class EntityController implements IController {
 	

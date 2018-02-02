@@ -2,7 +2,7 @@ package com.lordhero.game.model;
 
 import java.util.List;
 
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.items.IWeapon;
 

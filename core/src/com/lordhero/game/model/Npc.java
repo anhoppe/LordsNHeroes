@@ -4,13 +4,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.lordhero.game.model.items.IItemFactory;
-import com.lordhero.game.IPlayer;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.IItemFactory;
 
 public class Npc extends EntityBase implements INpc {
 	public enum Type {
@@ -91,6 +88,11 @@ public class Npc extends EntityBase implements INpc {
 			_items.add(ItemFactory.produce(_type));
 		}
 	}
+
+	@Override
+	public boolean isTerminated() {
+		return false;
+	}
 	
 	public void setSprite(Sprite sprite) {
 		_sprite = sprite;
@@ -118,5 +120,11 @@ public class Npc extends EntityBase implements INpc {
 	
 	public int getPrice() {
 		return _price;
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }

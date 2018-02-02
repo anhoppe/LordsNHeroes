@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.controller.IMapController;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.items.IItem;

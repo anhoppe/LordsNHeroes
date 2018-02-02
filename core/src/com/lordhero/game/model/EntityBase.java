@@ -3,6 +3,10 @@ package com.lordhero.game.model;
 import java.io.Serializable;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Vector2;
+import com.lordhero.game.model.items.Weapon;
 
 public abstract class EntityBase implements IEntity, Serializable {
 
@@ -15,12 +19,9 @@ public abstract class EntityBase implements IEntity, Serializable {
 	protected float _xPos;
 	protected float _yPos;
 
-	protected float _viewDirection;
+	protected float _viewDirectionDeg;
 
-	@Override
-	public boolean isTerminated() {
-		return false;
-	}
+	protected Weapon _weapon = Weapon.Create(0);
 
 	@Override
 	public Sprite getSprite() {		
@@ -45,11 +46,40 @@ public abstract class EntityBase implements IEntity, Serializable {
 	@Override 
 	public boolean isInRange(int xPos, int yPos) {
 		return distanceTo(xPos, yPos) < InRangeDistance;
+	}	
+
+	@Override
+	public TextureRegion getWeaponAnimationFrame() {
+		TextureRegion weaponAnimation = null;
+		
+		if (_weapon != null && _weapon.attacks()) {
+			weaponAnimation = _weapon.getWeaponAnimation();
+		}
+		
+		return weaponAnimation;
 	}
 	
 	@Override
 	public float getRotation() {
-		return _viewDirection;
+		return _viewDirectionDeg;
+	}
+	
+	protected Vector2 getHitPosition() {
+		Vector2 hitPosition = null;
+		
+		if (_weapon != null && _weapon.attacks()) {
+			Vector2 vec = new Vector2(0, 1);
+			Matrix3 rotMatrix = new Matrix3();
+			rotMatrix.idt();
+			
+			rotMatrix.setToRotation(_viewDirectionDeg);
+			vec.mul(rotMatrix);
+			vec.scl(_weapon.getRange());
+			
+			hitPosition = new Vector2(_xPos + vec.x, _yPos + vec.y);
+		}		
+		
+		return hitPosition;
 	}
 
 	private int distanceTo(int xPos, int yPos) {

@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.lordhero.game.INetwork.ConnectionType;
@@ -20,6 +19,7 @@ import com.lordhero.game.model.Entities;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.Map;
+import com.lordhero.game.model.Player;
 import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
@@ -132,12 +132,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _entities.setMapInfo(_map);
         _entities.setSelectedNpcProvider(_npcEditor);
         _entities.setNpcSelectionReceiver(_npcView);
-        _entities.setPlayer(_player);
        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
-        _map.setGameMode(this);
-                
+        _map.setGameMode(this);               
         
 		// Controller DI
         mapController.setMap(_map);

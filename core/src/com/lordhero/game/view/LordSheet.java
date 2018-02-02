@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.controller.IMapController;
 
 public class LordSheet extends UiPanel {

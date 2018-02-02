@@ -1,7 +1,6 @@
 package com.lordhero.game;
 
 import com.lordhero.game.model.IEntity;
-import com.lordhero.game.model.INpc;
 
 public interface IGameMode {
 	public enum GameMode {

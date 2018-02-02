@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.MapController;
 import com.lordhero.game.model.IEntities;
@@ -27,9 +27,6 @@ public class WorldMap {
 
     private Texture _cursorImage;
     private Sprite _cursorSprite;
-    
-	private Texture _playerImage;
-	private Sprite _playerSprite;
 	
     private SpriteBatch _spriteBatch;
         
@@ -47,10 +44,7 @@ public class WorldMap {
         _camera.translate(new Vector2(200, 0));        
 
         _spriteBatch = new SpriteBatch();
-		
-		_playerImage = new Texture(Gdx.files.internal("My1stHero.png"));
-		_playerSprite = new Sprite(_playerImage);
-		
+		       
 		_cursorImage = new Texture(Gdx.files.internal("cursor.png"));
 		_cursorSprite = new Sprite(_cursorImage);
     }
@@ -108,14 +102,10 @@ public class WorldMap {
 			}		
 		}
 
-		_cursorSprite.setCenter(xCursor, yCursor);
-		
-        _cursorSprite.draw(_spriteBatch);
-
         if (_gameMode.is(GameMode.Play)) {
-        	_playerSprite.setRotation(_player.getRotation());
-            _playerSprite.setCenter(xCamera, yCamera);
-            _playerSprite.draw(_spriteBatch);
+        	Sprite sprite = _player.getSprite();
+            sprite.setCenter(xCamera, yCamera);
+            sprite.draw(_spriteBatch);
             
             // Animation test
         	TextureRegion weaponTexture = _player.getWeaponAnimationFrame();
@@ -124,11 +114,15 @@ public class WorldMap {
                 _spriteBatch.draw(weaponTexture, xCamera, yCamera, 0f, 0f, 32f, 32f, 1f, 1f, _player.getRotation());        		
         	}
         }
+        else {
+    		_cursorSprite.setCenter(xCursor, yCursor);		
+            _cursorSprite.draw(_spriteBatch);
+        }
 
         _spriteBatch.end();        
 	}
 
 	public void dispose() {
-		_playerImage.dispose();
+		_cursorImage.dispose();
 	}
 }

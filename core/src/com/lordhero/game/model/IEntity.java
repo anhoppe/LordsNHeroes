@@ -2,19 +2,17 @@ package com.lordhero.game.model;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.lordhero.game.IPlayer;
+import com.lordhero.game.model.IPlayer;
 
-public interface IEntity extends IMovable {
-
-	void update(IPlayer player);
-
-	boolean isTerminated();
+public interface IEntity {
 
 	Sprite getSprite();
 
 	float getX();
 	
 	float getY();
+
+	float getRotation();
 
 	boolean isAt(int xPos, int yPos);
 	
@@ -24,5 +22,7 @@ public interface IEntity extends IMovable {
 	void restore();
 
 	TextureRegion getWeaponAnimationFrame();
+	
+	void dispose();
 
 }

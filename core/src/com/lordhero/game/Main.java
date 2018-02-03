@@ -38,7 +38,7 @@ import com.lordhero.game.view.PurchaseSheet;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
-public class Main extends ApplicationAdapter implements InputProcessor, IGameMode {
+public class Main extends ApplicationAdapter implements InputProcessor, IGameMode, IGameSourceProvider {
 	 private static final java.util.Map<IGameMode.SaveType, String> SaveTypeFolder;
 	    static {
 	        java.util.Map<IGameMode.SaveType, String> aMap = new HashMap<IGameMode.SaveType, String>();
@@ -154,6 +154,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
         _map.setGameMode(this);               
+        _map.setGameSourceProvider(this);
         
 		// Controller DI
         mapController.setMap(_map);
@@ -169,10 +170,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		// View DI
 		_lordSheet.setLord(_player);
 		_lordSheet.setGameMode(this);
-		_lordSheet.setMapController(mapController);
+		_lordSheet.setGameSourceProvider(this);
 
 		_heroSheet.setHero(_player);
-		_heroSheet.setMapController(mapController);
+		_heroSheet.setGameSourceProvider(this);
 		
 		_worldMap.setEntities(_entities);
         _worldMap.setMap(_map);
@@ -187,7 +188,13 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         
         ///////////////////////////////////////////////////////////////////
         // Required initialization
-        _map.loadRemoteMap(_network);
+        _map.loadFromRemote(_network);
+        try {
+			_entities.loadFromRemote(_network);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+		}
         
         ///////////////////////////////////////////////////////////////////
         // set input multiplexer
@@ -299,14 +306,20 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		_worldMap.dispose();
 		_map.dispose();
 		
-		Path path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "entities.xml");
-		FileOutputStream outputStream;
 		try {
-			outputStream = new FileOutputStream(path.toString());
+			Path path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "entities.xml");
+			FileOutputStream outputStream = new FileOutputStream(path.toString());
 			XmlWriter writer = new XmlWriter(new OutputStreamWriter(outputStream));
-			
-			_player.write(writer);
 			_entities.save(writer);		
+			writer.flush();
+			outputStream.flush();
+			outputStream.close();
+
+			
+			path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "player.xml");
+			outputStream = new FileOutputStream(path.toString());
+			writer = new XmlWriter(new OutputStreamWriter(outputStream));
+			_player.write(writer);
 			writer.flush();
 			outputStream.flush();
 			outputStream.close();
@@ -380,6 +393,37 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	public void setWorldName(String worldName) {
 		_worldName = worldName;		
 	}
+	
+	@Override
+	public void visitWorld() {
+		_network.connectToServer(ConnectionType.Remote);
+		
+		set(GameMode.Play, null);
+
+		_map.loadFromRemote(_network);
+		try {
+			_entities.loadFromRemote(_network);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void goHome() {
+		_network.connectToServer(ConnectionType.Local);
+		
+		set(GameMode.BuyTiles, null);
+
+		_map.loadFromRemote(_network);
+		try {
+			_entities.loadFromRemote(_network);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 	@Override
 	public Path getSaveFolder(SaveType saveType) {

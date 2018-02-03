@@ -22,6 +22,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IGameMode.SaveType;
+import com.lordhero.game.IGameSourceProvider;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedCellProvider;
 
@@ -46,6 +47,8 @@ public class Map implements IMap, IMapInfo {
 	
 	private IGameMode _gameMode;
 	
+	private IGameSourceProvider _gameSourceProvider;
+	
 	public Map() {		
 		_currentMap = "baseMap";
 	}
@@ -60,6 +63,10 @@ public class Map implements IMap, IMapInfo {
     
     public void setGameMode(IGameMode gameMode) {
     	_gameMode = gameMode;
+    }
+    
+    public void setGameSourceProvider(IGameSourceProvider gameSourceProvider) {
+    	_gameSourceProvider = gameSourceProvider;
     }
 
 	@Override
@@ -162,9 +169,8 @@ public class Map implements IMap, IMapInfo {
             }         
         }
 	}
-
 	
-	public void loadRemoteMap(INetwork network) {		
+	public void loadFromRemote(INetwork network) {		
 		byte[] fileAsArray = network.requestMap(_currentMap);
 		
         try {
@@ -188,7 +194,7 @@ public class Map implements IMap, IMapInfo {
 	private void writeCurrentMap() {
 		FileWriter fileWriter;
 		try {
-			Path path = Paths.get(_gameMode.getSaveFolder(SaveType.Map).toString(), _currentMap + ".tmx");
+			Path path = Paths.get(_gameSourceProvider.getSaveFolder(SaveType.Map).toString(), _currentMap + ".tmx");
 			fileWriter = new FileWriter(path.toString(), false);
 			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
 			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);

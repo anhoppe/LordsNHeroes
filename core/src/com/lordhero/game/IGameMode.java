@@ -26,10 +26,4 @@ public interface IGameMode {
 	boolean is(GameMode gameMode);
 
 	void set(GameMode gameMode, IEntity entity);
-	
-	String getWorldName();
-	
-	void setWorldName(String worldName);
-	
-	Path getSaveFolder(SaveType saveType);
 }

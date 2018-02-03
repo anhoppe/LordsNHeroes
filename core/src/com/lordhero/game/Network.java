@@ -17,10 +17,10 @@ public class Network implements INetwork {
     private BufferedInputStream _inputStream;
     private PrintWriter _outputStream;
     
-	private IGameMode _gameMode;
+	private IGameSourceProvider _gameSourceProvider;
 	
-	public Network(IGameMode gameMode, int homePort, int visitorPort) {
-		_gameMode = gameMode;
+	public Network(IGameSourceProvider gameSourceProvider, int homePort, int visitorPort) {
+		_gameSourceProvider = gameSourceProvider;
 		
 		_homePort = homePort;
 		_visitorPort = visitorPort;
@@ -52,7 +52,7 @@ public class Network implements INetwork {
 	        _inputStream.read(worldNameAsArray, 0, worldNameLength);
 	        
 	        String worldName = new String(worldNameAsArray, "UTF-8");
-	        _gameMode.setWorldName(worldName);
+	        _gameSourceProvider.setWorldName(worldName);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -61,24 +61,18 @@ public class Network implements INetwork {
 
 	@Override
 	public byte[] requestMap(String currentMap) {
-		byte[] fileAsArray = null;
-        _outputStream.println("sendMap:" + currentMap);
+        _outputStream.println("sendMap:" + currentMap);        
 
-        byte[] fileLengthInBytes = new byte[4];
-        try {
-			_inputStream.read(fileLengthInBytes, 0, 4);
-	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
-	        
-	        fileAsArray = new byte[fileLength];
-	        _inputStream.read(fileAsArray, 0, fileLength);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        return fileAsArray;
+        return convertAnswerToByteArray();
 	}
 
+	@Override
+	public byte[] requestEntities() {
+        _outputStream.println("sendEntities:");
+		
+        return convertAnswerToByteArray();
+	}
+	
 	private void closeCurrentConnection() {
 		_outputStream.println(CloseConnection);
 		
@@ -102,4 +96,22 @@ public class Network implements INetwork {
 		_outputStream = null;		
 	}
 	
+	private byte[] convertAnswerToByteArray()
+	{
+		byte[] fileAsArray = null;
+        byte[] fileLengthInBytes = new byte[4];
+        
+        try {
+			_inputStream.read(fileLengthInBytes, 0, 4);
+	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
+	        
+	        fileAsArray = new byte[fileLength];
+	        _inputStream.read(fileAsArray, 0, fileLength);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        return fileAsArray;		
+	}
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.Weapon;
 
@@ -24,6 +25,18 @@ public abstract class EntityBase implements IEntity {
 	protected float _viewDirectionDeg;
 
 	protected Weapon _weapon = Weapon.Create(0);
+
+	public EntityBase() {
+		
+	}
+	
+	public EntityBase(Element entityBaseNode) {
+		if (entityBaseNode != null) {
+			_xPos = entityBaseNode.getFloatAttribute("XPos");
+			_yPos = entityBaseNode.getFloatAttribute("YPos");
+			_viewDirectionDeg = entityBaseNode.getFloatAttribute("ViewDirection");
+		}
+	}
 
 	@Override
 	public Sprite getSprite() {		

@@ -2,33 +2,30 @@ package com.lordhero.server;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Properties;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 
 public class Main implements ApplicationListener {
 
 	private static final String SendMap = "sendMap";
+	private static final String SendEntities = "sendEntities";
 	private static final String RequestWorldName = "requestWorldName";
 	private static final String CloseConnection = "closeConnection";
 
@@ -37,6 +34,8 @@ public class Main implements ApplicationListener {
 	private String _worldName;
 
 	private Path _mapPath;
+	
+	private Path _entitiesPath;
 	
 	public Main(String configPath) {
 		Properties prop = new Properties();
@@ -67,6 +66,56 @@ public class Main implements ApplicationListener {
 
 	@Override
 	public void create() {		
+		setupPaths();
+
+		initialCopyOfOriginalMaps();
+		
+	    handleClientConnections();		
+	}
+
+	private void handleClientConnections() {
+		try {
+	    	while (true) {
+				ServerSocket serverSocket = new ServerSocket(_port);
+				Socket clientSocket = serverSocket.accept();
+			    BufferedOutputStream outputStream = new BufferedOutputStream(clientSocket.getOutputStream());
+			    BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
+				
+				String receivedMessage;
+				
+				while ((receivedMessage = inputStream.readLine()) != null) {
+					String[] tokens = receivedMessage.split(":");
+					if (tokens[0].equals(SendMap)) {		
+						Path mapToLoad = Paths.get(_mapPath.toString(), tokens[1] + ".tmx");						
+
+						sendFile(outputStream, Gdx.files.internal(mapToLoad.toString()));
+					}
+					else if (tokens[0].equals(SendEntities)) {
+						sendFile(outputStream, Gdx.files.internal(_entitiesPath.toString()));
+					}
+					else if (tokens[0].equals(RequestWorldName)) {
+						byte[] worldNameAsByteArray = _worldName.getBytes();
+
+						byte[] fileLengthAsByteArray = new byte[4];
+						ByteBuffer.wrap(fileLengthAsByteArray).putInt(worldNameAsByteArray.length);
+						
+						outputStream.write(fileLengthAsByteArray);
+						outputStream.flush();
+						
+						outputStream.write(worldNameAsByteArray, 0, worldNameAsByteArray.length);
+						outputStream.flush();
+					}
+					else if (tokens[0].equals(CloseConnection)) {
+						break;
+					}
+				}
+	    	}
+		} catch (IOException ioEx) {
+			System.out.println(ioEx.getMessage());
+		}
+	}
+
+	private void setupPaths() {
 		Path path = Paths.get(System.getProperty("user.home"), "Lords'n'Heroes");
 		if (!Files.exists(path)) {
 			try {
@@ -99,73 +148,7 @@ public class Main implements ApplicationListener {
 			}					
 		}
 
-		Path sourcePath = Paths.get(".");
-
-		DirectoryStream.Filter<Path> dirFilter = new DirectoryStream.Filter<Path>() {
-            public boolean accept(Path path) throws IOException {
-            	PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:./*.tmx");
-                return matcher.matches(path);
-            }
-        };
-        
-		try {
-			for (final Path copiedFilePath : Files.newDirectoryStream(sourcePath)) {
-				if (dirFilter.accept(copiedFilePath)) {
-					Path targetPath = Paths.get(_mapPath.toString(), copiedFilePath.getFileName().toString());
-					if (!Files.exists(targetPath)) {
-						Files.copy(copiedFilePath, targetPath);						
-					}						
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		
-	    try {
-	    	while (true) {
-				ServerSocket serverSocket = new ServerSocket(_port);
-			    Socket clientSocket = serverSocket.accept();
-			    BufferedOutputStream outputStream = new BufferedOutputStream(clientSocket.getOutputStream());
-			    BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
-				
-				String receivedMessage;
-				
-				while ((receivedMessage = inputStream.readLine()) != null) {
-					String[] tokens = receivedMessage.split(":");
-					if (tokens[0].equals(SendMap)) {		
-						Path mapToLoad = Paths.get(_mapPath.toString(), tokens[1] + ".tmx");
-						FileHandle mapHandle = Gdx.files.internal(mapToLoad.toString());
-
-						byte[] fileLengthAsByteArray = new byte[4];
-				        int fileLength = (int)mapHandle.length();
-				        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
-				        outputStream.write(fileLengthAsByteArray);
-				        outputStream.flush();
-						
-						outputStream.write(mapHandle.readBytes(), 0, fileLength);
-						outputStream.flush();					
-					}
-					else if (tokens[0].equals(RequestWorldName)) {
-						byte[] worldNameAsByteArray = _worldName.getBytes();
-
-						byte[] fileLengthAsByteArray = new byte[4];
-						ByteBuffer.wrap(fileLengthAsByteArray).putInt(worldNameAsByteArray.length);
-						
-						outputStream.write(fileLengthAsByteArray);
-						outputStream.flush();
-						
-						outputStream.write(worldNameAsByteArray, 0, worldNameAsByteArray.length);
-						outputStream.flush();
-					}
-					else if (tokens[0].equals(CloseConnection)) {
-						break;
-					}
-				}
-	    	}
-		} catch (IOException ioEx) {
-			System.out.println(ioEx.getMessage());
-		}		
+		_entitiesPath = Paths.get(path.toString(), "entities.xml");
 	}
 
 
@@ -201,4 +184,40 @@ public class Main implements ApplicationListener {
 		// TODO Auto-generated method stub
 	}
 
+	private void initialCopyOfOriginalMaps()
+	{
+		Path sourcePath = Paths.get(".");
+
+		DirectoryStream.Filter<Path> dirFilter = new DirectoryStream.Filter<Path>() {
+            public boolean accept(Path path) throws IOException {
+            	PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:./*.tmx");
+                return matcher.matches(path);
+            }
+        };
+        
+		try {
+			for (final Path copiedFilePath : Files.newDirectoryStream(sourcePath)) {
+				if (dirFilter.accept(copiedFilePath)) {
+					Path targetPath = Paths.get(_mapPath.toString(), copiedFilePath.getFileName().toString());
+					if (!Files.exists(targetPath)) {
+						Files.copy(copiedFilePath, targetPath);						
+					}						
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	private void sendFile(OutputStream outputStream, FileHandle mapHandle) throws IOException {
+		byte[] fileLengthAsByteArray = new byte[4];
+        int fileLength = (int)mapHandle.length();
+        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
+        outputStream.write(fileLengthAsByteArray);
+        outputStream.flush();
+		
+		outputStream.write(mapHandle.readBytes(), 0, fileLength);
+		outputStream.flush();					
+	}
 }

@@ -3,17 +3,16 @@ package com.lordhero.game.model;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
@@ -27,8 +26,6 @@ public class Entities implements IEntities {
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
-		
-		load();
 	}
 	
 	public void setMapInfo(IMapInfo mapInfo) {
@@ -45,11 +42,11 @@ public class Entities implements IEntities {
 
 	@Override
 	public void update(IPlayer player) {			
-		create();
+		createEnemy();
 		
 		updateEntities(player);
 		
-		delete();
+		deleteTerminatedEntites();
 	}
 
 	@Override
@@ -61,16 +58,7 @@ public class Entities implements IEntities {
 	public void addNpc(int xPos, int yPos) {
 		String site = _mapInfo.getCurrentMap();
 		
-		List<IEntity> entitiesOnSite;
-		if (!_entities.containsKey(site)) {
-			entitiesOnSite = new LinkedList<IEntity>();
-			_entities.put(site, entitiesOnSite);
-		}
-		else {
-			entitiesOnSite = _entities.get(site);
-		}				
-		
-		entitiesOnSite.add(new Npc(_selectedNpcProvider.get(), xPos, yPos));		
+		addEntityToSite(site, new Npc(_selectedNpcProvider.get(), xPos, yPos));
 	}
 
 	@Override
@@ -117,48 +105,58 @@ public class Entities implements IEntities {
 		}
 		
 		return npcInRange;
-	}
-	
-	@Override
-	public void load() {
-		String path = "c:/temp/teest";
+	}	
 
-		if (!Files.exists(Paths.get(path))) {
-		  return;
-		}
-		try {
-	         FileInputStream fis = new FileInputStream(path);
-	         ObjectInputStream ois = new ObjectInputStream(fis);
-	         _entities = (Hashtable<String, List<IEntity>>) ois.readObject();
-	         ois.close();
-	         fis.close();
-	    }
-	    catch(IOException ioe) {
-	    	ioe.printStackTrace();
-	        return;
-	    }
-	    catch(ClassNotFoundException c) {
-	    	System.out.println("Class not found");
-	        c.printStackTrace();
-	        return;
-	    }
+	public void loadFromRemote(INetwork network) throws IOException {
+        _entities.clear();
+
+        byte[] fileAsArray = network.requestEntities();
 		
-		// call restore method on all npc's
-		Set<String> keys = _entities.keySet();
-		for (String key : keys) {
-			List<IEntity> entityList = _entities.get(key);
-			
-			for (IEntity entity : entityList) {
-				entity.restore();
-			}
+		if (fileAsArray == null) {
+			return;
 		}
+		
+        try {
+	        FileOutputStream fos = new FileOutputStream("entities");
+	        fos.write(fileAsArray);
+	        fos.flush();
+	        fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+		FileInputStream inputStream = new FileInputStream("entities");        
+        XmlReader xmlReader = new XmlReader();
+        XmlReader.Element root = xmlReader.parse(inputStream);
+        
+        
+        Array<XmlReader.Element> sites = root.getChildrenByName("site");
+        
+        for (XmlReader.Element siteNode : sites) {
+        	String siteName = siteNode.getAttribute("Name");
+        	for (int index = 0; index < siteNode.getChildCount(); index++) {
+        		XmlReader.Element entityNode = siteNode.getChild(index);
+        		
+        		IEntity entity = null;
+        		if (entityNode.getName().equals("Npc")) {
+        			entity = new Npc(entityNode);
+        		}
+        		else if (entityNode.getName().equals("Enemy")) {
+        			entity = new Enemy(entityNode);
+        		}
+        		
+        		addEntityToSite(siteName, entity);
+        	}
+        }
 	}
 	
 	@Override
 	public void save(XmlWriter writer) throws IOException {
+		writer.element("Entities");
+		
 		Set<String> keys = _entities.keySet();
         for(String key : keys) {
-        	writer.element(key);
+        	writer.element("site").attribute("Name",  key);
         	
         	List<IEntity> entities = _entities.get(key);
         	for (IEntity entity : entities) {
@@ -166,27 +164,30 @@ public class Entities implements IEntities {
         	}
         	writer.pop();
         }		
+        writer.pop();
 	}
 
-	private void create() {
-		String site = null;
-		List<IEntity> entitiesOnSite;
-		
+	private void createEnemy() {
 		if (Math.random() < 0.01) {
-			site = "baseMap";		
-			if (!_entities.containsKey(site)) {
-				entitiesOnSite = new LinkedList<IEntity>();
-				_entities.put(site,  entitiesOnSite);
-			}
-			else {
-				entitiesOnSite = _entities.get(site);
-			}				
-			
-			entitiesOnSite.add(new Enemy());
+			addEntityToSite("baseMap", new Enemy());
 		}		
 	}
 	
-	private void delete() {
+	private void addEntityToSite(String site, IEntity entity) {
+		List<IEntity> entitiesOnSite;
+
+		if (!_entities.containsKey(site)) {
+			entitiesOnSite = new LinkedList<IEntity>();
+			_entities.put(site,  entitiesOnSite);
+		}
+		else {
+			entitiesOnSite = _entities.get(site);
+		}				
+		
+		entitiesOnSite.add(entity);
+	}
+	
+	private void deleteTerminatedEntites() {
 		Enumeration<String> enumKey = _entities.keys();
 		while(enumKey.hasMoreElements()) {
 		    String key = enumKey.nextElement();

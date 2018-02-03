@@ -15,5 +15,5 @@ public interface IMap {
 	boolean enter();
 	void setTile();
 	void setCursorPosition(int xPos, int yPos);
-	void loadRemoteMap(INetwork _network);
+	void loadFromRemote(INetwork _network);
 }

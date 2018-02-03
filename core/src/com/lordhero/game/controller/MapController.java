@@ -10,7 +10,7 @@ import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IMap;
 import com.lordhero.game.model.IPlayer;
 
-public class MapController implements IController, IMapController {
+public class MapController implements IController {
 
 	private static final float AngleSpeed = 1.0f;
 
@@ -63,7 +63,7 @@ public class MapController implements IController, IMapController {
     	if (keyCode == Input.Keys.E)
     	{
     		if (_map.enter()) {
-    			_map.loadRemoteMap(_network);
+    			_map.loadFromRemote(_network);
     			return true;
     		}
     	}		
@@ -106,26 +106,7 @@ public class MapController implements IController, IMapController {
 			_map.setCursorPosition(xPos, yPos);			
 			return true;
 		}
-	}
-
-	@Override
-	public void visitWorld() {
-		_network.connectToServer(ConnectionType.Remote);
-		
-		_gameMode.set(GameMode.Play, null);
-
-		_map.loadRemoteMap(_network);	
-	}
-
-	@Override
-	public void goHome() {
-		_network.connectToServer(ConnectionType.Local);
-		
-		_gameMode.set(GameMode.BuyTiles, null);
-
-		_map.loadRemoteMap(_network);
-	}
-	
+	}	
 
 	private void moveLord() {
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {

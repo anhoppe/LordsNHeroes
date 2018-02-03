@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
@@ -70,6 +71,17 @@ public class Npc extends EntityBase implements INpc {
 		_sprite.setCenter((float)xPos, (float)yPos);
 	}
 	
+	public Npc(Element entityNode) {
+		super(entityNode.getChildByName("EntityBase"));
+
+		_name = entityNode.getAttribute("Name");
+		_price = entityNode.getIntAttribute("Price");
+		_productionProbability = entityNode.getFloatAttribute("ProductionProbability");
+		_type = Type.valueOf(entityNode.getAttribute("Type"));
+				
+		restore();
+	}
+
 	@Override
 	public List<IItem> getItems() {
 		return _items;

@@ -10,4 +10,6 @@ public interface INetwork {
 	void connectToServer(ConnectionType local);
 
 	byte[] requestMap(String currentMap);
+
+	byte[] requestEntities();
 }

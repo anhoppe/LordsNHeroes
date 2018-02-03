@@ -31,11 +31,7 @@ public abstract class EntityBase implements IEntity {
 	}
 	
 	public EntityBase(Element entityBaseNode) {
-		if (entityBaseNode != null) {
-			_xPos = entityBaseNode.getFloatAttribute("XPos");
-			_yPos = entityBaseNode.getFloatAttribute("YPos");
-			_viewDirectionDeg = entityBaseNode.getFloatAttribute("ViewDirection");
-		}
+		read(entityBaseNode);
 	}
 
 	@Override
@@ -111,5 +107,13 @@ public abstract class EntityBase implements IEntity {
 		int yDist = (int) Math.abs(yPos - _yPos);
 			
 		return Math.max(xDist,  yDist);
+	}
+
+	public void read(Element entityBaseNode) {
+		if (entityBaseNode != null) {
+			_xPos = entityBaseNode.getFloatAttribute("XPos");
+			_yPos = entityBaseNode.getFloatAttribute("YPos");
+			_viewDirectionDeg = entityBaseNode.getFloatAttribute("ViewDirection");
+		}		
 	}
 }

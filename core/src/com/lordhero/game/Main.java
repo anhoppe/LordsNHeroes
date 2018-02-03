@@ -18,6 +18,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.INetwork.ConnectionType;
 import com.lordhero.game.controller.EntityController;
@@ -188,6 +189,22 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         
         ///////////////////////////////////////////////////////////////////
         // Required initialization
+		Path path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "player.xml");
+		FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(path.toString());
+			XmlReader reader = new XmlReader();
+			XmlReader.Element root = reader.parse(inputStream);
+			_player.read(root);
+			inputStream.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
         _map.loadFromRemote(_network);
         try {
 			_entities.loadFromRemote(_network);

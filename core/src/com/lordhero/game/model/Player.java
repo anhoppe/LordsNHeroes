@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.items.IItem;
@@ -125,16 +126,16 @@ public class Player extends EntityBase implements IPlayer {
 	public void moveAbsolute(Direction direction) {
 		float delta = Gdx.graphics.getDeltaTime();
 
-		if (direction == Direction.Up && !_upBlocked) {
+		if (direction == Direction.Up) {
             _yPos += LordSpeed * delta;
 		}
-		if (direction == Direction.Down && !_downBlocked) {
+		if (direction == Direction.Down) {
             _yPos -= LordSpeed * delta;
 		}
-		if (direction == Direction.Left && !_leftBlocked) {
+		if (direction == Direction.Left) {
             _xPos -= LordSpeed * delta;
 		}
-		if (direction == Direction.Right && !_rightBlocked) {
+		if (direction == Direction.Right) {
             _xPos += LordSpeed * delta;
 		}
 	}
@@ -260,5 +261,13 @@ public class Player extends EntityBase implements IPlayer {
 	@Override
 	public void dispose() {
 		_image.dispose();		
+	}
+
+	public void read(Element playerNode) {
+		super.read(playerNode.getChildByName("EntityBase"));
+		_money = playerNode.getIntAttribute("Money");
+		_hitPoints = playerNode.getIntAttribute("HitPoints");
+		
+		fireChangeEvent();
 	}	
 }

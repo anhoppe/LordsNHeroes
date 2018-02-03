@@ -43,7 +43,7 @@ public class WorldMap {
         _camera.update();
         _camera.translate(new Vector2(200, 0));        
 
-        _spriteBatch = new SpriteBatch();
+        _spriteBatch = new SpriteBatch();        
 		       
 		_cursorImage = new Texture(Gdx.files.internal("cursor.png"));
 		_cursorSprite = new Sprite(_cursorImage);

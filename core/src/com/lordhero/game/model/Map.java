@@ -55,7 +55,7 @@ public class Map implements IMap, IMapInfo {
 
 	public void setPlayer(IPlayer player) {
 		_player = player;
-	}
+	}	
 	
     public void setSelectedCellProvider(ISelectedCellProvider selectedCellProvider) {
     	_selectedCellProvider = selectedCellProvider;

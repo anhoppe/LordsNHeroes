@@ -18,6 +18,7 @@ import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.controller.EntityController;
 import com.lordhero.game.controller.MapController;
+import com.lordhero.game.model.ICreature;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.IMap;
@@ -94,11 +95,15 @@ public class WorldMap {
 				Sprite sprite = entity.getSprite();
 				sprite.draw(_spriteBatch);
 								
-		    	TextureRegion weaponTexture = entity.getWeaponAnimationFrame();
-		        
-		    	if (weaponTexture != null) {
-	                _spriteBatch.draw(weaponTexture, entity.getX(), entity.getY(), 0f, 0f, 32f, 32f, 1f, 1f, entity.getRotation());        				    		
-		    	}
+				if (entity instanceof ICreature)
+				{
+					ICreature creature = (ICreature)entity;
+			    	TextureRegion weaponTexture = creature.getWeaponAnimationFrame();
+			        
+			    	if (weaponTexture != null) {
+		                _spriteBatch.draw(weaponTexture, entity.getX(), entity.getY(), 0f, 0f, 32f, 32f, 1f, 1f, creature.getRotation());        				    		
+			    	}					
+				}
 			}		
 		}
 

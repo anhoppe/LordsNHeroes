@@ -9,6 +9,7 @@ public interface IGameMode {
 		None,
 		BuyTiles,
 		AddNpc,
+		MonsterPit,
 		SelectMapItems,
 		Play, 
 		Conversation, 

@@ -9,7 +9,7 @@ import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
-public interface IPlayer extends IEntity {
+public interface IPlayer extends ICreature {
 	public enum Direction {
 		None,
 		Up,

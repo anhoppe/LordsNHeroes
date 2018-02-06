@@ -61,6 +61,14 @@ public class Entities implements IEntities {
 		addEntityToSite(site, new Npc(_selectedNpcProvider.get(), xPos, yPos));
 	}
 
+
+	@Override
+	public void addMonsterPit(int xPos, int yPos) {
+		String site = _mapInfo.getCurrentMap();
+		
+		addEntityToSite(site, new MonsterPit(xPos, yPos));		
+	}
+
 	@Override
 	public void selectEntity(int xPos, int yPos) {
 		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
@@ -96,9 +104,10 @@ public class Entities implements IEntities {
 		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
 
 		for (IEntity entity : entitiesOnSite) {
-			if (entity.isInRange(xPos, yPos)) {
-				if (entity instanceof Npc) {
-					npcInRange = (INpc)entity;
+			if (entity instanceof Npc) {
+				Npc npc = (Npc)entity;
+				if (npc.isInRange(xPos, yPos)) {
+					npcInRange = npc;
 					break;
 				}
 			}
@@ -143,6 +152,9 @@ public class Entities implements IEntities {
         		}
         		else if (entityNode.getName().equals("Enemy")) {
         			entity = new Enemy(entityNode);
+        		}
+        		else if (entityNode.getName().equals("MonsterPit")) {
+        			entity = new MonsterPit(entityNode);
         		}
         		
         		addEntityToSite(siteName, entity);

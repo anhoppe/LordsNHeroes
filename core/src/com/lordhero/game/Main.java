@@ -33,6 +33,7 @@ import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
 import com.lordhero.game.view.MainPanel;
+import com.lordhero.game.view.MonsterPitPanel;
 import com.lordhero.game.view.NpcEditor;
 import com.lordhero.game.view.NpcView;
 import com.lordhero.game.view.PurchaseSheet;
@@ -68,6 +69,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private HeroSheet _heroSheet;
 	private PurchaseSheet _purchaseSheet;
 	private CharacterSheet _characterSheet;
+	private MonsterPitPanel _monsterPitPanel;
 
 	// Others...
 	InputMultiplexer _inputMultiplexer;
@@ -116,6 +118,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		// Instantiation
 		
 		// Create UI components
+		_monsterPitPanel = new MonsterPitPanel();
 		_characterSheet = new CharacterSheet();
 		_purchaseSheet = new PurchaseSheet();
 		_lordSheet = new LordSheet();
@@ -249,6 +252,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
             else if (_gameMode == GameMode.AddNpc) {
             	_npcEditor.draw();
             }
+            else if (_gameMode == GameMode.MonsterPit) {
+            	_monsterPitPanel.draw();
+            }
             else if (_gameMode == GameMode.SelectMapItems) {
             	_npcView.draw();
             }
@@ -376,6 +382,12 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
         }
+        else if (_gameMode == GameMode.MonsterPit) {
+        	_inputMultiplexer.addProcessor(_monsterPitPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);        	
+        }
         else if (_gameMode == GameMode.SelectMapItems) {
     		_inputMultiplexer.addProcessor(_npcView.getInputProcessor());
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
@@ -440,7 +452,6 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public Path getSaveFolder(SaveType saveType) {

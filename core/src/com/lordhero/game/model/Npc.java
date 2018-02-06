@@ -12,12 +12,12 @@ import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
 
-public class Npc extends EntityBase implements INpc {
+public class Npc extends CreatureBase implements INpc {
 	public enum Type {
 		None,
 		Hobo,
 		Blacksmith,
-		Bowyer,
+		Bowyer,		
 		Warrior,
 		TownGuard,
 		King,
@@ -57,7 +57,7 @@ public class Npc extends EntityBase implements INpc {
 		_productionProbability = productionProbabilityPerMinute;
 	}
 	
-	public Npc(Npc npc, int xPos, int yPos) {
+	public Npc(Npc npc, int xPos, int yPos) {		
 		_name = npc._name;
 		_price = npc._price;
 		_type = npc._type;
@@ -72,7 +72,7 @@ public class Npc extends EntityBase implements INpc {
 	}
 	
 	public Npc(Element entityNode) {
-		super(entityNode.getChildByName("EntityBase"));
+		super(entityNode.getChildByName("CreatureBase"));
 
 		_name = entityNode.getAttribute("Name");
 		_price = entityNode.getIntAttribute("Price");

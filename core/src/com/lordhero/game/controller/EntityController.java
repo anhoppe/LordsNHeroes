@@ -36,7 +36,7 @@ public class EntityController implements IController {
 	}
 
 	@Override
-	public boolean processKeyUp(int keyCode) {
+	public boolean processKeyUp(int keyCode) {		
 		if (_gameMode.is(GameMode.Play)) {
 			if (keyCode == Input.Keys.T) {
 				INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());				
@@ -65,6 +65,9 @@ public class EntityController implements IController {
 		else if (_gameMode.get() == IGameMode.GameMode.SelectMapItems) {
 			_entities.selectEntity(xCursor, yCursor);
 			return true;
+		}
+		else if (_gameMode.is(GameMode.MonsterPit)) {
+			_entities.addMonsterPit(xCursor, yCursor);
 		}
 
 		return false;

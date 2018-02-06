@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.Weapon;
 
-public class Enemy extends EntityBase implements INonPlayer {
+public class Enemy extends CreatureBase implements INonPlayer {
 	enum Mode {
 		None,
 		Wander,
@@ -51,7 +51,7 @@ public class Enemy extends EntityBase implements INonPlayer {
 	}
 	
 	public Enemy(Element enemyNode) {
-		super(enemyNode.getChildByName("EntityBase"));
+		super(enemyNode.getChildByName("CreatureBase"));
 		
 		_xEndPos = enemyNode.getIntAttribute("XEndPos");
 		_yEndPos = enemyNode.getIntAttribute("YEndPos");

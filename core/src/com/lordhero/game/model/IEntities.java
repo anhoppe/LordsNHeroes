@@ -22,6 +22,8 @@ public interface IEntities {
 	
 	void addNpc(int xPos, int yPos);
 
+	void addMonsterPit(int xCursor, int yCursor);
+
 	void selectEntity(int xPos, int yPos);
 	
 	INpc getNpcInRange(int xPos, int yPos);

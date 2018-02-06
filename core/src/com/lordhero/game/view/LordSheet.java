@@ -16,6 +16,7 @@ import com.lordhero.game.model.IPlayer;
 public class LordSheet extends UiPanel {
 	private static final String EditMapMode = "Editor map";
 	private static final String AddNpcMode = "Add npc";
+	private static final String MonsterPit = "Monster pit";
 	private static final String SelectMode = "Select";
 	
 	IPlayer _lord;
@@ -34,7 +35,7 @@ public class LordSheet extends UiPanel {
 		
 		_table.row();
 		
-		TextButton visitWorld = new TextButton("Visit world", _skin);
+		TextButton visitWorld = new TextButton("Visit world", _skin);		
 
 		_table.add(visitWorld).size(90, 25);
 		visitWorld.addCaptureListener(new ClickListener() {
@@ -54,7 +55,7 @@ public class LordSheet extends UiPanel {
 		_table.add(new Label("Menu: ", _skin));
 		
 	    _menuSelection = new SelectBox<String>(_skin);
-	    _menuSelection.setItems(new String[] {EditMapMode, AddNpcMode, SelectMode});
+	    _menuSelection.setItems(new String[] {EditMapMode, AddNpcMode, MonsterPit, SelectMode});
 	    _menuSelection.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -70,6 +71,9 @@ public class LordSheet extends UiPanel {
 		}
 		else if (selected == AddNpcMode) {
 			return GameMode.AddNpc;
+		}
+		else if (selected == MonsterPit) {
+			return GameMode.MonsterPit;
 		}
 		else if (selected == SelectMode) {
 			return GameMode.SelectMapItems;

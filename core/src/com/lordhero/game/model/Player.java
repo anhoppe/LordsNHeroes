@@ -19,7 +19,7 @@ import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
-public class Player extends EntityBase implements IPlayer {
+public class Player extends CreatureBase implements IPlayer {
 	private static final int IsAtDistance = 32;
     private static final float PlayerSpeed = 150f;
     private static final float LordSpeed = 300;    
@@ -264,7 +264,7 @@ public class Player extends EntityBase implements IPlayer {
 	}
 
 	public void read(Element playerNode) {
-		super.read(playerNode.getChildByName("EntityBase"));
+		super.readCreatureBase(playerNode.getChildByName("CreatureBase"));
 		_money = playerNode.getIntAttribute("Money");
 		_hitPoints = playerNode.getIntAttribute("HitPoints");
 		

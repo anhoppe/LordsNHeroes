@@ -25,7 +25,7 @@ public class MapController implements IController {
 	private INetwork _network;
 	
 	public void setMap(IMap map) {
-		_map = map;
+		_map = map;		
 	}
 	
 	public void setPlayer(IPlayer player) {

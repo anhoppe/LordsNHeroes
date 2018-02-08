@@ -39,11 +39,11 @@ public class Enemy extends CreatureBase implements INonPlayer {
 	private Mode _mode = Mode.Wander;
 	
 	private int _hitPoints = 20;
-	
-	public Enemy() {		 
-		_xPos = getRandomStartPosition();
-		_yPos = getRandomStartPosition();
-		 
+
+	public Enemy(float xPos, float yPos) {
+		_xPos = xPos;
+		_yPos = yPos;
+
 		_xEndPos = getRandomStartPosition();
 		_yEndPos = getRandomStartPosition();
 

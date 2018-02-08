@@ -17,15 +17,19 @@ import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
 
-public class Entities implements IEntities {
+import net.dermetfan.utils.Pair;
+
+public class Entities implements IEntities, IEntityFactory {
 	private Hashtable<String, List<IEntity>> _entities;
 	private IMapInfo _mapInfo;
 	private ISelectedNpcProvider _selectedNpcProvider;
+	private List<Pair<String, IEntity>> _createdEntities;
 	
 	private INpcSelectionReceiver _npcSelectionReceiver;
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
+		_createdEntities = new LinkedList<Pair<String, IEntity>>();
 	}
 	
 	public void setMapInfo(IMapInfo mapInfo) {
@@ -42,9 +46,9 @@ public class Entities implements IEntities {
 
 	@Override
 	public void update(IPlayer player) {			
-		createEnemy();
-		
 		updateEntities(player);
+		
+		addCreatedEntities();
 		
 		deleteTerminatedEntites();
 	}
@@ -61,12 +65,11 @@ public class Entities implements IEntities {
 		addEntityToSite(site, new Npc(_selectedNpcProvider.get(), xPos, yPos));
 	}
 
-
 	@Override
 	public void addMonsterPit(int xPos, int yPos) {
 		String site = _mapInfo.getCurrentMap();
 		
-		addEntityToSite(site, new MonsterPit(xPos, yPos));		
+		addEntityToSite(site, new MonsterPit(xPos, yPos, this, _mapInfo.getCurrentMap()));		
 	}
 
 	@Override
@@ -154,7 +157,7 @@ public class Entities implements IEntities {
         			entity = new Enemy(entityNode);
         		}
         		else if (entityNode.getName().equals("MonsterPit")) {
-        			entity = new MonsterPit(entityNode);
+        			entity = new MonsterPit(entityNode, this);
         		}
         		
         		addEntityToSite(siteName, entity);
@@ -179,10 +182,9 @@ public class Entities implements IEntities {
         writer.pop();
 	}
 
-	private void createEnemy() {
-		if (Math.random() < 0.01) {
-			addEntityToSite("baseMap", new Enemy());
-		}		
+	@Override
+	public void createEnemy(String site, float xPos, float yPos) {
+		_createdEntities.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
 	}
 	
 	private void addEntityToSite(String site, IEntity entity) {
@@ -231,10 +233,18 @@ public class Entities implements IEntities {
 		    List<IEntity> entitiesOnSite = _entities.get(key);
 
 			for (IEntity entity : entitiesOnSite) {
-				if (entity instanceof INonPlayer) {
-					((INonPlayer)entity).update(player);
+				if (entity instanceof IUpdateable) {
+					((IUpdateable)entity).update(player);
 				}
 		    }
 		}			
+	}
+	
+	private void addCreatedEntities() {
+		for (Pair<String, IEntity> createdEntity : _createdEntities) {
+			addEntityToSite(createdEntity.getKey(), createdEntity.getValue());
+		}
+		
+		_createdEntities.clear();
 	}
 }

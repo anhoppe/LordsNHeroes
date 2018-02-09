@@ -152,7 +152,6 @@ public class Main implements ApplicationListener {
 		_entitiesPath = Paths.get(path.toString(), "entities.xml");
 	}
 
-
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub

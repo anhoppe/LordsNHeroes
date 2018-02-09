@@ -1,0 +1,31 @@
+Base
+----
+ - hit points
+ - mana
+ - xp
+ - level
+ - speed
+ - endurance
+ - view range
+ - infravision
+
+Attriubtes
+----------
+ - Strength (Carry goods, speed, Hit modifier)
+ - Dextitrity (speed, hit speed, bow accuracy, hit modifier)
+ - Constitution (endurance, hit points)
+ - Intelligence (mana, search)
+
+ Skills
+ ------
+  - Bowyer
+  - Weapon smith
+  - Magic
+  - Search
+  - Create trap
+  - Disarm trap
+
+  Spells
+  ------
+   - Magic missile
+   - 

@@ -7,4 +7,6 @@ import com.lordhero.game.model.items.IItem;
 
 public interface INpc extends INonPlayer {
 	List<IItem> getItems();
+
+	void addMoney(int costs);
 }

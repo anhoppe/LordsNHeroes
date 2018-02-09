@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.IGameMode;
@@ -41,28 +42,30 @@ public class Npc extends CreatureBase implements INpc {
 
 	private String _name;
 	
-	private int _price;
+	private int _priceToBuyNpc;
 	
 	private Type _type;
 	
-	private double _productionProbability;
+	private double _productionProbabilityPerSec;
 	
 	private List<IItem> _items = new LinkedList<IItem>();
+	
+	private int _money;
 	
 	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
 
 	public Npc(String name, int price, Type type, double productionProbabilityPerMinute) {
 		_name = name;
-		_price = price;
+		_priceToBuyNpc = price;
 		_type = type;
-		_productionProbability = productionProbabilityPerMinute;
+		_productionProbabilityPerSec = productionProbabilityPerMinute;
 	}
 	
 	public Npc(Npc npc, int xPos, int yPos) {		
 		_name = npc._name;
-		_price = npc._price;
+		_priceToBuyNpc = npc._priceToBuyNpc;
 		_type = npc._type;
-		_productionProbability = npc._productionProbability;
+		_productionProbabilityPerSec = npc._productionProbabilityPerSec;
 		
 		_sprite = new Sprite(npc._sprite);
 	
@@ -75,11 +78,16 @@ public class Npc extends CreatureBase implements INpc {
 	public Npc(Element entityNode) {
 		super(entityNode.getChildByName("CreatureBase"));
 
-		_name = entityNode.getAttribute("Name");
-		_price = entityNode.getIntAttribute("Price");
-		_productionProbability = entityNode.getFloatAttribute("ProductionProbability");
-		_type = Type.valueOf(entityNode.getAttribute("Type"));
-				
+		try {
+			_name = entityNode.getAttribute("Name");
+			_priceToBuyNpc = entityNode.getIntAttribute("Price");
+			_type = Type.valueOf(entityNode.getAttribute("Type"));
+			_productionProbabilityPerSec = entityNode.getFloatAttribute("ProductionProbability");
+			_money = entityNode.getIntAttribute("Money");
+		} catch (GdxRuntimeException e) {
+			// 
+		}
+		
 		restore();
 	}
 
@@ -90,7 +98,7 @@ public class Npc extends CreatureBase implements INpc {
 
 	@Override
 	public void update(IPlayer player, IGameMode gameMode) {
-		if (Math.random() < _productionProbability) {
+		if (Math.random() < _productionProbabilityPerSec) {
 			_items.add(ItemFactory.produce(_type));
 		}
 	}
@@ -119,28 +127,33 @@ public class Npc extends CreatureBase implements INpc {
 	public TextureRegion getWeaponAnimationFrame() {
 		return null;
 	}
+	
+	@Override
+	public void addMoney(int money) {
+		_money += money;
+	}
 
 	public String getName() {
 		return _name;
 	}
 	
 	public int getPrice() {
-		return _price;
+		return _priceToBuyNpc;
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void write(XmlWriter writer) throws IOException {
 		writer.element("Npc").
 		attribute("Name", _name).
-		attribute("Price", _price).
+		attribute("Price", _priceToBuyNpc).
 		attribute("Type", _type).
-		attribute("ProductionProbability", _productionProbability);
+		attribute("ProductionProbability", _productionProbabilityPerSec).
+		attribute("Money", _money);
 		
 		super.write(writer);
 

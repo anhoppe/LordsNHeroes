@@ -83,9 +83,14 @@ public class PurchaseSheet extends UiPanel {
 		int index = _itemsList.getSelectedIndex();
 		
 		java.util.List<IItem> npcItems = _npc.getItems();
-		IItem transferredItem = npcItems.remove(index);
-		
-		_player.addItem(transferredItem);
+		IItem itemToBuy = npcItems.get(index);
+		int costs = itemToBuy.getPrice();
+		if (_player.getMoney() >= costs) {
+			npcItems.remove(index);
+			_player.addItem(itemToBuy);
+			_player.pay(costs);
+			_npc.addMoney(costs);
+		}
 		
 		updateItems();
 	}	

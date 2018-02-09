@@ -12,6 +12,7 @@ import java.util.Set;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.IGameMode;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.items.IWeapon;
@@ -45,8 +46,8 @@ public class Entities implements IEntities, IEntityFactory {
 	}
 
 	@Override
-	public void update(IPlayer player) {			
-		updateEntities(player);
+	public void update(IPlayer player, IGameMode gameMode) {			
+		updateEntities(player, gameMode);
 		
 		addCreatedEntities();
 		
@@ -87,14 +88,17 @@ public class Entities implements IEntities, IEntityFactory {
 	}	
 
 	@Override
-	public void hitEntity(int xPos, int yPos, IWeapon hitWeapon) {
+	public void hitEntity(int xPos, int yPos, IPlayer player) {
 		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
 
+		IWeapon weapon = player.getWeapon();
 		for (IEntity entity : entitiesOnSite) {
 			if (entity.isAt(xPos, yPos)) {
 				if (entity instanceof Enemy) {
 					Enemy enemy = (Enemy)entity;
-					enemy.hit(hitWeapon.hit());
+					if (enemy.hit(weapon.hit())) {
+						player.addXp(enemy.getXp());
+					}					
 				}
 			}
 		}		
@@ -225,7 +229,7 @@ public class Entities implements IEntities, IEntityFactory {
 		}			
 	}
 	
-	private void updateEntities(IPlayer player) {
+	private void updateEntities(IPlayer player, IGameMode gameMode) {
 		Enumeration<String> enumKey = _entities.keys();
 		while(enumKey.hasMoreElements()) {
 		    String key = enumKey.nextElement();
@@ -234,7 +238,7 @@ public class Entities implements IEntities, IEntityFactory {
 
 			for (IEntity entity : entitiesOnSite) {
 				if (entity instanceof IUpdateable) {
-					((IUpdateable)entity).update(player);
+					((IUpdateable)entity).update(player, gameMode);
 				}
 		    }
 		}			

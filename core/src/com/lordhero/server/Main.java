@@ -75,8 +75,8 @@ public class Main implements ApplicationListener {
 
 	private void handleClientConnections() {
 		try {
+			ServerSocket serverSocket = new ServerSocket(_port);
 	    	while (true) {
-				ServerSocket serverSocket = new ServerSocket(_port);
 				Socket clientSocket = serverSocket.accept();
 			    BufferedOutputStream outputStream = new BufferedOutputStream(clientSocket.getOutputStream());
 			    BufferedReader inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
@@ -106,6 +106,7 @@ public class Main implements ApplicationListener {
 						outputStream.flush();
 					}
 					else if (tokens[0].equals(CloseConnection)) {
+						clientSocket.close();
 						break;
 					}
 				}
@@ -212,12 +213,21 @@ public class Main implements ApplicationListener {
 	
 	private void sendFile(OutputStream outputStream, FileHandle mapHandle) throws IOException {
 		byte[] fileLengthAsByteArray = new byte[4];
-        int fileLength = (int)mapHandle.length();
-        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
-        outputStream.write(fileLengthAsByteArray);
-        outputStream.flush();
-		
-		outputStream.write(mapHandle.readBytes(), 0, fileLength);
-		outputStream.flush();					
+
+		int fileLength = 0;
+		try {
+			fileLength = (int)mapHandle.length();
+	        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
+	        outputStream.write(fileLengthAsByteArray);
+	        outputStream.flush();
+			
+			outputStream.write(mapHandle.readBytes(), 0, fileLength);
+			outputStream.flush();
+		} catch (Exception e) {
+			// error handling: file not found, just send 0 file size
+	        ByteBuffer.wrap(fileLengthAsByteArray).putInt(fileLength);
+	        outputStream.write(fileLengthAsByteArray);
+	        outputStream.flush();			
+		}        					
 	}
 }

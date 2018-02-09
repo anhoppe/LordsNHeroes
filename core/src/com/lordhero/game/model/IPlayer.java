@@ -56,4 +56,9 @@ public interface IPlayer extends ICreature {
 
 	void hit(int x, int y, IWeapon weapon);
 
+	void addXp(int xp);
+
+	int getXp();
+
+	int getLevel();
 }

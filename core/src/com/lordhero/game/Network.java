@@ -105,8 +105,10 @@ public class Network implements INetwork {
 			_inputStream.read(fileLengthInBytes, 0, 4);
 	        int fileLength = new BigInteger(fileLengthInBytes).intValue();
 	        
-	        fileAsArray = new byte[fileLength];
-	        _inputStream.read(fileAsArray, 0, fileLength);
+	        if (fileLength > 0) {
+		        fileAsArray = new byte[fileLength];
+		        _inputStream.read(fileAsArray, 0, fileLength);
+	        }
 
 		} catch (IOException e) {
 			e.printStackTrace();

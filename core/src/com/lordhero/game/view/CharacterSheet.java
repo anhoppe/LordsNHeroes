@@ -35,7 +35,9 @@ public class CharacterSheet extends UiPanel {
 	private SelectBox<String> _rangedWeaponSelection;
 	private java.util.List<RangeWeapon> _rangedWeapons;
 	
-	private TextField _hitPointsText;
+	private Label _hitPointsText;
+	private Label _xpText;
+	private Label _levelText;
 	
 	public CharacterSheet() {
 		_table.setPosition(500,  500);
@@ -45,8 +47,11 @@ public class CharacterSheet extends UiPanel {
 		_rangedWeapons = new LinkedList<RangeWeapon>();		
 		
 		Table statsTable = new Table();
-		statsTable.add(new Label("Hit points", _skin));
-		_hitPointsText = new TextField("", _skin);
+		_levelText = new Label("", _skin);
+		statsTable.add(_levelText);
+		_xpText = new Label("", _skin);
+		statsTable.add(_xpText);
+		_hitPointsText = new Label("", _skin);
 		statsTable.add(_hitPointsText);
 		_table.add(statsTable);
 		
@@ -81,10 +86,17 @@ public class CharacterSheet extends UiPanel {
 	public void update() {		
 		java.util.List<IItem> items = _player.getItems();
 
-		_hitPointsText.setText(Integer.toString(_player.getHitPoints()));
+		updateStats();
 		updateItemsList(items);
 		updateMeleeWeaponsList(items);
 		updateRangedWeapongs(items);
+	}
+	
+	private void updateStats() {
+		_levelText.setText("Level: " + Integer.toString(_player.getLevel()));
+		_xpText.setText("XP: " + Integer.toString(_player.getXp()));
+		_hitPointsText.setText("Hit points: " + Integer.toString(_player.getHitPoints()));
+		
 	}
 
 	private void updateItemsList(java.util.List<IItem> items) {		

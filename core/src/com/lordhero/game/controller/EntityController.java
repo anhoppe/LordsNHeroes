@@ -32,7 +32,7 @@ public class EntityController implements IController {
   	
 	@Override
 	public void update() {		
-		_entities.update(_player);
+		_entities.update(_player, _gameMode);
 	}
 
 	@Override

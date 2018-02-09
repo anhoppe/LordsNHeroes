@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.IGameMode;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
 
@@ -88,7 +89,7 @@ public class Npc extends CreatureBase implements INpc {
 	}
 
 	@Override
-	public void update(IPlayer player) {
+	public void update(IPlayer player, IGameMode gameMode) {
 		if (Math.random() < _productionProbability) {
 			_items.add(ItemFactory.produce(_type));
 		}

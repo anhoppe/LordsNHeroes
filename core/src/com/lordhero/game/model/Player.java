@@ -36,6 +36,10 @@ public class Player extends CreatureBase implements IPlayer {
     private int _money = 10000;
 	
 	private int _hitPoints = 100;
+	
+	private int _xp = 0;
+	
+	private int _level = 0;
 
     private List<IItem> _items;
 
@@ -220,7 +224,7 @@ public class Player extends CreatureBase implements IPlayer {
 		Vector2 hitPosition = getHitPosition();
 		
 		if (hitPosition != null) {
-			entities.hitEntity((int)(hitPosition.x), (int)(hitPosition.y), _weapon);			
+			entities.hitEntity((int)(hitPosition.x), (int)(hitPosition.y), this);			
 		}
 	}
 
@@ -246,10 +250,39 @@ public class Player extends CreatureBase implements IPlayer {
 			_hitPoints -= weapon.hit();
 		}		
 	}
+
+	@Override
+	public void dispose() {
+		_image.dispose();		
+	}
+
+	@Override
+	public void addXp(int xp) {
+		_xp += xp;
+		
+		if (_xp > Math.pow(2, _level)) {
+			_level++;
+		}
+	}
+
+	@Override
+	public int getXp() {
+		return _xp;
+	}
+
+	@Override
+	public int getLevel() {
+		return _level;
+	}	
 	
 	@Override
 	public void write(XmlWriter writer) throws IOException {
-		writer.element("Player").attribute("Money", _money).attribute("HitPoints", _hitPoints);
+		writer.element("Player").
+		attribute("Money", _money).
+		attribute("HitPoints", _hitPoints).
+		attribute("Xp", _xp).
+		attribute("Level", _level);
+		
 		super.write(writer);
 		
 		for (IItem item : _items) {
@@ -258,16 +291,13 @@ public class Player extends CreatureBase implements IPlayer {
 		writer.pop();
 	}
 
-	@Override
-	public void dispose() {
-		_image.dispose();		
-	}
-
 	public void read(Element playerNode) {
 		super.readCreatureBase(playerNode.getChildByName("CreatureBase"));
 		_money = playerNode.getIntAttribute("Money");
 		_hitPoints = playerNode.getIntAttribute("HitPoints");
+		_xp = playerNode.getIntAttribute("Xp");
+		_level = playerNode.getIntAttribute("Level");
 		
 		fireChangeEvent();
-	}	
+	}
 }

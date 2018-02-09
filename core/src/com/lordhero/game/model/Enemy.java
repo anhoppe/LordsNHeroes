@@ -9,8 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.IGameMode;
+import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.Weapon;
 
@@ -40,29 +43,38 @@ public class Enemy extends CreatureBase implements INonPlayer {
 	
 	private int _hitPoints = 20;
 
+	private int _xp;
+	
 	public Enemy(float xPos, float yPos) {
 		_xPos = xPos;
 		_yPos = yPos;
 
 		_xEndPos = getRandomStartPosition();
 		_yEndPos = getRandomStartPosition();
+		
+		_xp = 5;
 
 		restore();
 	}
 	
 	public Enemy(Element enemyNode) {
 		super(enemyNode.getChildByName("CreatureBase"));
-		
-		_xEndPos = enemyNode.getIntAttribute("XEndPos");
-		_yEndPos = enemyNode.getIntAttribute("YEndPos");
-		_mode = Mode.valueOf(enemyNode.getAttribute("Mode"));
-		_hitPoints = enemyNode.getIntAttribute("HitPoints");
+
+		try {
+			_xEndPos = enemyNode.getIntAttribute("XEndPos");
+			_yEndPos = enemyNode.getIntAttribute("YEndPos");
+			_mode = Mode.valueOf(enemyNode.getAttribute("Mode"));
+			_hitPoints = enemyNode.getIntAttribute("HitPoints");		
+			_xp = enemyNode.getIntAttribute("Xp");
+		} catch (GdxRuntimeException e) {
+			
+		}
 		
 		restore();
 	}
 
 	@Override
-	public void update(IPlayer player) {
+	public void update(IPlayer player, IGameMode gameMode) {
 		if (_mode == Mode.Wander) {
 			Vector2 dir = new Vector2((float)(_xEndPos - _xPos), (float)(_yEndPos - _yPos));
 			
@@ -72,7 +84,7 @@ public class Enemy extends CreatureBase implements INonPlayer {
 			_xPos += dir.x;
 			_yPos += dir.y;
 			
-			if (spotsPlayer(player)) {
+			if (spotsPlayer(player) && gameMode.is(GameMode.Play)) {
 				_mode = Mode.Hunt;
 			}
 			else if ((Math.abs(_xPos - _xEndPos) * Math.abs(_xPos - _xEndPos) + Math.abs(_yPos - _yEndPos) * Math.abs(_yPos - _yEndPos)) < MinTargetDistance) {
@@ -157,17 +169,27 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		_mode = Mode.Terminate;		
 	}
 
-	public void hit(int hit) {
+	public boolean hit(int hit) {
+		boolean killed = false;
+		
 		_hitPoints -= hit;
 		
 		if (_hitPoints < 0) {
+			killed = true;
 			terminate();
 		}		
+		
+		return killed;
 	}
 	
 	@Override
 	public void write(XmlWriter writer) throws IOException {
-		writer.element("Enemy").attribute("XEndPos", _xEndPos).attribute("YEndPos", _yEndPos).attribute("Mode", _mode).attribute("HitPoints", _hitPoints);
+		writer.element("Enemy").
+		attribute("XEndPos", _xEndPos).
+		attribute("YEndPos", _yEndPos).
+		attribute("Mode", _mode).
+		attribute("HitPoints", _hitPoints).
+		attribute("Xp", _xp);
 
 		super.write(writer);
 		writer.pop();
@@ -175,5 +197,9 @@ public class Enemy extends CreatureBase implements INonPlayer {
 
 	@Override
 	public void dispose() {
+	}
+
+	public int getXp() {
+		return _xp;
 	}
 }

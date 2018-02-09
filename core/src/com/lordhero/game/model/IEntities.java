@@ -3,11 +3,8 @@ package com.lordhero.game.model;
 import java.io.IOException;
 import java.util.List;
 
-import com.lordhero.game.model.IPlayer;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
-import com.lordhero.game.model.IEntity;
-import com.lordhero.game.model.items.IWeapon;
+import com.lordhero.game.IGameMode;
 
 public interface IEntities {
 	public enum EntityType {
@@ -16,7 +13,7 @@ public interface IEntities {
 		Npc
 	};
 
-	void update(IPlayer player);
+	void update(IPlayer player, IGameMode gameMode);
 	
 	List<IEntity> getEntitiesOnSite();
 	
@@ -30,5 +27,5 @@ public interface IEntities {
 
 	void save(XmlWriter writer) throws IOException;
 
-	void hitEntity(int xPos, int yPos, IWeapon hitWeapon);
+	void hitEntity(int xPos, int yPos, IPlayer player);
 }

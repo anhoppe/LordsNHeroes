@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.IGameMode;
+import com.lordhero.game.IGameMode.GameMode;
 
 public class MonsterPit extends EntityBase implements IUpdateable {
 
@@ -55,14 +57,16 @@ public class MonsterPit extends EntityBase implements IUpdateable {
 	}
 
 	@Override
-	public void update(IPlayer player) {
-		_elapsedTime += Gdx.graphics.getDeltaTime();
-		
-		if (_elapsedTime > 1) {
-			_elapsedTime = 0;
-			if (Math.random() <= _monstersPropabilityPerSecond) {
-				_entityFactory.createEnemy(_site, _xPos, _yPos);
-			}
-		}		
+	public void update(IPlayer player, IGameMode gameMode) {		
+		if (gameMode.is(GameMode.Play)) {
+			_elapsedTime += Gdx.graphics.getDeltaTime();
+			
+			if (_elapsedTime > 1) {
+				_elapsedTime = 0;
+				if (Math.random() <= _monstersPropabilityPerSecond) {
+					_entityFactory.createEnemy(_site, _xPos, _yPos);
+				}
+			}		
+		}
 	}
 }

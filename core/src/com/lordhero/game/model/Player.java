@@ -43,6 +43,7 @@ public class Player extends CreatureBase implements IPlayer {
     private List<IItem> _items;
 
 	private RangeWeapon _rangedWeapon;
+	private boolean _isMeleeActiveWeapon = true;
 		
 	public Player() {
 		_image = new Texture(Gdx.files.internal("My1stHero.png"));
@@ -54,7 +55,7 @@ public class Player extends CreatureBase implements IPlayer {
 		_xPos = 30;
 		_yPos = 30;
 		
-		_weapon = Weapon.Create(0);
+		_weapon = null;
 		_rangedWeapon = null;
 		
 		_items.add(_weapon);
@@ -101,8 +102,7 @@ public class Player extends CreatureBase implements IPlayer {
 
 	@Override
 	public void restore() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -212,10 +212,23 @@ public class Player extends CreatureBase implements IPlayer {
 	}
 
 	@Override
-	public void startAttack() {
-		if (_weapon != null) {
-			_weapon.startAttack();
-		}		
+	public void switchActiveWeapon() {
+		_isMeleeActiveWeapon = !_isMeleeActiveWeapon ;
+	}
+
+	@Override
+	public void startAttack(IEntityFactory entityFactory) {
+		if (_isMeleeActiveWeapon)
+		{
+			if (_weapon != null) {
+				_weapon.startAttack();
+			}		
+		}
+		else {
+			if (_rangedWeapon != null) {
+				entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, _rangedWeapon.getDamage());				
+			}
+		}
 	}
 
 	@Override
@@ -272,7 +285,7 @@ public class Player extends CreatureBase implements IPlayer {
 	@Override
 	public int getLevel() {
 		return _level;
-	}	
+	}
 	
 	@Override
 	public void addHitPoints(int hitPoints) {

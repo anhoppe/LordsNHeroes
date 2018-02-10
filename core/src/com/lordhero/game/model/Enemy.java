@@ -162,7 +162,7 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		if (_hitPoints < 0) {
 			killed = true;
 			terminate();
-		}		
+		}
 		
 		return killed;
 	}

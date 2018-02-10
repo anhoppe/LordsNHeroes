@@ -48,7 +48,9 @@ public interface IPlayer extends ICreature {
 
 	void moveDirection(Direction up);
 
-	void startAttack();
+	void switchActiveWeapon();
+
+	void startAttack(IEntityFactory entityFactory);
 
 	void evaluateAttack(IEntities _entities);
 

@@ -6,6 +6,7 @@ import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.model.IEntities;
+import com.lordhero.game.model.IEntityFactory;
 import com.lordhero.game.model.IMap;
 import com.lordhero.game.model.IPlayer;
 
@@ -70,6 +71,9 @@ public class MapController implements IController {
 			_gameMode.set(GameMode.CharacterSheet, null);
 			return true;
 		}
+		else if (_gameMode.is(GameMode.Play) && keyCode == Input.Keys.X) {
+			_player.switchActiveWeapon();
+		}
 
 		return false;
 	}
@@ -77,7 +81,7 @@ public class MapController implements IController {
 	@Override
 	public boolean processMouseDown(int xScreen, int yScreen, int xCursor, int yCursor) {
 		if (_gameMode.is(IGameMode.GameMode.Play)) {
-			_player.startAttack();
+			_player.startAttack((IEntityFactory)_entities);
 			return true;			
 		}
 		return false;

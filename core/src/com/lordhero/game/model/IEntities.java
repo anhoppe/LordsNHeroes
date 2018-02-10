@@ -18,7 +18,7 @@ public interface IEntities {
 	List<IEntity> getEntitiesOnSite();
 	
 	void addNpc(int xPos, int yPos);
-
+	
 	void addMonsterPit(int xCursor, int yCursor);
 
 	void selectEntity(int xPos, int yPos);

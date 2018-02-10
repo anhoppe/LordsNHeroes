@@ -190,6 +190,14 @@ public class Entities implements IEntities, IEntityFactory {
 	public void createEnemy(String site, float xPos, float yPos) {
 		_createdEntities.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
 	}
+
+	@Override
+	public void createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
+		String site = _mapInfo.getCurrentMap();
+		
+		_createdEntities.add(new Pair<String, IEntity>(site, new Missile(xPos, yPos, viewDirectionDeg, damage)));
+		
+	}
 	
 	private void addEntityToSite(String site, IEntity entity) {
 		List<IEntity> entitiesOnSite;

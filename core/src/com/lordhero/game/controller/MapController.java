@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
-import com.lordhero.game.INetwork.ConnectionType;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IMap;
 import com.lordhero.game.model.IPlayer;

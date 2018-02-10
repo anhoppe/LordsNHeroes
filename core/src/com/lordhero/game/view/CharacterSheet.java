@@ -10,14 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.lordhero.game.IGameMode;
-import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.IGameMode.GameMode;
+import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.Potion;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
@@ -38,6 +38,8 @@ public class CharacterSheet extends UiPanel {
 	private Label _hitPointsText;
 	private Label _xpText;
 	private Label _levelText;
+
+	private TextButton _quaffPotionButton;
 	
 	public CharacterSheet() {
 		_table.setPosition(500,  500);
@@ -46,14 +48,7 @@ public class CharacterSheet extends UiPanel {
 		_meleeWeapons = new LinkedList<Weapon>();
 		_rangedWeapons = new LinkedList<RangeWeapon>();		
 		
-		Table statsTable = new Table();
-		_levelText = new Label("", _skin);
-		statsTable.add(_levelText);
-		_xpText = new Label("", _skin);
-		statsTable.add(_xpText);
-		_hitPointsText = new Label("", _skin);
-		statsTable.add(_hitPointsText);
-		_table.add(statsTable);
+		addStatsTable();
 		
 		_table.row();
 		
@@ -73,6 +68,17 @@ public class CharacterSheet extends UiPanel {
 		});
 		
 		_table.add(exitButton);
+	}
+
+	private void addStatsTable() {
+		Table statsTable = new Table();
+		_levelText = new Label("", _skin);
+		statsTable.add(_levelText);
+		_xpText = new Label("", _skin);
+		statsTable.add(_xpText);
+		_hitPointsText = new Label("", _skin);
+		statsTable.add(_hitPointsText);
+		_table.add(statsTable);
 	}
 	
 	public void setPlayer(IPlayer player) {
@@ -151,9 +157,31 @@ public class CharacterSheet extends UiPanel {
 		// applied items to the right
 		Table appliedItemsTable = new Table();		
 		_table.addActor(appliedItemsTable);
+
+		// 1st row: quaff potion
+		_quaffPotionButton = new TextButton("Quaff potion", _skin);
+		_quaffPotionButton.addCaptureListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent input, float x, float y) {
+				int index = _itemList.getSelectedIndex();
+				
+				if (index != -1) {
+					IItem item = _player.getItems().get(index);
+					if (item instanceof Potion) {
+						_player.getItems().remove(index);
+						((Potion)item).quaff(_player);
+						update();
+					}
+				}
+			}
+		});
+		appliedItemsTable.add(_quaffPotionButton);
 		
+		// 2nd row: melee weapon
+		appliedItemsTable.row();
+				
 		appliedItemsTable.add(new Label("Melee weapon: ", _skin));
-		
+
 		_meleeWeaponSelection = new SelectBox<String>(_skin);
 		_meleeWeaponSelection.addCaptureListener(new ChangeListener() {
 			@Override
@@ -164,7 +192,8 @@ public class CharacterSheet extends UiPanel {
 			}				
 		});
 		appliedItemsTable.add(_meleeWeaponSelection);
-		
+
+		// 3rd row: ranged weapon
 		appliedItemsTable.row();
 		
 		appliedItemsTable.add(new Label("Ranged weapon: ", _skin));

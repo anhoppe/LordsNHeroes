@@ -1,7 +1,5 @@
 package com.lordhero.game;
 
-import java.nio.file.Path;
-
 import com.lordhero.game.model.IEntity;
 
 public interface IGameMode {
@@ -12,7 +10,8 @@ public interface IGameMode {
 		MonsterPit,
 		SelectMapItems,
 		Play, 
-		Conversation, 
+		Purchase,
+		Inn,
 		CharacterSheet
 	}
 	

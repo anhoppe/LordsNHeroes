@@ -99,8 +99,6 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 		int price = 0;
 
 		if (selectedCells != null) {
-	        int width = selectedCells.length;
-	        int height = selectedCells[0].length;
 
 			int xStart = Math.min(_xStartSelection, _xEndSelection);
 			int yStart = Math.min(_yStartSelection, _yEndSelection);

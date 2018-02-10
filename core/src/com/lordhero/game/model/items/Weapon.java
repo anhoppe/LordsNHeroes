@@ -7,15 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.model.Dice;
 
 public class Weapon extends ItemBase implements IWeapon {
 	
-	int _diceRollCount = 1;
-	int _diceSpots = 6;
-	int _diceStatic = 2;
+	Dice _dice = new Dice(1, 6, 2);
 
 	public static Weapon[] WeaponTemplates = new Weapon[] {
 		new Weapon("Knife", Type.Knife, 100, 25),
@@ -37,7 +35,6 @@ public class Weapon extends ItemBase implements IWeapon {
 	}
 	
 	private static final float HitFrameRate = 1f / 8f; 
-	private static final float HitFrameCount = 5;
 
 	private Type _type;	
 		
@@ -121,11 +118,7 @@ public class Weapon extends ItemBase implements IWeapon {
 	public int hit() {
 		int damage = 0;
 		if (!_hasHit) {
-			for (int i = 0; i < _diceRollCount; i++) {
-				damage += ThreadLocalRandom.current().nextInt(1, _diceSpots + 1);
-			}
-			
-			damage += _diceStatic;
+			damage = _dice.roll();
 			_hasHit = true;
 		}
 		

@@ -1,7 +1,6 @@
 package com.lordhero.game.model.items;
 
 import com.lordhero.game.model.Npc;
-import com.lordhero.game.model.Npc.Type;
 
 public class ItemFactory implements IItemFactory {
 
@@ -19,6 +18,7 @@ public class ItemFactory implements IItemFactory {
 			item = RangeWeapon.Create();
 			break;
 		case Healer:
+			item = Potion.Create();
 			break;
 		case King:
 			break;

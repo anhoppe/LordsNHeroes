@@ -8,14 +8,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
-import com.lordhero.game.model.IPlayer;
-import com.lordhero.game.model.items.Weapon;
 
 public class Enemy extends CreatureBase implements INonPlayer {
 	enum Mode {
@@ -42,6 +39,8 @@ public class Enemy extends CreatureBase implements INonPlayer {
 	private Mode _mode = Mode.Wander;
 	
 	private int _hitPoints = 20;
+	
+	private int _maxHitPoints = 20;
 
 	private int _xp;
 	
@@ -151,20 +150,6 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		_sprite.setCenter((float)_xPos, (float)_yPos);
 	}
 
-	private int getRandomStartPosition() {
-		return (int) (Math.random() * 128 * 32);
-	}
-	
-	private boolean spotsPlayer(IPlayer player) {
-		Vector2 vec = new Vector2(player.getX() - _xPos, player.getY() - _yPos);
-		
-		if (vec.len() < SpotRange) {
-			return true;
-		}
-		
-		return false;
-	}
-
 	public void terminate() {
 		_mode = Mode.Terminate;		
 	}
@@ -180,6 +165,10 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		}		
 		
 		return killed;
+	}
+	
+	public void addHitPoints(int hitPoints) {
+		_hitPoints = Math.min(_hitPoints + hitPoints, _maxHitPoints);
 	}
 	
 	@Override
@@ -201,5 +190,19 @@ public class Enemy extends CreatureBase implements INonPlayer {
 
 	public int getXp() {
 		return _xp;
+	}
+
+	private int getRandomStartPosition() {
+		return (int) (Math.random() * 128 * 32);
+	}
+	
+	private boolean spotsPlayer(IPlayer player) {
+		Vector2 vec = new Vector2(player.getX() - _xPos, player.getY() - _yPos);
+		
+		if (vec.len() < SpotRange) {
+			return true;
+		}
+		
+		return false;
 	}
 }

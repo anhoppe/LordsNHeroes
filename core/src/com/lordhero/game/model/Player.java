@@ -7,20 +7,17 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
-import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.Weapon;
 
 public class Player extends CreatureBase implements IPlayer {
-	private static final int IsAtDistance = 32;
     private static final float PlayerSpeed = 150f;
     private static final float LordSpeed = 300;    
 	
@@ -36,6 +33,8 @@ public class Player extends CreatureBase implements IPlayer {
     private int _money = 10000;
 	
 	private int _hitPoints = 100;
+	
+	private int _maxHitPoints = 100;
 	
 	private int _xp = 0;
 	
@@ -274,6 +273,11 @@ public class Player extends CreatureBase implements IPlayer {
 	public int getLevel() {
 		return _level;
 	}	
+	
+	@Override
+	public void addHitPoints(int hitPoints) {
+		_hitPoints = Math.min(_hitPoints + hitPoints, _maxHitPoints);
+	}
 	
 	@Override
 	public void write(XmlWriter writer) throws IOException {

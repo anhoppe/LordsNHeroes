@@ -30,9 +30,8 @@ import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
 public class Map implements IMap, IMapInfo {
-	private static final String SendMap = "sendMap";
-	
-    private TiledMapRenderer _tiledMapRenderer;
+
+	private TiledMapRenderer _tiledMapRenderer;
 
     private String _currentMap;
 
@@ -199,6 +198,7 @@ public class Map implements IMap, IMapInfo {
 			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
 			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
 			tmxWriter.flush();
+			tmxWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

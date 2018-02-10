@@ -31,7 +31,7 @@ public class EntityController implements IController {
 	}
   	
 	@Override
-	public void update() {		
+	public void update() {
 		_entities.update(_player, _gameMode);
 	}
 
@@ -41,7 +41,7 @@ public class EntityController implements IController {
 			if (keyCode == Input.Keys.T) {
 				INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());				
 				if (npc != null) {
-					_gameMode.set(GameMode.Conversation, npc);
+					_gameMode.set(GameMode.Purchase, npc);
 					return true;					
 				}
 			}

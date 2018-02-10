@@ -35,7 +35,7 @@ public class Npc extends CreatureBase implements INpc {
 			new Npc("Warrior", 6000, Npc.Type.Warrior, 0),
 			new Npc("Town guard", 4500, Npc.Type.TownGuard, 0),
 			new Npc("King", 20000, Npc.Type.King, 0),
-			new Npc("Healer", 8000, Npc.Type.Healer, 0),
+			new Npc("Healer", 8000, Npc.Type.Healer, 0.001),
 			new Npc("Landlord", 1500, Npc.Type.Landlord, 0),
 			new Npc("Knight", 15000, Npc.Type.Knight, 0)
 			));
@@ -51,6 +51,9 @@ public class Npc extends CreatureBase implements INpc {
 	private List<IItem> _items = new LinkedList<IItem>();
 	
 	private int _money;
+	
+	private int _hitPoints = 20;
+	private int _maxHitPoints = 20;
 	
 	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
 
@@ -131,6 +134,11 @@ public class Npc extends CreatureBase implements INpc {
 	@Override
 	public void addMoney(int money) {
 		_money += money;
+	}
+	
+	@Override 
+	public void addHitPoints(int hitPoints) {
+		_hitPoints = Math.min(_hitPoints+hitPoints, _maxHitPoints);
 	}
 
 	public String getName() {

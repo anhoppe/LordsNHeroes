@@ -236,7 +236,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         if (_gameMode == GameMode.Play) {
         	_heroSheet.draw();
         }
-        else if (_gameMode == GameMode.Conversation) {
+        else if (_gameMode == GameMode.Purchase) {
         	_purchaseSheet.draw();
         }
         else if (_gameMode == GameMode.CharacterSheet) {
@@ -399,7 +399,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         	_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);
         }
-        else if (_gameMode == GameMode.Conversation) {
+        else if (_gameMode == GameMode.Purchase) {
         	if (entity instanceof INpc) {
             	_purchaseSheet.setNpc((INpc)entity);        		
         	}        		

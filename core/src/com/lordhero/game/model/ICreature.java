@@ -8,4 +8,6 @@ public interface ICreature extends IEntity {
 	boolean isInRange(int xPos, int yPos);
 
 	TextureRegion getWeaponAnimationFrame();
+	
+	void addHitPoints(int hitPoints);
 }

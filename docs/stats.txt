@@ -1,20 +1,35 @@
 Base
 ----
- - hit points
- - mana
- - xp
- - level
- - speed
- - endurance
- - view range
- - infravision
+ - Hit points
+ - Mana
+ - Xp
+ - Level
+ - Speed
+ - Endurance
+ - View range
+ - Infravision
+ - Amor
+
+ Body places
+ -----------
+ - On head
+ - On heands
+ - On arms
+ - On body
+ - On feet
+ - On legs
+ - On fingers
+ - On wrists
+ - Around neck
 
 Attriubtes
 ----------
+ - Courage (Hit modifier, )
  - Strength (Carry goods, speed, Hit modifier)
- - Dextitrity (speed, hit speed, bow accuracy, hit modifier)
+ - Dextirity (speed, hit speed, bow accuracy, hit modifier)
  - Constitution (endurance, hit points)
  - Intelligence (mana, search)
+ - Charisma (purchasing, spells)
 
  Skills
  ------
@@ -24,8 +39,28 @@ Attriubtes
   - Search
   - Create trap
   - Disarm trap
+  - Alchemy
 
   Spells
   ------
    - Magic missile
-   - 
+   - Enchant potion
+   - Enchant weapon
+   - Enchatnt amor
+   - Confuse monster
+   - Turn undead
+   - Fire bolt
+   - Ice bolt
+   - Fire ball
+   - Ice ball
+   - Charm monster
+   - Hold monster
+   - Call light
+   - Earthquake
+   - Summon undead
+   - Summon ghost
+   - Summon deamon
+
+
+   Items
+   -----

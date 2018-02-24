@@ -24,7 +24,7 @@ public abstract class EntityBase implements IEntity {
 		readEntityBase(entityBaseNode);
 	}
 
-	public EntityBase(int xPos, int yPos) {
+	public EntityBase(float xPos, float yPos) {
 		_xPos = xPos;
 		_yPos = yPos;
 	}

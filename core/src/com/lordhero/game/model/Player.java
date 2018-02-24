@@ -56,9 +56,7 @@ public class Player extends CreatureBase implements IPlayer {
 		_yPos = 30;
 		
 		_weapon = null;
-		_rangedWeapon = null;
-		
-		_items.add(_weapon);
+		_rangedWeapon = null;	
 	}
 
 	@Override
@@ -303,7 +301,9 @@ public class Player extends CreatureBase implements IPlayer {
 		super.write(writer);
 		
 		for (IItem item : _items) {
-			item.write(writer);
+			if (item != null) {
+				item.write(writer);
+			}
 		}
 		writer.pop();
 	}

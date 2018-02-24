@@ -195,8 +195,7 @@ public class Entities implements IEntities, IEntityFactory {
 	public void createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
 		String site = _mapInfo.getCurrentMap();
 		
-		_createdEntities.add(new Pair<String, IEntity>(site, new Missile(xPos, yPos, viewDirectionDeg, damage)));
-		
+		_createdEntities.add(new Pair<String, IEntity>(site, new Missile(xPos, yPos, viewDirectionDeg, damage)));		
 	}
 	
 	private void addEntityToSite(String site, IEntity entity) {

@@ -105,11 +105,13 @@ public class CharacterSheet extends UiPanel {
 		
 	}
 
-	private void updateItemsList(java.util.List<IItem> items) {		
+	private void updateItemsList(java.util.List<IItem> items) {
 		Array<String> itemArray = new Array<String>();
 		
 		for (IItem item : items) {
-			itemArray.add(item.getName());
+			if (item != null) {
+				itemArray.add(item.getName());
+			}
 		}
 		
 		_itemList.setItems(itemArray);
@@ -118,6 +120,7 @@ public class CharacterSheet extends UiPanel {
 	private void updateMeleeWeaponsList(java.util.List<IItem> items) {
 		Array<String> itemArray = new Array<String>();
 
+		_meleeWeapons.clear();
 		itemArray.add("None");
 		_meleeWeapons.add(null);
 		
@@ -134,6 +137,7 @@ public class CharacterSheet extends UiPanel {
 	private void updateRangedWeapongs(java.util.List<IItem> items) {
 		Array<String> itemArray = new Array<String>();
 
+		_rangedWeapons.clear();
 		itemArray.add("None");
 		_rangedWeapons.add(null);
 		for (IItem item : items) {

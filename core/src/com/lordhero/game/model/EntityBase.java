@@ -45,7 +45,7 @@ public abstract class EntityBase implements IEntity {
 	}
 
 	@Override
-	public boolean isAt(int xPos, int yPos) {
+	public boolean isAt(float xPos, float yPos) {
 		return distanceTo(xPos, yPos) < IsAtDistance;
 	}
 
@@ -57,9 +57,9 @@ public abstract class EntityBase implements IEntity {
 		writer.pop();
 	}	
 	
-	protected int distanceTo(int xPos, int yPos) {
-		int xDist = (int) Math.abs(xPos - _xPos);
-		int yDist = (int) Math.abs(yPos - _yPos);
+	protected float distanceTo(float xPos, float yPos) {
+		float xDist = Math.abs(xPos - _xPos);
+		float yDist = Math.abs(yPos - _yPos);
 			
 		return Math.max(xDist,  yDist);
 	}

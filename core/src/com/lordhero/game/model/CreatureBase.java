@@ -1,6 +1,8 @@
 package com.lordhero.game.model;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
@@ -8,15 +10,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
-import com.lordhero.game.model.items.Weapon;
+import com.lordhero.game.model.items.RangeWeapon;
+import com.lordhero.game.model.items.MeleeWeapon;
 
 public abstract class CreatureBase extends EntityBase implements ICreature {
 
 	private static final int InRangeDistance = 100;
+	
+	private List<Missile> _activeMissiles = new LinkedList<Missile>();
 
 	protected float _viewDirectionDeg;
 
-	protected Weapon _weapon = Weapon.Create(0);
+	protected MeleeWeapon _meleeWeapon = MeleeWeapon.Create(0);
+
+	protected RangeWeapon _rangedWeapon;
+
+	protected boolean _isMeleeActiveWeapon = true;
 
 	public CreatureBase() {
 		
@@ -36,8 +45,8 @@ public abstract class CreatureBase extends EntityBase implements ICreature {
 	public TextureRegion getWeaponAnimationFrame() {
 		TextureRegion weaponAnimation = null;
 		
-		if (_weapon != null && _weapon.attacks()) {
-			weaponAnimation = _weapon.getWeaponAnimation();
+		if (_meleeWeapon != null && _meleeWeapon.attacks()) {
+			weaponAnimation = _meleeWeapon.getWeaponAnimation();
 		}
 		
 		return weaponAnimation;
@@ -61,21 +70,42 @@ public abstract class CreatureBase extends EntityBase implements ICreature {
 		_viewDirectionDeg = creatureBaseNode.getFloatAttribute("ViewDirection");
 	}
 	
-	protected Vector2 getHitPosition() {
-		Vector2 hitPosition = null;
+	protected void addActiveMissile(Missile missile) {
+		_activeMissiles.add(missile);
+	}
+	
+	protected List<HitInfo> getHitInfos() {
+		List<HitInfo> hitInfos = new LinkedList<HitInfo>();
 		
-		if (_weapon != null && _weapon.attacks()) {
+		if (_meleeWeapon != null && _meleeWeapon.attacks()) {
 			Vector2 vec = new Vector2(0, 1);
 			Matrix3 rotMatrix = new Matrix3();
 			rotMatrix.idt();
 			
 			rotMatrix.setToRotation(_viewDirectionDeg);
 			vec.mul(rotMatrix);
-			vec.scl(_weapon.getRange());
+			vec.scl(_meleeWeapon.getRange());
 			
-			hitPosition = new Vector2(_xPos + vec.x, _yPos + vec.y);
+			hitInfos.add(new HitInfo((int)(_xPos + vec.x), (int)(_yPos + vec.y), _meleeWeapon));			
 		}		
 		
-		return hitPosition;
+		boolean removedMissile = false;
+		
+		do {
+			removedMissile = false;
+			for (Missile missile : _activeMissiles) {
+				if (missile.isTerminated()) {
+					_activeMissiles.remove(missile);
+					removedMissile = true;
+					break;
+				}
+			}			
+		} while(removedMissile);
+				
+		for (Missile missile : _activeMissiles) {
+			hitInfos.add(new HitInfo((int)missile.getX(), (int)missile.getY(), missile));
+		}
+		
+		return hitInfos;
 	}
 }

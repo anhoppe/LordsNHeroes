@@ -13,7 +13,7 @@ public interface IEntity {
 	
 	float getY();
 
-	boolean isAt(int xPos, int yPos);
+	boolean isAt(float xPos, float yPos);
 
 	// Can be overwritten by derived class in order to restore non-serializable members
 	void restore();

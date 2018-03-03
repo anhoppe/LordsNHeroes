@@ -17,9 +17,9 @@ import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.IPlayer;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.MeleeWeapon;
 import com.lordhero.game.model.items.Potion;
 import com.lordhero.game.model.items.RangeWeapon;
-import com.lordhero.game.model.items.Weapon;
 
 public class CharacterSheet extends UiPanel {
 	
@@ -30,7 +30,7 @@ public class CharacterSheet extends UiPanel {
 	private List<String> _itemList;
 	
 	private SelectBox<String> _meleeWeaponSelection;
-	private java.util.List<Weapon> _meleeWeapons;
+	private java.util.List<MeleeWeapon> _meleeWeapons;
 	
 	private SelectBox<String> _rangedWeaponSelection;
 	private java.util.List<RangeWeapon> _rangedWeapons;
@@ -45,7 +45,7 @@ public class CharacterSheet extends UiPanel {
 		_table.setPosition(500,  500);
 		
 		_itemList = new List<String>(_skin);
-		_meleeWeapons = new LinkedList<Weapon>();
+		_meleeWeapons = new LinkedList<MeleeWeapon>();
 		_rangedWeapons = new LinkedList<RangeWeapon>();		
 		
 		addStatsTable();
@@ -125,9 +125,9 @@ public class CharacterSheet extends UiPanel {
 		_meleeWeapons.add(null);
 		
 		for (IItem item : items) {
-			if (item instanceof Weapon) {
+			if (item instanceof MeleeWeapon) {
 				itemArray.add(item.getName());
-				_meleeWeapons.add((Weapon)item);
+				_meleeWeapons.add((MeleeWeapon)item);
 			}
 		}
 		

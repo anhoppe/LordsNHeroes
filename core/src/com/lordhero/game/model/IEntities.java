@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.IGameMode;
+import com.lordhero.game.model.items.IWeapon;
 
 public interface IEntities {
 	public enum EntityType {
@@ -27,5 +28,5 @@ public interface IEntities {
 
 	void save(XmlWriter writer) throws IOException;
 
-	void hitEntity(int xPos, int yPos, IPlayer player);
+	void hitEntity(int xPos, int yPos, IPlayer player, IWeapon weapon);
 }

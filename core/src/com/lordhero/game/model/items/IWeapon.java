@@ -1,15 +1,7 @@
 package com.lordhero.game.model.items;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 public interface IWeapon {
+	int getDamage();
 
-	void startAttack();
-
-	TextureRegion getWeaponAnimation();
-
-	boolean attacks();
-
-	int hit();
-
+	void setHasHit();
 }

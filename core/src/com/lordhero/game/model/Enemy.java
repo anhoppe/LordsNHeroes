@@ -114,21 +114,21 @@ public class Enemy extends CreatureBase implements INonPlayer {
 			}
 		
 			// hit player if already in range and the distance is ok
-			if (dist <= MeeleAttackDist && !_weapon.attacks()) {
-				_weapon.startAttack();
+			if (dist <= MeeleAttackDist && !_meleeWeapon.attacks()) {
+				_meleeWeapon.startAttack();
 			}
 			
 			// check if attack is already going on, then evaluate the damage
-			else if (_weapon.attacks()) {
+			else if (_meleeWeapon.attacks()) {
 				Vector2 vec = new Vector2(0, 1);
 				Matrix3 rotMatrix = new Matrix3();
 				rotMatrix.idt();
 				
 				rotMatrix.setToRotation(_viewDirectionDeg);
 				vec.mul(rotMatrix);
-				vec.scl(_weapon.getRange());
+				vec.scl(_meleeWeapon.getRange());
 
-				player.hit((int)(_xPos + vec.x), (int)(_yPos + vec.y), _weapon);
+				player.hit((int)(_xPos + vec.x), (int)(_yPos + vec.y), _meleeWeapon);
 			}
 		}
 						
@@ -154,6 +154,7 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		_mode = Mode.Terminate;		
 	}
 
+	// Call this method to inflict damage on an enemy.
 	public boolean hit(int hit) {
 		boolean killed = false;
 		

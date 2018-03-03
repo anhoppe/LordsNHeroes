@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.lordhero.game.IGameMode;
+import com.lordhero.game.model.items.IWeapon;
 
-public class Missile extends EntityBase implements INonPlayer {
+public class Missile extends EntityBase implements INonPlayer, IWeapon {
 	private static final float Range = 500f;	
 	private static final float Speed = 12f;
 
@@ -19,6 +20,10 @@ public class Missile extends EntityBase implements INonPlayer {
 	private Vector2 _directionVec;
 
 	private float _directionDeg;
+	
+	private Dice _damage;
+	
+	private boolean _hasHit = false;
 
 	public Missile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
 		super(xPos, yPos);
@@ -29,6 +34,8 @@ public class Missile extends EntityBase implements INonPlayer {
 		_directionVec = new Vector2(0f, 1f);
 		_directionVec.rotate(viewDirectionDeg);
 		_directionVec.scl(Speed);
+		
+		_damage = damage;
 		
 		restore();
 	}
@@ -52,13 +59,27 @@ public class Missile extends EntityBase implements INonPlayer {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public boolean isTerminated() {
-		return ((_xPos-_xStart)*(_xPos-_xStart) + (_yPos-_yStart)*(_yPos-_yStart)) > Range*Range;
+		return (((_xPos-_xStart)*(_xPos-_xStart) + (_yPos-_yStart)*(_yPos-_yStart)) > Range*Range) || _hasHit;
 	}
 
+	@Override
+	public int getDamage() {
+		int damage = 0;
+		
+		if (!_hasHit) {
+			damage =_damage.roll(); 
+		}
+		
+		return damage;
+	}
+
+	@Override
+	public void setHasHit() {
+		_hasHit = true;		
+	}
 }

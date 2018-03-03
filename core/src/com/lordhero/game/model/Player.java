@@ -13,9 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.IMeleeWeapon;
 import com.lordhero.game.model.items.IWeapon;
+import com.lordhero.game.model.items.MeleeWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
-import com.lordhero.game.model.items.Weapon;
 
 public class Player extends CreatureBase implements IPlayer {
     private static final float PlayerSpeed = 150f;
@@ -41,9 +42,6 @@ public class Player extends CreatureBase implements IPlayer {
 	private int _level = 0;
 
     private List<IItem> _items;
-
-	private RangeWeapon _rangedWeapon;
-	private boolean _isMeleeActiveWeapon = true;
 		
 	public Player() {
 		_image = new Texture(Gdx.files.internal("My1stHero.png"));
@@ -55,7 +53,7 @@ public class Player extends CreatureBase implements IPlayer {
 		_xPos = 30;
 		_yPos = 30;
 		
-		_weapon = null;
+		_meleeWeapon = null;
 		_rangedWeapon = null;	
 	}
 
@@ -188,7 +186,7 @@ public class Player extends CreatureBase implements IPlayer {
 		_lordChangedListeners.add(listener);
 	}
 
-	@Override
+ 	@Override
 	public void addItem(IItem item) {
 		_money -= item.getPrice();
 		_items.add(item);
@@ -200,13 +198,13 @@ public class Player extends CreatureBase implements IPlayer {
 	}
 
 	@Override
-	public void setWeapon(Weapon weapon) {
-		_weapon = weapon;	
+	public void setWeapon(MeleeWeapon weapon) {
+		_meleeWeapon = weapon;	
 	}
 	
 	@Override 
-	public IWeapon getWeapon() {
-		return _weapon;
+	public IMeleeWeapon getWeapon() {
+		return _meleeWeapon;
 	}
 
 	@Override
@@ -218,23 +216,26 @@ public class Player extends CreatureBase implements IPlayer {
 	public void startAttack(IEntityFactory entityFactory) {
 		if (_isMeleeActiveWeapon)
 		{
-			if (_weapon != null) {
-				_weapon.startAttack();
+			if (_meleeWeapon != null) {
+				_meleeWeapon.startAttack();
 			}		
 		}
 		else {
 			if (_rangedWeapon != null) {
-				entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, _rangedWeapon.getDamage());				
+				Missile missile = entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, _rangedWeapon.getDamage());
+				addActiveMissile(missile);
 			}
 		}
 	}
 
 	@Override
 	public void evaluateAttack(IEntities entities) {
-		Vector2 hitPosition = getHitPosition();
+		List<HitInfo> hitInfos = getHitInfos();
 		
-		if (hitPosition != null) {
-			entities.hitEntity((int)(hitPosition.x), (int)(hitPosition.y), this);			
+		if (hitInfos != null) {
+			for (HitInfo hitInfo : hitInfos) {
+				entities.hitEntity(hitInfo.getX(), hitInfo.getY(), this, hitInfo.getWeapon());			
+			}
 		}
 	}
 
@@ -257,7 +258,7 @@ public class Player extends CreatureBase implements IPlayer {
 	@Override
 	public void hit(int x, int y, IWeapon weapon) {
 		if (isAt(x, y)) {
-			_hitPoints -= weapon.hit();
+			_hitPoints -= weapon.getDamage();
 		}		
 	}
 

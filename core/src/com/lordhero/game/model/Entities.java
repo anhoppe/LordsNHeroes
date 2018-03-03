@@ -88,15 +88,15 @@ public class Entities implements IEntities, IEntityFactory {
 	}	
 
 	@Override
-	public void hitEntity(int xPos, int yPos, IPlayer player) {
+	public void hitEntity(int xPos, int yPos, IPlayer player, IWeapon weapon) {
 		List<IEntity> entitiesOnSite = _entities.get(_mapInfo.getCurrentMap());
 
-		IWeapon weapon = player.getWeapon();
 		for (IEntity entity : entitiesOnSite) {
 			if (entity.isAt(xPos, yPos)) {
 				if (entity instanceof Enemy) {
 					Enemy enemy = (Enemy)entity;
-					if (enemy.hit(weapon.hit())) {
+					if (enemy.hit(weapon.getDamage())) {
+						weapon.setHasHit();
 						player.addXp(enemy.getXp());
 					}					
 				}
@@ -192,10 +192,14 @@ public class Entities implements IEntities, IEntityFactory {
 	}
 
 	@Override
-	public void createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
+	public Missile createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
+		Missile missile = new Missile(xPos, yPos, viewDirectionDeg, damage);
+		
 		String site = _mapInfo.getCurrentMap();
 		
-		_createdEntities.add(new Pair<String, IEntity>(site, new Missile(xPos, yPos, viewDirectionDeg, damage)));		
+		_createdEntities.add(new Pair<String, IEntity>(site, missile));
+		
+		return missile;
 	}
 	
 	private void addEntityToSite(String site, IEntity entity) {

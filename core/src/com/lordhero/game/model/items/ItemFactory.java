@@ -12,7 +12,7 @@ public class ItemFactory implements IItemFactory {
 		case Hobo:
 			break;
 		case Blacksmith:
-			item = Weapon.Create();
+			item = MeleeWeapon.Create();
 			break;
 		case Bowyer:
 			item = RangeWeapon.Create();

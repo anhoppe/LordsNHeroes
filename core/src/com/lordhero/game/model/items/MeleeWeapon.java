@@ -11,17 +11,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.model.Dice;
 
-public class Weapon extends ItemBase implements IWeapon {
+public class MeleeWeapon extends ItemBase implements IMeleeWeapon {
 	
 	Dice _dice = new Dice(1, 6, 2);
 
-	public static Weapon[] WeaponTemplates = new Weapon[] {
-		new Weapon("Knife", Type.Knife, 100, 25),
-		new Weapon("Dagger", Type.Dagger, 150, 25),
-		new Weapon("Axe", Type.Axe, 1200, 25),
-		new Weapon("Saber", Type.Saber, 1500, 25),
-		new Weapon("Sword", Type.Sword, 3500, 25),
-		new Weapon("TwoHander", Type.TwoHander, 5000, 25)
+	public static MeleeWeapon[] MeleeWeaponTemplates = new MeleeWeapon[] {
+		new MeleeWeapon("Knife", Type.Knife, 100, 25),
+		new MeleeWeapon("Dagger", Type.Dagger, 150, 25),
+		new MeleeWeapon("Axe", Type.Axe, 1200, 25),
+		new MeleeWeapon("Saber", Type.Saber, 1500, 25),
+		new MeleeWeapon("Sword", Type.Sword, 3500, 25),
+		new MeleeWeapon("TwoHander", Type.TwoHander, 5000, 25)
 	};
 	
 	enum Type {
@@ -47,14 +47,14 @@ public class Weapon extends ItemBase implements IWeapon {
 	
     private float _elapsedTime;
 	
-	public Weapon(String name, Type type, int price, int range) {
+	public MeleeWeapon(String name, Type type, int price, int range) {
 		_name = name;
 		_type = type;
 		_price = price;
 		_range = range;
 	}
 	
-	public Weapon(Weapon weapon) {
+	public MeleeWeapon(MeleeWeapon weapon) {
 		_name = weapon._name;
 		_type = weapon._type;
 		_price = weapon._price;
@@ -74,12 +74,12 @@ public class Weapon extends ItemBase implements IWeapon {
 		_hitAnimation = new Animation<TextureRegion>(HitFrameRate, animationArray);		
 	}
 
-	public static Weapon Create() {
-		return Create(ThreadLocalRandom.current().nextInt(0, WeaponTemplates.length - 1));		
+	public static MeleeWeapon Create() {
+		return Create(ThreadLocalRandom.current().nextInt(0, MeleeWeaponTemplates.length - 1));		
 	}
 	
-	public static Weapon Create(int index) {
-		return new Weapon(WeaponTemplates[index]);
+	public static MeleeWeapon Create(int index) {
+		return new MeleeWeapon(MeleeWeaponTemplates[index]);
 	}
 
 	@Override
@@ -115,11 +115,10 @@ public class Weapon extends ItemBase implements IWeapon {
 	}
 
 	@Override
-	public int hit() {
+	public int getDamage() {
 		int damage = 0;
 		if (!_hasHit) {
 			damage = _dice.roll();
-			_hasHit = true;
 		}
 		
 		return damage;
@@ -130,5 +129,10 @@ public class Weapon extends ItemBase implements IWeapon {
 		writer.element("Weapon").attribute("Type", _type).attribute("Range", _range);
 		super.write(writer);
 		writer.pop();
+	}
+
+	@Override
+	public void setHasHit() {
+		_hasHit = true;
 	}
 }

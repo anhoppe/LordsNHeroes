@@ -123,6 +123,39 @@ public class Entities implements IEntities, IEntityFactory {
 		return npcInRange;
 	}	
 
+	@Override
+	public void createEnemy(String site, float xPos, float yPos) {
+		_createdEntities.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
+	}
+
+	@Override
+	public Missile createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
+		Missile missile = new Missile(xPos, yPos, viewDirectionDeg, damage);
+		
+		String site = _mapInfo.getCurrentMap();
+		
+		_createdEntities.add(new Pair<String, IEntity>(site, missile));
+		
+		return missile;
+	}
+	
+	@Override
+	public void save(XmlWriter writer) throws IOException {
+		writer.element("Entities");
+		
+		Set<String> keys = _entities.keySet();
+        for(String key : keys) {
+        	writer.element("site").attribute("Name",  key);
+        	
+        	List<IEntity> entities = _entities.get(key);
+        	for (IEntity entity : entities) {
+        		entity.write(writer);
+        	}
+        	writer.pop();
+        }		
+        writer.pop();
+	}
+
 	public void loadFromRemote(INetwork network) throws IOException {
         _entities.clear();
 
@@ -167,40 +200,7 @@ public class Entities implements IEntities, IEntityFactory {
         		addEntityToSite(siteName, entity);
         	}
         }
-	}
-	
-	@Override
-	public void save(XmlWriter writer) throws IOException {
-		writer.element("Entities");
-		
-		Set<String> keys = _entities.keySet();
-        for(String key : keys) {
-        	writer.element("site").attribute("Name",  key);
-        	
-        	List<IEntity> entities = _entities.get(key);
-        	for (IEntity entity : entities) {
-        		entity.write(writer);
-        	}
-        	writer.pop();
-        }		
-        writer.pop();
-	}
-
-	@Override
-	public void createEnemy(String site, float xPos, float yPos) {
-		_createdEntities.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
-	}
-
-	@Override
-	public Missile createMissile(float xPos, float yPos, float viewDirectionDeg, Dice damage) {
-		Missile missile = new Missile(xPos, yPos, viewDirectionDeg, damage);
-		
-		String site = _mapInfo.getCurrentMap();
-		
-		_createdEntities.add(new Pair<String, IEntity>(site, missile));
-		
-		return missile;
-	}
+	}	
 	
 	private void addEntityToSite(String site, IEntity entity) {
 		List<IEntity> entitiesOnSite;
@@ -214,8 +214,8 @@ public class Entities implements IEntities, IEntityFactory {
 		}				
 		
 		entitiesOnSite.add(entity);
-	}
-	
+	}	
+
 	private void deleteTerminatedEntites() {
 		Enumeration<String> enumKey = _entities.keys();
 		while(enumKey.hasMoreElements()) {

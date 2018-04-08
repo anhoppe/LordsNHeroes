@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" infinite="0" nextobjectid="2">
  <tileset firstgid="1" source="data/tileset/Building.tsx"/>
  <tileset firstgid="257" source="MyTiles.tsx"/>
  <layer name="Background" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztzkEJADAMBLCbnhNR/65qYjAGeeSfnqQAAAAAAHDR5P0BAAAAAAAAAAAA4DcL7ZDAMg==
+   eJztzkENACAMBLBDz0QgAf9uMEEGJH303xpJAQAAAADAQTP3DwDA/9YDBwAAAAAAAACAThuYm8BW
   </data>
  </layer>
  <layer name="Obstacles" width="64" height="64">

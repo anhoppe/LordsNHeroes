@@ -37,6 +37,7 @@ import com.lordhero.game.view.MonsterPitPanel;
 import com.lordhero.game.view.NpcEditor;
 import com.lordhero.game.view.NpcView;
 import com.lordhero.game.view.PurchaseSheet;
+import com.lordhero.game.view.SiteEditor;
 import com.lordhero.game.view.WorldEditor;
 import com.lordhero.game.view.WorldMap;
 
@@ -65,6 +66,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private WorldEditor _worldEditor;
 	private NpcEditor _npcEditor;
 	private NpcView _npcView;
+	private SiteEditor _siteEditor;
 	private WorldMap _worldMap;	
 	private HeroSheet _heroSheet;
 	private PurchaseSheet _purchaseSheet;
@@ -126,6 +128,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _worldEditor = new WorldEditor();
         _npcEditor = new NpcEditor();
         _npcView = new NpcView();
+        _siteEditor = new SiteEditor();
         _mainPanel = new MainPanel();
 
         // Create models
@@ -159,6 +162,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _map.setSelectedCellProvider(_worldEditor);
         _map.setGameMode(this);               
         _map.setGameSourceProvider(this);
+        _map.setSelectedSiteProvider(_siteEditor);
         
 		// Controller DI
         mapController.setMap(_map);
@@ -208,7 +212,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 			e.printStackTrace();
 		}
 		
+		_map.init();
         _map.loadFromRemote(_network);
+        
         try {
 			_entities.loadFromRemote(_network);
 		} catch (IOException e) {
@@ -251,6 +257,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
             }
             else if (_gameMode == GameMode.AddNpc) {
             	_npcEditor.draw();
+            }
+            else if (_gameMode == GameMode.AddSite) {
+            	_siteEditor.draw();
             }
             else if (_gameMode == GameMode.MonsterPit) {
             	_monsterPitPanel.draw();
@@ -378,6 +387,12 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         }
         else if (_gameMode == GameMode.AddNpc) {
     		_inputMultiplexer.addProcessor(_npcEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        }
+        else if (_gameMode == GameMode.AddSite) {
+    		_inputMultiplexer.addProcessor(_siteEditor.getInputProcessor());
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);

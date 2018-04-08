@@ -1,55 +1,43 @@
 package com.lordhero.game.model;
 
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
-import com.lordhero.game.IGameMode.SaveType;
 import com.lordhero.game.IGameSourceProvider;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedCellProvider;
-
-import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
-import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
+import com.lordhero.game.ISelectedSiteProvider;
 
 public class Map implements IMap, IMapInfo {
 
 	private TiledMapRenderer _tiledMapRenderer;
 
-    private String _currentMap;
-
-    private TiledMap _tiledMap; 
+    private IMapInstance _currentMap;
 
     private IPlayer _player;
     
+    // Absolute cursor position
     private int _xCursor;
     private int _yCursor;
     
 	private ISelectedCellProvider _selectedCellProvider;
 	
+	private ISelectedSiteProvider _selectedSiteProvider;
+	
 	private IGameMode _gameMode;
 	
 	private IGameSourceProvider _gameSourceProvider;
 	
-	public Map() {		
-		_currentMap = "baseMap";
+	public void init() throws NullPointerException {
+		if (_gameSourceProvider == null) {
+			throw new NullPointerException();
+		}
+		_currentMap = MapInstance.Create(Consts.BaseMap, _gameSourceProvider);
 	}
 
 	public void setPlayer(IPlayer player) {
@@ -67,10 +55,14 @@ public class Map implements IMap, IMapInfo {
     public void setGameSourceProvider(IGameSourceProvider gameSourceProvider) {
     	_gameSourceProvider = gameSourceProvider;
     }
+    
+    public void setSelectedSiteProvider(ISelectedSiteProvider selectedSiteProvider) {
+    	_selectedSiteProvider = selectedSiteProvider;
+    }
 
 	@Override
 	public String getCurrentMap() {
-		return _currentMap;
+		return _currentMap.getName();
 	}
 	
 	@Override
@@ -90,146 +82,89 @@ public class Map implements IMap, IMapInfo {
 
 	@Override
 	public void setCursorPosition(int xPos, int yPos) {
-		_xCursor = ((xPos - Gdx.graphics.getWidth() / 2) + (int)_player.getX()) / 32 * 32 + 16;
-		_yCursor = (Gdx.graphics.getHeight() / 2 - yPos + (int)_player.getY()) / 32 * 32 + 16;		
+		_xCursor = ((xPos - Gdx.graphics.getWidth() / 2) + (int)_player.getX()) / Consts.TileWidth * Consts.TileWidth + Consts.TileWidth / 2;
+		_yCursor = (Gdx.graphics.getHeight() / 2 - yPos + (int)_player.getY()) / Consts.TileHeight * Consts.TileHeight + Consts.TileHeight / 2;		
 	}
 
 	@Override
-	public void checkForCollision() {
-        TiledMapTileLayer collisionObjectLayer = (TiledMapTileLayer)_tiledMap.getLayers().get("Collision");
-
-        // get the player position
-        int xPos = (int)(_player.getX() / collisionObjectLayer.getTileWidth());
-        int yPos = (int)(_player.getY() / collisionObjectLayer.getTileHeight());                
+	public void checkForCollision() {        
+		int collisions = _currentMap.getCollisions(_player.getX(), _player.getY());
         
-        // check top
-        _player.setCollisions(collisionObjectLayer.getCell(xPos, yPos+1) != null,
-        		collisionObjectLayer.getCell(xPos, yPos-1) != null,
-        		collisionObjectLayer.getCell(xPos-1, yPos) != null,
-        		collisionObjectLayer.getCell(xPos+1, yPos) != null);
+        _player.setCollisions((collisions & Consts.Up) != 0,
+        		(collisions & Consts.Down) != 0,
+        		(collisions & Consts.Left) != 0,
+        		(collisions & Consts.Right) != 0);
 	}
 
 	@Override
-	public boolean enter() {
+	public boolean enter(INetwork network) {
 		boolean entered = false;
+		IMapInstance childMap = _currentMap.getChildMap(_player.getX(), _player.getY());
 		
-        MapLayer layer = (MapLayer)_tiledMap.getLayers().get("Buildings");
-
-        MapObjects objects = layer.getObjects();
-		
-		for (int i = 0; i < objects.getCount(); i++) {
-			RectangleMapObject mapObject = (RectangleMapObject)objects.get(i);
-			
-			if (Math.abs(mapObject.getRectangle().x -_player.getX()) < 32f &&
-				Math.abs(mapObject.getRectangle().y -_player.getY()) < 32f) {
-
-				if (_gameMode.get() != GameMode.Play) {
-					writeCurrentMap();
-				}
-				
-				_currentMap = (String)mapObject.getProperties().get("TargetMap");
-				
-				_player.setPosition(Integer.parseInt(mapObject.getProperties().get("StartX").toString()), 
-						Integer.parseInt(mapObject.getProperties().get("StartY").toString()));
-		
-				entered = true;
-		        
-				break;
+		if (childMap != null && _currentMap != null) {
+			entered = true;
+			if (_gameMode.get() != GameMode.Play) {
+				_currentMap.write();
 			}
+			
+			_currentMap = childMap;
+			
+			loadFromRemote(network);
+			
+			_player.setPosition(_currentMap.getXEntry(), _currentMap.getYEntry());
 		}
-		
+				
 		return entered;
 	}
 
 	public void setTile() {
-        TiledMapTileLayer backgroundLayer = (TiledMapTileLayer)_tiledMap.getLayers().get(_selectedCellProvider.getLayerName());
-   
         int[][] selectedCells = _selectedCellProvider.getSelectedCellIndexArray();
         int price = _selectedCellProvider.getSelectedCellPrice(selectedCells);
         
         if (_player.pay(price)) {
-            int width = selectedCells.length;
-            int height = selectedCells[0].length;
-                    
-            for (int x = 0; x < width; x++) {
-            	for (int y = 0; y < height; y++) {
-                	int xCell = x + (int)(_xCursor / backgroundLayer.getTileWidth());
-                	int yCell = (int)(_yCursor / backgroundLayer.getTileHeight()) - y;
-
-                	TiledMapTileLayer.Cell prevCell = backgroundLayer.getCell(xCell, yCell); 
-                	
-                	if (prevCell == null)
-                	{
-                		prevCell = new TiledMapTileLayer.Cell();
-                		backgroundLayer.setCell(xCell,  yCell, prevCell);
-                	}
-                	prevCell.setTile(getSelectedTile(selectedCells[x][y]));        		
-            	}
-            }         
+        	_currentMap.setTileArray(_xCursor, _yCursor, _selectedCellProvider.getLayerName(), selectedCells);
         }
 	}
-	
-	public void loadFromRemote(INetwork network) {		
-		byte[] fileAsArray = network.requestMap(_currentMap);
-		
-        try {
-	        FileOutputStream fos = new FileOutputStream("map");
+
+	@Override
+	public void addSite(INetwork network) {
+		String newMapFileName = "MyNewMap";
+		String siteTemplateFileName = _selectedSiteProvider.getSelectedSiteFileName();
+		if (network.createMapFromTemplate(siteTemplateFileName, newMapFileName))
+		{
+			IMapInstance selectedSite = MapInstance.Create(newMapFileName, _gameSourceProvider);
+            
+	        if (_currentMap.canBuildAt(_xCursor, _yCursor) && _player.pay(selectedSite.getPrice())) {
+	        	_currentMap.addSubSite(_xCursor, _yCursor, selectedSite);
+			}
+		}
+		else {
+			System.err.println("Could not add site");
+		}
+	}
+
+	public void loadFromRemote(INetwork network) {
+		byte[] fileAsArray = network.requestMap(_currentMap.getName());
+				
+        writeMapToDisc(fileAsArray);
+        
+        _tiledMapRenderer = _currentMap.load();
+	}
+
+	public void dispose() {
+		if (_currentMap != null) {			
+			_currentMap.dispose();
+		}
+	}
+
+	private void writeMapToDisc(byte[] fileAsArray) {
+		try {
+			FileOutputStream fos = new FileOutputStream(Consts.Map);
 	        fos.write(fileAsArray);
 	        fos.flush();
 	        fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
-        _tiledMap =  new TmxMapLoader().load("map");
-        _tiledMapRenderer = new OrthogonalTiledMapRenderer(_tiledMap);                
-	}
-
-	public void dispose() {
-		writeCurrentMap();
-		_tiledMap.dispose();		
-	}
-
-	private void writeCurrentMap() {
-		FileWriter fileWriter;
-		try {
-			Path path = Paths.get(_gameSourceProvider.getSaveFolder(SaveType.Map).toString(), _currentMap + ".tmx");
-			fileWriter = new FileWriter(path.toString(), false);
-			TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
-			tmxWriter.tmx(_tiledMap, Format.Base64Zlib);
-			tmxWriter.flush();
-			tmxWriter.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private TiledMapTile getSelectedTile(int selectedCellIndex) {
-		TiledMapTile selectedTile = null;
-		
-		TiledMapTileSets tileSets = _tiledMap.getTileSets();
-        Iterator<TiledMapTileSet> it = tileSets.iterator();
-
-        int count = 0;
-        while(it.hasNext()) {
-        	TiledMapTileSet tileSet = it.next();
-        	Iterator<TiledMapTile> tileIt = tileSet.iterator();
-        	
-        	while(tileIt.hasNext()) {
-        		selectedTile = tileIt.next();
-        		
-        		if (count == selectedCellIndex) {
-        			break;
-        		}
-        		count++;
-        	}
-
-        	if (count == selectedCellIndex) {
-    			break;
-    		}
-        }
-		
-        return selectedTile;
 	}
 }

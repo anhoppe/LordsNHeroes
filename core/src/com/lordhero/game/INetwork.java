@@ -12,4 +12,6 @@ public interface INetwork {
 	byte[] requestMap(String currentMap);
 
 	byte[] requestEntities();
+
+	boolean createMapFromTemplate(String siteTemplateFileName, String newMapFileName);
 }

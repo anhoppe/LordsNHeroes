@@ -12,7 +12,8 @@ public interface IGameMode {
 		Play, 
 		Purchase,
 		Inn,
-		CharacterSheet
+		CharacterSheet, 
+		AddSite
 	}
 	
 	public enum SaveType {

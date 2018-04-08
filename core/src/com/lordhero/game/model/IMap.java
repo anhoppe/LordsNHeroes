@@ -12,8 +12,9 @@ public interface IMap {
 	
 	// Setters for controller
 	void checkForCollision();
-	boolean enter();
+	boolean enter(INetwork _network);
 	void setTile();
 	void setCursorPosition(int xPos, int yPos);
 	void loadFromRemote(INetwork _network);
+	void addSite(INetwork network);
 }

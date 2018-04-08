@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.lordhero.game.Consts;
 import com.lordhero.game.ISelectedCellProvider;
 
 public class WorldEditor extends UiPanel implements ISelectedCellProvider {
@@ -40,7 +41,7 @@ public class WorldEditor extends UiPanel implements ISelectedCellProvider {
 		
 		_layerSelection = new SelectBox<String>(_skin);
 		
-		String[] layerSelection = {"Background", "Obstacles", "Collision"};
+		String[] layerSelection = {Consts.Background, Consts.Obstacles, Consts.Collision};
 		
 		_layerSelection.setItems(layerSelection);
 		_table.add(_layerSelection).size(200, 32);

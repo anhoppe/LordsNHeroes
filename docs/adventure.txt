@@ -1,0 +1,12 @@
+Items for designing adventures
+
+
+entry
+sign (write your explanation)
+oneway-exit
+oneway-entry
+door
+oneway-key
+monster pit
+chest (spwans money)
+trap

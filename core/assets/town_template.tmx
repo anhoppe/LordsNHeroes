@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1">
  <tileset firstgid="1" source="MyTiles.tsx"/>
+ <tileset firstgid="257" source="data/tileset/Building.tsx"/>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKHr3+xbrcdQcNVUVVXV1w/RSSQu
+   eJztwwEJAAAMBKFr+P3brMdQcNVUVVXV1w8cTTwQ
   </data>
  </layer>
  <layer name="Obstacles" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+   eJztziEBAAAIA7DTvx6BaIBBYLYESwAAAIBN1/fgbgCzEwDW
   </data>
  </layer>
  <layer name="Collision" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzTENAAAMw7AyKH+2Y7E+jpTbTdLxq/h8Pp/P5/P5fD6fz//0lx9B7gdF
+   eJzt16ENAEAMA7Fu0P23LX38qhrik4KNU5WvQ3v96/h8Pp/P5/P5fD6fn/F//+PG/0w2dUYGvg==
   </data>
  </layer>
  <objectgroup name="Buildings"/>

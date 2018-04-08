@@ -27,6 +27,7 @@ public class Main implements ApplicationListener {
 	private static final String SendMap = "sendMap";
 	private static final String SendEntities = "sendEntities";
 	private static final String RequestWorldName = "requestWorldName";
+	private static final String CreateMapFromTemplate = "createMapFromTemplate";
 	private static final String CloseConnection = "closeConnection";
 
 	private int _port;
@@ -105,6 +106,16 @@ public class Main implements ApplicationListener {
 						outputStream.write(worldNameAsByteArray, 0, worldNameAsByteArray.length);
 						outputStream.flush();
 					}
+					else if (tokens[0].equals(CreateMapFromTemplate)) {
+						boolean success = false;
+						if (tokens.length == 3) {
+							success = copyTemplateMap(tokens[1], tokens[2]);
+						}
+						byte[] result = new byte[1];
+						result[0] = (byte) (success ? 1 : 0);
+						outputStream.write(result);
+						outputStream.flush();						
+					}
 					else if (tokens[0].equals(CloseConnection)) {
 						clientSocket.close();
 						break;
@@ -150,6 +161,25 @@ public class Main implements ApplicationListener {
 		}
 
 		_entitiesPath = Paths.get(path.toString(), "entities.xml");
+	}
+	
+	private boolean copyTemplateMap(String source, String target) {
+		boolean success = false;
+		
+		Path sourcePath = Paths.get(_mapPath.toString(), source + ".tmx");		
+		Path targetPath = Paths.get(_mapPath.toString(), target + ".tmx");		
+		
+		if (!Files.exists(targetPath)) {
+			try {
+				Files.copy(sourcePath, targetPath);
+				success = true;
+			}
+			catch (Exception e) {
+				System.err.println("Could not copy " + source + " to " + target + ": " + e.getMessage());
+			}
+		}
+		
+		return success;
 	}
 
 	@Override

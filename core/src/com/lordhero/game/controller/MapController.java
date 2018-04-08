@@ -62,8 +62,7 @@ public class MapController implements IController {
 	public boolean processKeyUp(int keyCode) {
     	if (keyCode == Input.Keys.E)
     	{
-    		if (_map.enter()) {
-    			_map.loadFromRemote(_network);
+    		if (_map.enter(_network)) {
     			return true;
     		}
     	}		
@@ -89,9 +88,12 @@ public class MapController implements IController {
 
 	@Override
 	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
-		if (_gameMode.get() == IGameMode.GameMode.BuyTiles)
-		{
+		if (_gameMode.is(IGameMode.GameMode.BuyTiles)) {
 			_map.setTile();
+			return true;
+		}
+		else if (_gameMode.is(GameMode.AddSite)) {
+			_map.addSite(_network);
 			return true;
 		}
 		

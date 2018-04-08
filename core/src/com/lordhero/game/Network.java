@@ -65,6 +65,26 @@ public class Network implements INetwork {
 
         return convertAnswerToByteArray();
 	}
+	
+
+	@Override
+	public boolean createMapFromTemplate(String siteTemplateFileName, String newMapFileName) {
+		boolean success = false;
+		
+		_outputStream.println("createMapFromTemplate:" + siteTemplateFileName + ":" + newMapFileName);
+		
+		// get the answer from the stream
+        try {
+        	byte[] result = new byte [1];
+			_inputStream.read(result, 0, 1);
+			success = result[0] != 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+        return success;        		
+	}
+
 
 	@Override
 	public byte[] requestEntities() {

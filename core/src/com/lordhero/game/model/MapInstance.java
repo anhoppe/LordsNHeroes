@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -16,9 +17,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.lordhero.game.IGameMode.SaveType;
 import com.lordhero.game.Consts;
+import com.lordhero.game.IGameMode.SaveType;
 import com.lordhero.game.IGameSourceProvider;
 
 import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
@@ -27,7 +27,10 @@ import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 public class MapInstance implements IMapInstance {
 	private String _fileName;
     private TiledMap _tiledMap;
-	private IGameSourceProvider _gameSourceProvider; 
+	private IGameSourceProvider _gameSourceProvider;
+	
+	private int _xEntry;
+	private int _yEntry; 
 
     public static IMapInstance Create(String fileName, IGameSourceProvider gameSourceProvider) {
     	return new MapInstance(fileName, gameSourceProvider);
@@ -36,6 +39,12 @@ public class MapInstance implements IMapInstance {
     private MapInstance(String fileName, IGameSourceProvider gameSourceProvider) {
     	_fileName = fileName;
     	_gameSourceProvider = gameSourceProvider;
+    }
+    
+    private MapInstance(String fileName, int xEntry, int yEntry, IGameSourceProvider gameSourceProvider) {
+    	this(fileName, gameSourceProvider);
+    	_xEntry = xEntry;
+    	_yEntry = yEntry;
     }
 
 	@Override
@@ -56,9 +65,13 @@ public class MapInstance implements IMapInstance {
 		RectangleMapObject mapObject = getSiteLayerObjectAt(x, y);
 		
 		if (mapObject != null) {
-			String childMapName = (String)mapObject.getProperties().get(Consts.TargetMap);
+			MapProperties mapProperties = mapObject.getProperties();
+			String childMapName = (String)mapProperties.get(Consts.TargetMap);
 			
-			childMap = new MapInstance(childMapName, _gameSourceProvider);			
+			int xEntry = Integer.parseInt((String)mapProperties.get(Consts.ChildMapEntryX));
+			int yEntry = Integer.parseInt((String)mapProperties.get(Consts.ChildMapEntryY));
+			
+			childMap = new MapInstance(childMapName, xEntry, yEntry, _gameSourceProvider);
 		}
 		
 		return childMap;
@@ -66,14 +79,12 @@ public class MapInstance implements IMapInstance {
 
 	@Override
 	public float getXEntry() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _xEntry;
 	}
 
 	@Override
 	public float getYEntry() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _yEntry;
 	}
 
 	@Override
@@ -140,15 +151,17 @@ public class MapInstance implements IMapInstance {
 	}
 
 	@Override
-	public void addSubSite(int xPos, int yPos, IMapInstance sitePattern) {
+	public void addSubSite(int xPos, int yPos, IMapInstance sitePattern, int newMapsExitXCell, int newMapsExitYCell) {
 		int xCell = xPos / Consts.TileWidth;
 		int yCell = yPos / Consts.TileHeight;
 		
         MapLayer siteLayer = (MapLayer)_tiledMap.getLayers().get(Consts.SiteLayer);        
         RectangleMapObject mapObject = new RectangleMapObject(xPos, yPos, Consts.TileWidth, Consts.TileHeight);	        
 		mapObject.getProperties().put(Consts.TargetMap, sitePattern.getName());
-		mapObject.getProperties().put("x", xPos);
-		mapObject.getProperties().put("y", yPos);
+		mapObject.getProperties().put("x", Integer.toString(xPos));
+		mapObject.getProperties().put("y", Integer.toString(yPos));
+		mapObject.getProperties().put(Consts.ChildMapEntryX, Integer.toString(newMapsExitXCell * Consts.TileWidth));
+		mapObject.getProperties().put(Consts.ChildMapEntryY, Integer.toString(newMapsExitYCell * Consts.TileHeight));
         MapObjects objects = siteLayer.getObjects();
         objects.add(mapObject);
         

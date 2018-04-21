@@ -130,12 +130,14 @@ public class Map implements IMap, IMapInfo {
 	public void addSite(INetwork network) {
 		String newMapFileName = "MyNewMap";
 		String siteTemplateFileName = _selectedSiteProvider.getSelectedSiteFileName();
-		if (network.createMapFromTemplate(siteTemplateFileName, newMapFileName))
+		MapCreationInfo mapCreationInfo = new MapCreationInfo(siteTemplateFileName, newMapFileName, _currentMap.getName(), _xCursor, _yCursor);
+		
+		if (network.createMapFromTemplate(mapCreationInfo))
 		{
 			IMapInstance selectedSite = MapInstance.Create(newMapFileName, _gameSourceProvider);
             
 	        if (_currentMap.canBuildAt(_xCursor, _yCursor) && _player.pay(selectedSite.getPrice())) {
-	        	_currentMap.addSubSite(_xCursor, _yCursor, selectedSite);
+	        	_currentMap.addSubSite(_xCursor, _yCursor, selectedSite, mapCreationInfo._newMapsExitXCell, mapCreationInfo._newMapsExitYCell);
 			}
 		}
 		else {
@@ -149,7 +151,7 @@ public class Map implements IMap, IMapInfo {
         writeMapToDisc(fileAsArray);
         
         _tiledMapRenderer = _currentMap.load();
-	}
+   	}
 
 	public void dispose() {
 		if (_currentMap != null) {			

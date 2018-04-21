@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1">
+ <properties>
+  <property name="DefaultEntryX" type="int" value="16"/>
+  <property name="DefaultEntryY" type="int" value="16"/>
+ </properties>
  <tileset firstgid="1" source="MyTiles.tsx"/>
+ <tileset firstgid="257" source="data/tileset/Building.tsx"/>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="zlib">
    eJztwwEJAAAMBKHr3+xbrcdQcNVUVVXV1w/RSSQu
@@ -8,7 +13,7 @@
  </layer>
  <layer name="Obstacles" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+   eJztzjEBAAAIA6DZv56BzLDLBxKQAAB0dr4HAEDrAIMZANY=
   </data>
  </layer>
  <layer name="Collision" width="32" height="32">

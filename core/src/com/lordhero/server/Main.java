@@ -3,6 +3,7 @@ package com.lordhero.server;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +22,17 @@ import java.util.Properties;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.lordhero.game.Consts;
+import com.lordhero.game.IGameMode.SaveType;
+
+import net.dermetfan.gdx.maps.tiled.TmxMapWriter;
+import net.dermetfan.gdx.maps.tiled.TmxMapWriter.Format;
 
 public class Main implements ApplicationListener {
 
@@ -107,14 +119,18 @@ public class Main implements ApplicationListener {
 						outputStream.flush();
 					}
 					else if (tokens[0].equals(CreateMapFromTemplate)) {
-						boolean success = false;
-						if (tokens.length == 3) {
-							success = copyTemplateMap(tokens[1], tokens[2]);
+						String result = "";
+						if (tokens.length == 6) {
+							result = copyTemplateMap(tokens[1], tokens[2], tokens[3], Integer.parseInt(tokens[4]), Integer.parseInt(tokens[5]));
 						}
-						byte[] result = new byte[1];
-						result[0] = (byte) (success ? 1 : 0);
-						outputStream.write(result);
-						outputStream.flush();						
+						byte[] resultAsByteArray = result.getBytes();
+
+						byte[] resultLengthAsByteArray = new byte[4];
+						ByteBuffer.wrap(resultLengthAsByteArray).putInt(resultAsByteArray.length);
+
+						outputStream.write(resultLengthAsByteArray);
+						outputStream.write(resultAsByteArray, 0, resultAsByteArray.length);					
+						outputStream.flush();
 					}
 					else if (tokens[0].equals(CloseConnection)) {
 						clientSocket.close();
@@ -163,23 +179,56 @@ public class Main implements ApplicationListener {
 		_entitiesPath = Paths.get(path.toString(), "entities.xml");
 	}
 	
-	private boolean copyTemplateMap(String source, String target) {
-		boolean success = false;
+	private String copyTemplateMap(String templateMapName, String newMapName, String parentMapName, int exitTargetX, int exitTargetY) {
+		String result = "error";
 		
-		Path sourcePath = Paths.get(_mapPath.toString(), source + ".tmx");		
-		Path targetPath = Paths.get(_mapPath.toString(), target + ".tmx");		
+		Path sourcePath = Paths.get(_mapPath.toString(), templateMapName + ".tmx");		
+		Path targetPath = Paths.get(_mapPath.toString(), newMapName + ".tmx");		
 		
 		if (!Files.exists(targetPath)) {
 			try {
 				Files.copy(sourcePath, targetPath);
-				success = true;
+				
+				// Add the meta data for the map exit to the newly created map
+				TiledMap tiledMap = new TmxMapLoader().load(targetPath.toString());
+				
+				MapProperties mapProperties = tiledMap.getProperties();
+				
+				int xExitToParent = (Integer)mapProperties.get("DefaultEntryX");
+				int yExitToParent = (Integer)mapProperties.get("DefaultEntryY");
+				
+		        MapLayer siteLayer = (MapLayer)tiledMap.getLayers().get(Consts.SiteLayer);        
+		        RectangleMapObject mapObject = new RectangleMapObject(xExitToParent * Consts.TileWidth, yExitToParent * Consts.TileHeight, Consts.TileWidth, Consts.TileHeight);	        
+				mapObject.getProperties().put(Consts.TargetMap, parentMapName);
+				mapObject.getProperties().put("x", xExitToParent * Consts.TileWidth);
+				mapObject.getProperties().put("y", yExitToParent * Consts.TileHeight);
+				mapObject.getProperties().put(Consts.ChildMapEntryX, exitTargetX);
+				mapObject.getProperties().put(Consts.ChildMapEntryY, exitTargetY);
+				
+		        MapObjects objects = siteLayer.getObjects();
+		        objects.add(mapObject);
+		        
+		        // Save the newly created map with its properties
+				FileWriter fileWriter;
+				try {
+					fileWriter = new FileWriter(targetPath.toString(), false);
+					TmxMapWriter tmxWriter = new TmxMapWriter(fileWriter);
+					tmxWriter.tmx(tiledMap, Format.Base64Zlib);
+					tmxWriter.flush();
+					tmxWriter.close();
+					result = Integer.toString(xExitToParent) + ":" + Integer.toString(yExitToParent);					
+				} catch (IOException e) {
+					System.err.println("Could not write newly created map: " + e.getMessage());
+					e.printStackTrace();
+				}		
+				
 			}
 			catch (Exception e) {
-				System.err.println("Could not copy " + source + " to " + target + ": " + e.getMessage());
+				System.err.println("Could not copy " + templateMapName + " to " + newMapName + ": " + e.getMessage());
 			}
 		}
 		
-		return success;
+		return result;
 	}
 
 	@Override
@@ -216,19 +265,51 @@ public class Main implements ApplicationListener {
 
 	private void initialCopyOfOriginalMaps()
 	{
-		Path sourcePath = Paths.get(".");
+		DirectoryStream.Filter<Path> dirFilter = createDirectoryFilter("glob:./*.tmx");        
+		copyFilteredFiles(dirFilter, "");
+		
+		dirFilter = createDirectoryFilter("glob:./*.tsx");        
+		copyFilteredFiles(dirFilter, "");
 
+		dirFilter = createDirectoryFilter("glob:./*.png");        
+		copyFilteredFiles(dirFilter, "");
+
+		dirFilter = createDirectoryFilter("glob:./data/tileset/*.tsx");
+		copyFilteredFiles(dirFilter, "data/tileset");
+
+		dirFilter = createDirectoryFilter("glob:./data/tileset/*.png");
+		copyFilteredFiles(dirFilter, "data/tileset");
+	}
+
+	private DirectoryStream.Filter<Path> createDirectoryFilter(final String filter) {
 		DirectoryStream.Filter<Path> dirFilter = new DirectoryStream.Filter<Path>() {
             public boolean accept(Path path) throws IOException {
-            	PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:./*.tmx");
+            	PathMatcher matcher = FileSystems.getDefault().getPathMatcher(filter);
                 return matcher.matches(path);
             }
         };
-        
+		return dirFilter;
+	}
+
+	private void copyFilteredFiles(DirectoryStream.Filter<Path> dirFilter, String subDirectory) {
+		Path sourcePath = Paths.get(".", subDirectory);
+
 		try {
 			for (final Path copiedFilePath : Files.newDirectoryStream(sourcePath)) {
 				if (dirFilter.accept(copiedFilePath)) {
-					Path targetPath = Paths.get(_mapPath.toString(), copiedFilePath.getFileName().toString());
+					Path targetPath = Paths.get(_mapPath.toString(), subDirectory);
+									
+					if (!Files.exists(targetPath)) {
+						try {
+							Files.createDirectories(targetPath);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+					targetPath = Paths.get(targetPath.toString(), copiedFilePath.getFileName().toString());
+					
 					if (!Files.exists(targetPath)) {
 						Files.copy(copiedFilePath, targetPath);						
 					}						
@@ -237,7 +318,7 @@ public class Main implements ApplicationListener {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
 	
 	private void sendFile(OutputStream outputStream, FileHandle mapHandle) throws IOException {

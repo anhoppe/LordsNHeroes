@@ -1,5 +1,7 @@
 package com.lordhero.game;
 
+import com.lordhero.game.model.MapCreationInfo;
+
 public interface INetwork {
 	enum ConnectionType {
 		None,
@@ -13,5 +15,5 @@ public interface INetwork {
 
 	byte[] requestEntities();
 
-	boolean createMapFromTemplate(String siteTemplateFileName, String newMapFileName);
+	boolean createMapFromTemplate(MapCreationInfo mapCreationInfo);
 }

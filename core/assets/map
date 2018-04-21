@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1">
- <tileset firstgid="1" source="MyTiles.tsx"/>
- <layer name="Background" width="32" height="32">
-  <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKHr3+xbrcdQcNVUVVXV1w/RSSQu
-  </data>
- </layer>
- <layer name="Obstacles" width="32" height="32">
-  <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
-  </data>
- </layer>
- <layer name="Collision" width="32" height="32">
-  <data encoding="base64" compression="zlib">
-   eJztzTENAAAMw7AyKH+2Y7E+jpTbTdLxq/h8Pp/P5/P5fD6fz//0lx9B7gdF
-  </data>
- </layer>
- <objectgroup name="Buildings"/>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
+	<properties>
+		<property name="DefaultEntryX" value="16"/>
+		<property name="hexsidelength" value="0"/>
+		<property name="DefaultEntryY" value="16"/>
+	</properties>
+	<tileset firstgid="1" name="MyTiles" tilewidth="32" tileheight="32" spacing="0" margin="0">
+		<tileoffset x="0" y="0"/>
+		<image source="MyTiles.png" imagewidth="0" imageheight="0"/>
+	</tileset>
+	<tileset firstgid="257" name="Building" tilewidth="32" tileheight="32" spacing="0" margin="0">
+		<tileoffset x="0" y="0"/>
+		<image source="VX BuildingsTileset.png" imagewidth="0" imageheight="0"/>
+	</tileset>
+	<layer name="Background" width="32" height="32" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJztwwEJAAAMBKHr3+xbrcdQcNVUVVXV1w/RSSQu
+		</data>
+	</layer>
+	<layer name="Obstacles" width="32" height="32" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJztzjEBAAAIA6DZv56BzLDLBxKQAAB0dr4HAEDrAIMZANY=
+		</data>
+	</layer>
+	<layer name="Collision" width="32" height="32" visible="1" opacity="1.0">
+		<data encoding="base64" compression="zlib">
+eJztzTENAAAMw7AyKH+2Y7E+jpTbTdLxq/h8Pp/P5/P5fD6fz//0lx9B7gdF
+		</data>
+	</layer>
+	<objectgroup name="Buildings">
+		<object name="" x="512" y="480" width="32" height="32">
+			<properties>
+				<property name="xChildMapEntry" value="336"/>
+				<property name="yChildMapEntry" value="240"/>
+				<property name="TargetMap" value="baseMap"/>
+			</properties>
+		</object>
+	</objectgroup>
 </map>

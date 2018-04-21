@@ -21,7 +21,7 @@ public interface IMapInstance {
 
 	boolean canBuildAt(int xPos, int yPos);
 
-	void addSubSite(int xPos, int yPos, IMapInstance sitePattern);
+	void addSubSite(int xPos, int yPos, IMapInstance sitePattern, int newMapsExitXCell, int newMapsExitYCell);
 
 	void setTileArray(int _xCursor, int _yCursor, String layerName, int[][] selectedCells);
 

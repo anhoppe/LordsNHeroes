@@ -50,8 +50,8 @@ public class Player extends CreatureBase implements IPlayer {
 		_lordChangedListeners = new LinkedList<ChangeListener>();
 		_items = new LinkedList<IItem>();
 		
-		_xPos = 30;
-		_yPos = 30;
+		_xPos = -1;
+		_yPos = -1;
 		
 		_meleeWeapon = null;
 		_rangedWeapon = null;	

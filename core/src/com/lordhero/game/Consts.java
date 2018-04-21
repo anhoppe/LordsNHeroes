@@ -12,6 +12,9 @@ public class Consts {
 	public static final String StartX = "StartX";
 	public static final String StartY = "StartY";
 
+	public static final String ChildMapEntryX = "xChildMapEntry";
+	public static final String ChildMapEntryY = "yChildMapEntry";
+
 	public static final String Map = "map";
 	public static final String BaseMap = "baseMap";
 	public static final String TargetMap = "TargetMap";

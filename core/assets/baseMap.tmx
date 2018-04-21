@@ -18,19 +18,9 @@
   </data>
  </layer>
  <objectgroup name="Buildings">
-  <object id="16" name="Capital" type="Entry" x="577" y="3009" width="29" height="32">
-   <properties>
-    <property name="StartX" type="int" value="992"/>
-    <property name="StartY" type="int" value="64"/>
-    <property name="TargetMap" value="capitalMap"/>
-   </properties>
-  </object>
-  <object id="18" name="Dungeon" type="Entry" x="354" y="3299" width="61" height="27">
-   <properties>
-    <property name="StartX" type="int" value="992"/>
-    <property name="StartY" type="int" value="1343"/>
-    <property name="TargetMap" value="dungeon"/>
-   </properties>
-  </object>
+  <properties>
+   <property name="DefaultEntryX" type="int" value="0"/>
+   <property name="DefaultEntryY" type="int" value="0"/>
+  </properties>
  </objectgroup>
 </map>

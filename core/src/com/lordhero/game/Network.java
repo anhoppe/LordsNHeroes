@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 
+import com.lordhero.game.model.MapCreationInfo;
+
 public class Network implements INetwork {
 
 	private static final String RequestWorldName = "requestWorldName";
@@ -66,25 +68,30 @@ public class Network implements INetwork {
         return convertAnswerToByteArray();
 	}
 	
-
 	@Override
-	public boolean createMapFromTemplate(String siteTemplateFileName, String newMapFileName) {
+	public boolean createMapFromTemplate(MapCreationInfo mapCreationInfo) {
 		boolean success = false;
 		
-		_outputStream.println("createMapFromTemplate:" + siteTemplateFileName + ":" + newMapFileName);
+		_outputStream.println("createMapFromTemplate:" + 
+		mapCreationInfo._templateMapName + ":" + 
+		mapCreationInfo._newMapName + ":" +
+		mapCreationInfo._parentMapName + ":" + 
+		Integer.toString(mapCreationInfo._exitTargetX) + ":" +
+		Integer.toString(mapCreationInfo._exitTargetY));
 		
-		// get the answer from the stream
-        try {
-        	byte[] result = new byte [1];
-			_inputStream.read(result, 0, 1);
-			success = result[0] != 0;
-		} catch (IOException e) {
-			e.printStackTrace();
+		// Read back the result which should contain the coordinates of the exit cell
+		String result = new String(convertAnswerToByteArray());
+		
+		String[] tokens = result.split(":");
+		if (tokens.length == 2) {
+			mapCreationInfo._newMapsExitXCell = Integer.parseInt(tokens[0]);
+			mapCreationInfo._newMapsExitYCell = Integer.parseInt(tokens[1]);
+			
+			success = true;
 		}
 
-        return success;        		
+        return success;
 	}
-
 
 	@Override
 	public byte[] requestEntities() {

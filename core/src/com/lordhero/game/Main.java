@@ -29,6 +29,7 @@ import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.Map;
 import com.lordhero.game.model.Player;
+import com.lordhero.game.view.AddItemPanel;
 import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
 import com.lordhero.game.view.LordSheet;
@@ -51,8 +52,6 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	        SaveTypeFolder = Collections.unmodifiableMap(aMap);
 	    }
 	    
-//	private static final String[] SaveTypeFolder = {"illegal", "map", "entities"};
-	
 	// Model objects
 	private Player _player;
 	private Map _map;
@@ -67,6 +66,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private NpcEditor _npcEditor;
 	private NpcView _npcView;
 	private SiteEditor _siteEditor;
+	private AddItemPanel _addItemPanel;
 	private WorldMap _worldMap;	
 	private HeroSheet _heroSheet;
 	private PurchaseSheet _purchaseSheet;
@@ -129,6 +129,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _npcEditor = new NpcEditor();
         _npcView = new NpcView();
         _siteEditor = new SiteEditor();
+        _addItemPanel = new AddItemPanel();
         _mainPanel = new MainPanel();
 
         // Create models
@@ -157,6 +158,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _entities.setMapInfo(_map);
         _entities.setSelectedNpcProvider(_npcEditor);
         _entities.setNpcSelectionReceiver(_npcView);
+        _entities.setSelectedItemProvider(_addItemPanel);
        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
@@ -239,6 +241,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 		
 		_worldMap.render();
         
+		// Game modes for the hero
         if (_gameMode == GameMode.Play) {
         	_heroSheet.draw();
         }
@@ -248,6 +251,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         else if (_gameMode == GameMode.CharacterSheet) {
         	_characterSheet.draw();
         }
+        // The following are the lord's game modes
         else {
             _mainPanel.draw();
     		_lordSheet.draw();
@@ -260,6 +264,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
             }
             else if (_gameMode == GameMode.AddSite) {
             	_siteEditor.draw();
+            }
+            else if (_gameMode == GameMode.AddItem) {
+            	_addItemPanel.draw();
             }
             else if (_gameMode == GameMode.MonsterPit) {
             	_monsterPitPanel.draw();
@@ -393,6 +400,12 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         }
         else if (_gameMode == GameMode.AddSite) {
     		_inputMultiplexer.addProcessor(_siteEditor.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
+    		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
+    		_inputMultiplexer.addProcessor(this);
+        }
+        else if (_gameMode == GameMode.AddItem) {
+    		_inputMultiplexer.addProcessor(_addItemPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(_lordSheet.getInputProcessor());
     		_inputMultiplexer.addProcessor(_mainPanel.getInputProcessor());
     		_inputMultiplexer.addProcessor(this);

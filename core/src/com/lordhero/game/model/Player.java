@@ -187,9 +187,13 @@ public class Player extends CreatureBase implements IPlayer {
 	}
 
  	@Override
-	public void addItem(IItem item) {
-		_money -= item.getPrice();
+	public boolean addItem(IItem item, boolean playerHasToBuy) {		
+ 		if (playerHasToBuy) {
+	 		_money -= item.getPrice();			
+		}
 		_items.add(item);
+		
+		return true; // maybe add limitations like out of money or too much weight
 	}
 
 	@Override

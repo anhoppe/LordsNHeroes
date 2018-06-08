@@ -14,23 +14,34 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.INetwork;
+import com.lordhero.game.ISelectedItemProvider;
 import com.lordhero.game.ISelectedNpcProvider;
+import com.lordhero.game.model.items.GenericItem;
+import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.IItemFactory;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.view.INpcSelectionReceiver;
 
 import net.dermetfan.utils.Pair;
 
 public class Entities implements IEntities, IEntityFactory {
+	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
+
 	private Hashtable<String, List<IEntity>> _entities;
+	private Hashtable<String, List<IItem>> _items;
+	
 	private IMapInfo _mapInfo;
-	private ISelectedNpcProvider _selectedNpcProvider;
-	private List<Pair<String, IEntity>> _createdEntities;
+	private List<Pair<String, IEntity>> _createdEntitiesBuffer;
 	
 	private INpcSelectionReceiver _npcSelectionReceiver;
+	private ISelectedNpcProvider _selectedNpcProvider;
+	private ISelectedItemProvider _selectedItemProvider;
 	
 	public Entities() {
 		_entities = new Hashtable<String, List<IEntity>>();
-		_createdEntities = new LinkedList<Pair<String, IEntity>>();
+		_createdEntitiesBuffer = new LinkedList<Pair<String, IEntity>>();
+		
+		_items = new Hashtable<String, List<IItem>>();
 	}
 	
 	public void setMapInfo(IMapInfo mapInfo) {
@@ -43,6 +54,10 @@ public class Entities implements IEntities, IEntityFactory {
 	
 	public void setNpcSelectionReceiver(INpcSelectionReceiver receiver) {
 		_npcSelectionReceiver = receiver;
+	}
+	
+	public void setSelectedItemProvider(ISelectedItemProvider selectedItemProvider) {
+		_selectedItemProvider = selectedItemProvider;
 	}
 
 	@Override
@@ -60,10 +75,46 @@ public class Entities implements IEntities, IEntityFactory {
 	}
 
 	@Override
+	public List<IItem> getItemsOnSite() {
+		return _items.get(_mapInfo.getCurrentMap());
+	}
+
+	@Override
 	public void addNpc(int xPos, int yPos) {
 		String site = _mapInfo.getCurrentMap();
 		
 		addEntityToSite(site, new Npc(_selectedNpcProvider.get(), xPos, yPos));
+	}
+
+	@Override
+	public void addItem(int xCursorCell, int yCursorCell) {
+		String site = _mapInfo.getCurrentMap();
+
+		IItem item = ItemFactory.produce(_selectedItemProvider.getSelectedItem(), xCursorCell, yCursorCell);
+		addItemToSite(site, item);
+	}
+	
+	@Override
+	public void remove(IItem item) {
+		List<IItem> itemsOnSite = _items.get(_mapInfo.getCurrentMap());
+		
+		itemsOnSite.remove(item);
+	}
+	
+	@Override
+	public IItem getItemInRange(int xPosPx, int yPosPx) {
+		IItem itemInRange = null;
+		
+		List<IItem> itemsOnSite = _items.get(_mapInfo.getCurrentMap());
+		
+		for (IItem item : itemsOnSite) {
+			if (item.isAt(xPosPx, yPosPx)) {
+				itemInRange = item;
+				break;
+			}
+		}
+		
+		return itemInRange;
 	}
 
 	@Override
@@ -125,7 +176,7 @@ public class Entities implements IEntities, IEntityFactory {
 
 	@Override
 	public void createEnemy(String site, float xPos, float yPos) {
-		_createdEntities.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
+		_createdEntitiesBuffer.add(new Pair<String, IEntity>(site, new Enemy(xPos, yPos)));
 	}
 
 	@Override
@@ -134,7 +185,7 @@ public class Entities implements IEntities, IEntityFactory {
 		
 		String site = _mapInfo.getCurrentMap();
 		
-		_createdEntities.add(new Pair<String, IEntity>(site, missile));
+		_createdEntitiesBuffer.add(new Pair<String, IEntity>(site, missile));
 		
 		return missile;
 	}
@@ -143,6 +194,7 @@ public class Entities implements IEntities, IEntityFactory {
 	public void save(XmlWriter writer) throws IOException {
 		writer.element("Entities");
 		
+		writer.element("Characters");
 		Set<String> keys = _entities.keySet();
         for(String key : keys) {
         	writer.element("site").attribute("Name",  key);
@@ -153,6 +205,21 @@ public class Entities implements IEntities, IEntityFactory {
         	}
         	writer.pop();
         }		
+        writer.pop();
+        
+        writer.element("Items");
+		Set<String> itemKeys = _items.keySet();
+        for(String key : itemKeys) {
+        	writer.element("site").attribute("Name",  key);
+        	
+        	List<IItem> items = _items.get(key);
+        	for (IItem item : items) {
+        		item.write(writer);
+        	}
+        	writer.pop();
+        }		
+        writer.pop();
+        
         writer.pop();
 	}
 
@@ -177,9 +244,9 @@ public class Entities implements IEntities, IEntityFactory {
 		FileInputStream inputStream = new FileInputStream("entities");        
         XmlReader xmlReader = new XmlReader();
         XmlReader.Element root = xmlReader.parse(inputStream);
-        
-        
-        Array<XmlReader.Element> sites = root.getChildrenByName("site");
+                
+        XmlReader.Element characterNode = root.getChildByName("Characters");
+        Array<XmlReader.Element> sites = characterNode.getChildrenByName("site");
         
         for (XmlReader.Element siteNode : sites) {
         	String siteName = siteNode.getAttribute("Name");
@@ -200,6 +267,22 @@ public class Entities implements IEntities, IEntityFactory {
         		addEntityToSite(siteName, entity);
         	}
         }
+        
+        XmlReader.Element itemsNode = root.getChildByName("Items");
+        sites = itemsNode.getChildrenByName("site");
+
+        for (XmlReader.Element siteNode : sites) {
+        	String siteName = siteNode.getAttribute("Name");
+        	for (int index = 0; index < siteNode.getChildCount(); index++) {
+        		XmlReader.Element itemNode = siteNode.getChild(index);
+        	        		
+        		IItem item = ItemFactory.produce(itemNode);        		
+        		
+        		if (item != null) {
+            		addItemToSite(siteName, item);        			
+        		}
+        	}
+        }        
 	}	
 	
 	private void addEntityToSite(String site, IEntity entity) {
@@ -215,6 +298,20 @@ public class Entities implements IEntities, IEntityFactory {
 		
 		entitiesOnSite.add(entity);
 	}	
+
+	private void addItemToSite(String site, IItem item) {
+		List<IItem> itemsOnSite;
+
+		if (!_items.containsKey(site)) {
+			itemsOnSite = new LinkedList<IItem>();
+			_items.put(site,  itemsOnSite);
+		}
+		else {
+			itemsOnSite = _items.get(site);
+		}				
+		
+		itemsOnSite.add(item);
+	}
 
 	private void deleteTerminatedEntites() {
 		Enumeration<String> enumKey = _entities.keys();
@@ -256,10 +353,10 @@ public class Entities implements IEntities, IEntityFactory {
 	}
 	
 	private void addCreatedEntities() {
-		for (Pair<String, IEntity> createdEntity : _createdEntities) {
+		for (Pair<String, IEntity> createdEntity : _createdEntitiesBuffer) {
 			addEntityToSite(createdEntity.getKey(), createdEntity.getValue());
 		}
 		
-		_createdEntities.clear();
+		_createdEntitiesBuffer.clear();
 	}
 }

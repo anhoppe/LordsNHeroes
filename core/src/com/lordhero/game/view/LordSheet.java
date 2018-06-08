@@ -8,17 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IGameSourceProvider;
 import com.lordhero.game.model.IPlayer;
 
 public class LordSheet extends UiPanel {
-	private static final String EditMapMode = "Editor map";
-	private static final String AddNpcMode = "Add npc";
-	private static final String AddSiteMode = "Add site";
-	private static final String MonsterPit = "Monster pit";
-	private static final String SelectMode = "Select";
 	
 	IPlayer _lord;
 	
@@ -56,7 +52,13 @@ public class LordSheet extends UiPanel {
 		_table.add(new Label("Menu: ", _skin));
 		
 	    _menuSelection = new SelectBox<String>(_skin);
-	    _menuSelection.setItems(new String[] {EditMapMode, AddNpcMode, AddSiteMode, MonsterPit, SelectMode});
+	    _menuSelection.setItems(new String[] {
+	    		Consts.EditMapMode, 
+	    		Consts.AddNpcMode, 
+	    		Consts.AddSiteMode, 
+	    		Consts.AddItemMode,
+	    		Consts.MonsterPit, 
+	    		Consts.SelectMode});
 	    _menuSelection.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -67,19 +69,22 @@ public class LordSheet extends UiPanel {
 	}
 	
 	private GameMode getModeFromString(String selected) {
-		if (selected == EditMapMode) {
+		if (selected == Consts.EditMapMode) {
 			return GameMode.BuyTiles;			
 		}
-		else if (selected == AddNpcMode) {
+		else if (selected == Consts.AddNpcMode) {
 			return GameMode.AddNpc;
 		}
-		else if (selected == AddSiteMode) {
+		else if (selected == Consts.AddSiteMode) {
 			return GameMode.AddSite;
 		}
-		else if (selected == MonsterPit) {
+		else if (selected == Consts.AddItemMode) {
+			return GameMode.AddItem;
+		}
+		else if (selected == Consts.MonsterPit) {
 			return GameMode.MonsterPit;
 		}
-		else if (selected == SelectMode) {
+		else if (selected == Consts.SelectMode) {
 			return GameMode.SelectMapItems;
 		}
 		

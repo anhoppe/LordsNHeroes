@@ -2,6 +2,7 @@ package com.lordhero.game.model;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -11,7 +12,9 @@ import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IGameSourceProvider;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedCellProvider;
+import com.lordhero.game.ISelectedItemProvider;
 import com.lordhero.game.ISelectedSiteProvider;
+import com.lordhero.game.view.AddItemPanel;
 
 public class Map implements IMap, IMapInfo {
 
@@ -28,7 +31,7 @@ public class Map implements IMap, IMapInfo {
 	private ISelectedCellProvider _selectedCellProvider;
 	
 	private ISelectedSiteProvider _selectedSiteProvider;
-	
+
 	private IGameMode _gameMode;
 	
 	private IGameSourceProvider _gameSourceProvider;
@@ -127,8 +130,8 @@ public class Map implements IMap, IMapInfo {
 	}
 
 	@Override
-	public void addSite(INetwork network) {
-		String newMapFileName = "MyNewMap";
+	public void addSite(INetwork network) {	
+		String newMapFileName = "map_" + UUID.randomUUID().toString();
 		String siteTemplateFileName = _selectedSiteProvider.getSelectedSiteFileName();
 		MapCreationInfo mapCreationInfo = new MapCreationInfo(siteTemplateFileName, newMapFileName, _currentMap.getName(), _xCursor, _yCursor);
 		

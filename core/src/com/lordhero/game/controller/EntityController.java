@@ -1,11 +1,13 @@
 package com.lordhero.game.controller;
 
 import com.badlogic.gdx.Input;
+import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.IPlayer;
+import com.lordhero.game.model.items.IItem;
 
 public class EntityController implements IController {
 	
@@ -38,11 +40,17 @@ public class EntityController implements IController {
 	@Override
 	public boolean processKeyUp(int keyCode) {		
 		if (_gameMode.is(GameMode.Play)) {
-			if (keyCode == Input.Keys.T) {
+			if (keyCode == Consts.TalkToNpcKey) {
 				INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());				
 				if (npc != null) {
 					_gameMode.set(GameMode.Purchase, npc);
 					return true;					
+				}
+			}
+			if (keyCode == Consts.PickUpItemKey) {
+				IItem item = _entities.getItemInRange((int)_player.getX(), (int)_player.getY());
+				if (_player.addItem(item, false)) {
+					_entities.remove(item);					
 				}
 			}
 		}
@@ -68,6 +76,9 @@ public class EntityController implements IController {
 		}
 		else if (_gameMode.is(GameMode.MonsterPit)) {
 			_entities.addMonsterPit(xCursor, yCursor);
+		}
+		else if (_gameMode.is(GameMode.AddItem)) {
+			_entities.addItem(xCursor, yCursor);
 		}
 
 		return false;

@@ -37,7 +37,7 @@ public interface IPlayer extends ICreature {
 	
 	void registerChangeListener(ChangeListener listener);
 	
-	void addItem(IItem item);
+	boolean addItem(IItem item, boolean playerHasToBuy);
 	
 	List<IItem> getItems();
 

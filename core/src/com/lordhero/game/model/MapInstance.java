@@ -167,10 +167,9 @@ public class MapInstance implements IMapInstance {
         
         TiledMapTileLayer obstacleLayer = (TiledMapTileLayer)_tiledMap.getLayers().get(Consts.Obstacles);
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        cell.setTile(getSelectedTile(11));
+        cell.setTile(getTileFromTileSet("Building", 212));
         obstacleLayer.setCell(xCell, yCell, cell);        
-	}
-	
+	}	
 
 	@Override
 	public int getCollisions(float x, float y) {
@@ -199,6 +198,39 @@ public class MapInstance implements IMapInstance {
         }        
 		
         return collisions;
+	}
+
+	private TiledMapTile getTileFromTileSet(String tileSetName, int index) {
+		TiledMapTile selectedTile = null;
+		
+		TiledMapTileSets tileSets = _tiledMap.getTileSets();
+        Iterator<TiledMapTileSet> it = tileSets.iterator();
+
+        int count = 0;
+        while(it.hasNext()) {
+        	TiledMapTileSet tileSet = it.next();
+        	
+        	if (!tileSetName.equals(tileSet.getName())) {
+        		continue;
+        	}
+        	
+        	Iterator<TiledMapTile> tileIt = tileSet.iterator();
+        	
+        	while(tileIt.hasNext()) {
+        		selectedTile = tileIt.next();
+        		
+        		if (count == index) {
+        			break;
+        		}
+        		count++;
+        	}
+
+        	if (count == index) {
+    			break;
+    		}
+        }
+		
+        return selectedTile;
 	}
 
 	private TiledMapTile getSelectedTile(int selectedCellIndex) {

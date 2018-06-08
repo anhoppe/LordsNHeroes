@@ -2,6 +2,7 @@ package com.lordhero.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.INetwork;
@@ -66,11 +67,11 @@ public class MapController implements IController {
     			return true;
     		}
     	}		
-		else if (_gameMode.is(GameMode.Play) && keyCode == Input.Keys.C) {
+		else if (_gameMode.is(GameMode.Play) && keyCode == Consts.CharacterSheetKey) {
 			_gameMode.set(GameMode.CharacterSheet, null);
 			return true;
 		}
-		else if (_gameMode.is(GameMode.Play) && keyCode == Input.Keys.X) {
+		else if (_gameMode.is(GameMode.Play) && keyCode == Consts.SwitchWeaponKey) {
 			_player.switchActiveWeapon();
 		}
 

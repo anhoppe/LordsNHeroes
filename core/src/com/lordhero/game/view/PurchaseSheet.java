@@ -87,7 +87,7 @@ public class PurchaseSheet extends UiPanel {
 		int costs = itemToBuy.getPrice();
 		if (_player.getMoney() >= costs) {
 			npcItems.remove(index);
-			_player.addItem(itemToBuy);
+			_player.addItem(itemToBuy, true);
 			_player.pay(costs);
 			_npc.addMoney(costs);
 		}

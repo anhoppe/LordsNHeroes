@@ -18,6 +18,7 @@ import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.IMap;
 import com.lordhero.game.model.IPlayer;
+import com.lordhero.game.model.items.IItem;
 
 public class WorldMap {
 
@@ -83,24 +84,9 @@ public class WorldMap {
         _spriteBatch.setProjectionMatrix(_camera.combined);
         _spriteBatch.begin();
 
-		List<IEntity> entitiesOnSite = _entities.getEntitiesOnSite();
-		
-		if (entitiesOnSite != null) {
-			for (IEntity entity : entitiesOnSite) {
-				Sprite sprite = entity.getSprite();
-				sprite.draw(_spriteBatch);
-								
-				if (entity instanceof ICreature)
-				{
-					ICreature creature = (ICreature)entity;
-			    	TextureRegion weaponTexture = creature.getWeaponAnimationFrame();
-			        
-			    	if (weaponTexture != null) {
-		                _spriteBatch.draw(weaponTexture, entity.getX(), entity.getY(), 0f, 0f, 32f, 32f, 1f, 1f, creature.getRotation());        				    		
-			    	}					
-				}
-			}		
-		}
+        renderItems();
+        
+		renderEntities();		
 
         if (_gameMode.is(GameMode.Play)) {
         	Sprite sprite = _player.getSprite();
@@ -124,5 +110,38 @@ public class WorldMap {
 
 	public void dispose() {
 		_cursorImage.dispose();
+	}
+
+
+	private void renderEntities() {
+		List<IEntity> entitiesOnSite = _entities.getEntitiesOnSite();
+		
+		if (entitiesOnSite != null) {
+			for (IEntity entity : entitiesOnSite) {
+				Sprite sprite = entity.getSprite();
+				sprite.draw(_spriteBatch);
+								
+				if (entity instanceof ICreature)
+				{
+					ICreature creature = (ICreature)entity;
+			    	TextureRegion weaponTexture = creature.getWeaponAnimationFrame();
+			        
+			    	if (weaponTexture != null) {
+		                _spriteBatch.draw(weaponTexture, entity.getX(), entity.getY(), 0f, 0f, 32f, 32f, 1f, 1f, creature.getRotation());        				    		
+			    	}					
+				}
+			}		
+		}
+	}
+	
+	private void renderItems() {
+		List<IItem> itemsOnSite = _entities.getItemsOnSite();
+		
+		if (itemsOnSite != null) {
+			for (IItem item : itemsOnSite) {
+				Sprite sprite = item.getSprite();
+				sprite.draw(_spriteBatch);
+			}
+		}
 	}
 }

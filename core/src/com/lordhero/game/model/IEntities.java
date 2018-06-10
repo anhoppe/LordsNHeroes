@@ -39,4 +39,6 @@ public interface IEntities {
 
 	IItem getItemInRange(int x, int y);
 
+	int getCollisions(int xPosPx, int yPosPx);
+
 }

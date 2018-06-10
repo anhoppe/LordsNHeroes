@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -29,6 +30,8 @@ import com.lordhero.game.model.IEntity;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.Map;
 import com.lordhero.game.model.Player;
+import com.lordhero.game.model.items.logic.Door;
+import com.lordhero.game.model.items.logic.IItemLogic;
 import com.lordhero.game.view.AddItemPanel;
 import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
@@ -83,6 +86,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	private INetwork _network;
 	private String _worldName;
 	
+	private Hashtable<String, IItemLogic> _itemLogic;
+	
 	public Main(String configPath) {
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -108,6 +113,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 				}
 			}
 		}
+		
+		setupItemLogic();
 	}
 
 	@Override
@@ -159,7 +166,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _entities.setSelectedNpcProvider(_npcEditor);
         _entities.setNpcSelectionReceiver(_npcView);
         _entities.setSelectedItemProvider(_addItemPanel);
-       
+        _entities.setItemLogic(_itemLogic);
+        
         _map.setPlayer(_player);
         _map.setSelectedCellProvider(_worldEditor);
         _map.setGameMode(this);               
@@ -484,5 +492,10 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	@Override
 	public Path getSaveFolder(SaveType saveType) {
 		return Paths.get(System.getProperty("user.home"), "Lords'n'Heroes", _worldName, SaveTypeFolder.get(saveType));
+	}
+	
+	private void setupItemLogic() {
+		_itemLogic = new Hashtable<String, IItemLogic>();
+		_itemLogic.put(Consts.ItemDoor, new Door());
 	}
 }

@@ -54,7 +54,7 @@ public class MapController implements IController {
 			moveLord();
 		}
 
-        _map.checkForCollision();
+        _map.checkForCollision(_entities);
         
         _player.evaluateAttack(_entities);
 	}

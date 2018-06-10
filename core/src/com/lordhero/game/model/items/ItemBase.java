@@ -18,8 +18,8 @@ public class ItemBase implements IItem {
 	}
 	
 	public ItemBase(Element itemNode) {
-		_name = itemNode.getAttribute("Name");
-		_price = itemNode.getInt("Price");		
+		_name = itemNode.getAttribute(Consts.SerializeName);
+		_price = itemNode.getInt(Consts.SerializePrice);		
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class ItemBase implements IItem {
 	
 	@Override
 	public void write(XmlWriter writer) throws IOException {
-		writer.element("Item").attribute("Name", _name).attribute("Price", _price);
+		writer.element("Item").attribute(Consts.SerializeName, _name).attribute(Consts.SerializePrice, _price);
 		writer.pop();
 	}
 	

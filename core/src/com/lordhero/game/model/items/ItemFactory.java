@@ -74,14 +74,14 @@ public class ItemFactory implements IItemFactory {
 		return produceGenericItem(itemName, xPosCell, yPosCell);
 	}	
 	
-	private GenericItem produceGenericItem(String itemName, int xPosCell, int yPosCell) {
+	private GenericItem produceGenericItem(String itemName, int xPosPx, int yPosPx) {
 		GenericItem item = new GenericItem();
 		item.setName(itemName);
 		
-		if (itemName.equals(Consts.DoorItem)) {
+		if (itemName.equals(Consts.ItemDoor)) {
 			createDoor(item);
 		}
-		else if (itemName.equals(Consts.KeyItem)) {
+		else if (itemName.equals(Consts.ItemKey)) {
 			createKey(item);
 		}
 		else {
@@ -90,7 +90,7 @@ public class ItemFactory implements IItemFactory {
 		}
 		
 		if (item != null) {
-			item.setPosition(xPosCell, yPosCell);			
+			item.setPosition(xPosPx, yPosPx);			
 		}
 		
 		return item;

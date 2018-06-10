@@ -172,14 +172,14 @@ public class MapInstance implements IMapInstance {
 	}	
 
 	@Override
-	public int getCollisions(float x, float y) {
+	public int getCollisions(float xPx, float yPx) {
 		int collisions = 0;
 		
 		TiledMapTileLayer collisionObjectLayer = (TiledMapTileLayer)_tiledMap.getLayers().get(Consts.Collision);
 
         // get the player position
-        int xPos = (int)(x / collisionObjectLayer.getTileWidth());
-        int yPos = (int)(y / collisionObjectLayer.getTileHeight());
+        int xPos = (int)(xPx / collisionObjectLayer.getTileWidth());
+        int yPos = (int)(yPx / collisionObjectLayer.getTileHeight());
         
         if (collisionObjectLayer.getCell(xPos, yPos+1) != null) {
         	collisions |= Consts.Up;

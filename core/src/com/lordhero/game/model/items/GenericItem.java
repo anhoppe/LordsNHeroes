@@ -3,19 +3,17 @@ package com.lordhero.game.model.items;
 import java.io.IOException;
 import java.util.Hashtable;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.Consts;
 
-public class GenericItem extends ItemBase {
+public class GenericItem extends ItemBase implements IGenericItem {
 
 	private Hashtable<String, ItemProperty> _properties;
 	
-	private int _tileIndex;	
+	private int _tileIndex;
 	
 	public GenericItem() {
 		_properties = new Hashtable<String, ItemProperty>();		
@@ -29,7 +27,7 @@ public class GenericItem extends ItemBase {
 		Array<Element> propertyNodes = itemNode.getChildrenByName("Property");
 		
 		for (Element propertyNode : propertyNodes) {
-			String name = propertyNode.get("Name");
+			String name = propertyNode.get(Consts.SerializeName);
 			ItemProperty itemProperty = new ItemProperty(propertyNode);
 			
 			if (_properties.containsKey(name)) {
@@ -38,6 +36,25 @@ public class GenericItem extends ItemBase {
 			}
 			_properties.put(name, itemProperty);			
 		}
+	}
+	
+	@Override
+	public boolean getBoolean(String propertyName) {
+		ItemProperty property = _properties.get(propertyName);
+		
+		if (property == null) {
+			System.err.println("Generic item " + _name + " has no such property: " + propertyName);
+			return false;
+		}
+		
+		Object value = property.get();
+		
+		if (!(value instanceof Boolean)) {
+			System.err.println("Property " + propertyName + " is not of type boolean");
+			return false;
+		}
+		
+		return ((Boolean)value).booleanValue();
 	}
 
 	@Override
@@ -64,8 +81,8 @@ public class GenericItem extends ItemBase {
 	
 	public void setPosition(int xPosPx, int yPosPx) {
 		if (_sprite != null) {
-			_sprite.setCenterX(xPosPx);
-			_sprite.setCenterY(yPosPx);
+			_sprite.setX(xPosPx);
+			_sprite.setY(yPosPx);
 		}
 	}
 

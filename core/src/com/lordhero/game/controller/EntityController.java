@@ -1,6 +1,5 @@
 package com.lordhero.game.controller;
 
-import com.badlogic.gdx.Input;
 import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
@@ -78,7 +77,7 @@ public class EntityController implements IController {
 			_entities.addMonsterPit(xCursor, yCursor);
 		}
 		else if (_gameMode.is(GameMode.AddItem)) {
-			_entities.addItem(xCursor, yCursor);
+			_entities.addItem(xCursor - Consts.TileWidth / 2, yCursor - Consts.TileHeight / 2);
 		}
 
 		return false;

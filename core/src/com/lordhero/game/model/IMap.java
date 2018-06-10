@@ -11,7 +11,7 @@ public interface IMap {
 	int getCursorY();
 	
 	// Setters for controller
-	void checkForCollision();
+	void checkForCollision(IEntities _entities);
 	boolean enter(INetwork _network);
 	void setTile();
 	void setCursorPosition(int xPos, int yPos);

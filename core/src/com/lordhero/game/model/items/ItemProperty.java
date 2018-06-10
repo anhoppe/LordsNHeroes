@@ -21,6 +21,9 @@ public class ItemProperty {
 			if (type.equals(String.class)) {
 				_value = valueAsString;
 			}
+			else if (type.equals(Boolean.class)) {
+				_value = new Boolean(Boolean.getBoolean(valueAsString));
+			}
 			else if (type.equals(Integer.class)) {
 				_value = new Integer(Integer.parseInt(valueAsString));
 			}
@@ -34,6 +37,10 @@ public class ItemProperty {
 		catch (ClassNotFoundException e) {
 			System.err.println("Could not find class for name: " + className);
 		}
+	}
+	
+	public Object get() {
+		return _value;
 	}
 
 	public void write() {

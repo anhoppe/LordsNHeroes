@@ -16,7 +16,7 @@ public class AddItemPanel extends UiPanel implements ISelectedItemProvider {
 
 		_itemSelection = new SelectBox<String>(_skin);
 		
-		String[] itemSelection = {Consts.KeyItem, Consts.DoorItem};
+		String[] itemSelection = {Consts.ItemKey, Consts.ItemDoor};
 		
 		_itemSelection.setItems(itemSelection);
 		_table.add(_itemSelection).size(200, 32);

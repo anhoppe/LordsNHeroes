@@ -27,8 +27,8 @@ public class Consts {
 	public static final String DungeonSite = "Dungeon";
 	
 	// Item types
-	public static final String KeyItem = "Key";
-	public static final String DoorItem = "Door";
+	public static final String ItemKey = "Key";
+	public static final String ItemDoor = "Door";
 	
 	// Map layer names
 	public static final String Background = "Background";
@@ -52,8 +52,12 @@ public class Consts {
 	public static final String DungeonTemplate = "dungeon_template";
 
 	// Item properties
-	public static final String ItemPropKeyCode = "key_code";
 	public static final String ItemPropIsOpen = "is_open";
+	public static final String ItemPropKeyCode = "key_code";
+	
+	// Serialization attributes
+	public static final String SerializeName = "Name";
+	public static final String SerializePrice = "Price";
 
 	//////////////////////////////////////////////////////////////////////
 	// Numeric

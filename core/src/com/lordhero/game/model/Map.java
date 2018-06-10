@@ -12,9 +12,7 @@ import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.IGameSourceProvider;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedCellProvider;
-import com.lordhero.game.ISelectedItemProvider;
 import com.lordhero.game.ISelectedSiteProvider;
-import com.lordhero.game.view.AddItemPanel;
 
 public class Map implements IMap, IMapInfo {
 
@@ -90,9 +88,11 @@ public class Map implements IMap, IMapInfo {
 	}
 
 	@Override
-	public void checkForCollision() {        
-		int collisions = _currentMap.getCollisions(_player.getX(), _player.getY());
+	public void checkForCollision(IEntities entities) {        
+		int mapCollisions = _currentMap.getCollisions(_player.getX(), _player.getY());
+        int entityCollisions = entities.getCollisions((int)_player.getX(), (int)_player.getY());
         
+        int collisions = mapCollisions | entityCollisions;
         _player.setCollisions((collisions & Consts.Up) != 0,
         		(collisions & Consts.Down) != 0,
         		(collisions & Consts.Left) != 0,

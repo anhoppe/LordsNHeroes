@@ -12,6 +12,7 @@ import java.util.Set;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedItemProvider;
@@ -20,6 +21,7 @@ import com.lordhero.game.model.items.GenericItem;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
 import com.lordhero.game.model.items.IWeapon;
+import com.lordhero.game.model.items.logic.IItemLogic;
 import com.lordhero.game.view.INpcSelectionReceiver;
 
 import net.dermetfan.utils.Pair;
@@ -29,6 +31,8 @@ public class Entities implements IEntities, IEntityFactory {
 
 	private Hashtable<String, List<IEntity>> _entities;
 	private Hashtable<String, List<IItem>> _items;
+	
+	private Hashtable<String, IItemLogic> _itemLogic;
 	
 	private IMapInfo _mapInfo;
 	private List<Pair<String, IEntity>> _createdEntitiesBuffer;
@@ -58,6 +62,10 @@ public class Entities implements IEntities, IEntityFactory {
 	
 	public void setSelectedItemProvider(ISelectedItemProvider selectedItemProvider) {
 		_selectedItemProvider = selectedItemProvider;
+	}
+	
+	public void setItemLogic(Hashtable<String, IItemLogic> itemLogic) {
+		_itemLogic = itemLogic;
 	}
 
 	@Override
@@ -115,6 +123,43 @@ public class Entities implements IEntities, IEntityFactory {
 		}
 		
 		return itemInRange;
+	}
+	
+	@Override
+	public int getCollisions(int xPosPx, int yPosPx) {
+		int collisions = 0;
+		
+		List<IItem> itemsOnSite = _items.get(_mapInfo.getCurrentMap());
+		
+		if (itemsOnSite == null) {
+			return 0;
+		}
+		
+		for (IItem item : itemsOnSite) {
+			if (item instanceof GenericItem) {
+				GenericItem genericItem = (GenericItem)item;
+				IItemLogic logic = _itemLogic.get(genericItem.getName());
+				if (logic != null)
+				{
+					if (logic.blocksMovement(genericItem)) {
+						if (item.isAt(xPosPx, yPosPx + Consts.TileHeight)) {
+				        	collisions |= Consts.Up;
+						}
+						if (item.isAt(xPosPx, yPosPx - Consts.TileHeight)) {
+				        	collisions |= Consts.Down;
+						}
+						if (item.isAt(xPosPx - Consts.TileWidth, yPosPx)) {
+				        	collisions |= Consts.Left;
+						}
+						if (item.isAt(xPosPx + Consts.TileWidth, yPosPx)) {
+				        	collisions |= Consts.Right;
+						}
+					}					
+				}
+			}
+		}		
+		
+		return collisions;
 	}
 
 	@Override

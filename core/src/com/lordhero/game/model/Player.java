@@ -1,8 +1,11 @@
 package com.lordhero.game.model;
 
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.omg.PortableServer._ServantLocatorStub;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,7 +45,9 @@ public class Player extends CreatureBase implements IPlayer {
 	private int _level = 0;
 
     private List<IItem> _items;
-		
+    
+    private Hashtable<Integer, IItem> _slotToItem;
+    		
 	public Player() {
 		_image = new Texture(Gdx.files.internal("My1stHero.png"));
 		_sprite = new Sprite(_image);
@@ -50,11 +55,10 @@ public class Player extends CreatureBase implements IPlayer {
 		_lordChangedListeners = new LinkedList<ChangeListener>();
 		_items = new LinkedList<IItem>();
 		
+		_slotToItem = new Hashtable<Integer, IItem>();
+		
 		_xPos = -1;
 		_yPos = -1;
-		
-		_meleeWeapon = null;
-		_rangedWeapon = null;	
 	}
 
 	@Override
@@ -202,33 +206,15 @@ public class Player extends CreatureBase implements IPlayer {
 	}
 
 	@Override
-	public void setWeapon(MeleeWeapon weapon) {
-		_meleeWeapon = weapon;	
-	}
-	
-	@Override 
-	public IMeleeWeapon getWeapon() {
-		return _meleeWeapon;
-	}
-
-	@Override
-	public void switchActiveWeapon() {
-		_isMeleeActiveWeapon = !_isMeleeActiveWeapon ;
-	}
-
-	@Override
 	public void startAttack(IEntityFactory entityFactory) {
-		if (_isMeleeActiveWeapon)
-		{
-			if (_meleeWeapon != null) {
-				_meleeWeapon.startAttack();
-			}		
+		if (_activeItem instanceof MeleeWeapon) {
+			MeleeWeapon meleeWeapon = (MeleeWeapon)_activeItem;
+			meleeWeapon.startAttack();
 		}
-		else {
-			if (_rangedWeapon != null) {
-				Missile missile = entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, _rangedWeapon.getDamage());
-				addActiveMissile(missile);
-			}
+		else if (_activeItem instanceof RangeWeapon){
+			RangeWeapon rangedWeapon = (RangeWeapon)_activeItem;
+			Missile missile = entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, rangedWeapon.getDamage());
+			addActiveMissile(missile);
 		}
 	}
 
@@ -241,11 +227,6 @@ public class Player extends CreatureBase implements IPlayer {
 				entities.hitEntity(hitInfo.getX(), hitInfo.getY(), this, hitInfo.getWeapon());			
 			}
 		}
-	}
-
-	@Override
-	public void setRangedWeapon(RangeWeapon rangeWeapon) {
-		_rangedWeapon = rangeWeapon;		
 	}
 
 	private void fireChangeEvent() {
@@ -288,6 +269,23 @@ public class Player extends CreatureBase implements IPlayer {
 	@Override
 	public int getLevel() {
 		return _level;
+	}
+	
+	@Override
+	public void assignItemToSlot(int slotIndex, int itemIndex) {
+		try {
+			IItem item = _items.get(itemIndex);
+			_slotToItem.put(slotIndex, item);			
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Tried to assign item to slot with itemIndex out of bounds: " + itemIndex);
+		}
+	}
+	
+	@Override 
+	public void useItemInSlot(int slotIndex) {
+		if (_slotToItem.containsKey(slotIndex)) {
+			_activeItem = _slotToItem.get(slotIndex);
+		}
 	}
 	
 	@Override

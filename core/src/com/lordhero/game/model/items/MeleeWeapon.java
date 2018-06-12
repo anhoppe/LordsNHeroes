@@ -43,6 +43,8 @@ public class MeleeWeapon extends ItemBase implements IMeleeWeapon {
 	private Texture _thrustImage;	
 	private Animation<TextureRegion> _hitAnimation;	
 	private boolean _isAttacking;
+	
+	// Indicates if a weapon already hit it's target during an attack
 	private boolean _hasHit;
 	
     private float _elapsedTime;

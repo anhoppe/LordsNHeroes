@@ -7,9 +7,12 @@ public class Consts {
 	/////////////////////////////////////////////////////////////////////
 	// Keyboard commands
 	public static final int CharacterSheetKey = Input.Keys.C;
+	public static final int KeyEnterBuilding = Input.Keys.E;
 	public static final int PickUpItemKey = Input.Keys.SPACE;
-	public static final int TalkToNpcKey = Input.Keys.T;
+	public static final int KeySlot1 = Input.Keys.NUM_1;
+	public static final int KeySlot9 = Input.Keys.NUM_9;
 	public static final int SwitchWeaponKey = Input.Keys.X;
+	public static final int TalkToNpcKey = Input.Keys.T;
 	
 	/////////////////////////////////////////////////////////////////////
 	// Strings
@@ -75,5 +78,4 @@ public class Consts {
 	// Item tile position for sprite
 	public static final int ItemSpriteIndexDoor = 755;
 	public static final int ItemSprintIndexKey = 528;
-
 }

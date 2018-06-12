@@ -1,6 +1,10 @@
 package com.lordhero.game.model;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import com.lordhero.game.model.items.IItem;
 
 public interface ICreature extends IEntity {
 	float getRotation();
@@ -10,4 +14,6 @@ public interface ICreature extends IEntity {
 	TextureRegion getWeaponAnimationFrame();
 	
 	void addHitPoints(int hitPoints);
+	
+	List<IItem> getItems();
 }

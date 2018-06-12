@@ -61,7 +61,7 @@ public class MapController implements IController {
 	
 	@Override
 	public boolean processKeyUp(int keyCode) {
-    	if (keyCode == Input.Keys.E)
+    	if (keyCode == Consts.KeyEnterBuilding)
     	{
     		if (_map.enter(_network)) {
     			return true;
@@ -71,8 +71,8 @@ public class MapController implements IController {
 			_gameMode.set(GameMode.CharacterSheet, null);
 			return true;
 		}
-		else if (_gameMode.is(GameMode.Play) && keyCode == Consts.SwitchWeaponKey) {
-			_player.switchActiveWeapon();
+		else if (_gameMode.is(GameMode.Play) && keyCode >= Consts.KeySlot1 && keyCode <= Consts.KeySlot9) {
+			_player.useItemInSlot(keyCode - Consts.KeySlot1);
 		}
 
 		return false;

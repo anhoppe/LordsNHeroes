@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
+import com.lordhero.game.model.items.MeleeWeapon;
 
 public class Enemy extends CreatureBase implements INonPlayer {
 	enum Mode {
@@ -52,6 +53,9 @@ public class Enemy extends CreatureBase implements INonPlayer {
 		_yEndPos = getRandomStartPosition();
 		
 		_xp = 5;
+		
+		_items.add(MeleeWeapon.Create(0));
+		_activeItem = _items.get(0);
 
 		restore();
 	}
@@ -114,21 +118,24 @@ public class Enemy extends CreatureBase implements INonPlayer {
 			}
 		
 			// hit player if already in range and the distance is ok
-			if (dist <= MeeleAttackDist && !_meleeWeapon.attacks()) {
-				_meleeWeapon.startAttack();
-			}
-			
-			// check if attack is already going on, then evaluate the damage
-			else if (_meleeWeapon.attacks()) {
-				Vector2 vec = new Vector2(0, 1);
-				Matrix3 rotMatrix = new Matrix3();
-				rotMatrix.idt();
+			if (_activeItem instanceof MeleeWeapon) {
+				MeleeWeapon weapon = (MeleeWeapon)_activeItem;
+				if (dist <= MeeleAttackDist && !weapon.attacks()) {
+					weapon.startAttack();
+				}
 				
-				rotMatrix.setToRotation(_viewDirectionDeg);
-				vec.mul(rotMatrix);
-				vec.scl(_meleeWeapon.getRange());
+				// check if attack is already going on, then evaluate the damage
+				else if (weapon.attacks()) {
+					Vector2 vec = new Vector2(0, 1);
+					Matrix3 rotMatrix = new Matrix3();
+					rotMatrix.idt();
+					
+					rotMatrix.setToRotation(_viewDirectionDeg);
+					vec.mul(rotMatrix);
+					vec.scl(weapon.getRange());
 
-				player.hit((int)(_xPos + vec.x), (int)(_yPos + vec.y), _meleeWeapon);
+					player.hit((int)(_xPos + vec.x), (int)(_yPos + vec.y), weapon);
+				}
 			}
 		}
 						

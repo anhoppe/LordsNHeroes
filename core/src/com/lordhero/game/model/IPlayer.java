@@ -38,18 +38,8 @@ public interface IPlayer extends ICreature {
 	void registerChangeListener(ChangeListener listener);
 	
 	boolean addItem(IItem item, boolean playerHasToBuy);
-	
-	List<IItem> getItems();
-
-	IMeleeWeapon getWeapon();
-
-	void setWeapon(MeleeWeapon weapon);
-
-	void setRangedWeapon(RangeWeapon rangeWeapon);
 
 	void moveDirection(Direction up);
-
-	void switchActiveWeapon();
 
 	void startAttack(IEntityFactory entityFactory);
 
@@ -64,4 +54,8 @@ public interface IPlayer extends ICreature {
 	int getXp();
 
 	int getLevel();
+
+	void assignItemToSlot(int slotIndex, int itemindex);
+
+	void useItemInSlot(int slotIndex);
 }

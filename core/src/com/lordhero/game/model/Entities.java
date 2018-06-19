@@ -14,10 +14,12 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
 import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
+import com.lordhero.game.IItemCollector;
 import com.lordhero.game.INetwork;
 import com.lordhero.game.ISelectedItemProvider;
 import com.lordhero.game.ISelectedNpcProvider;
 import com.lordhero.game.model.items.GenericItem;
+import com.lordhero.game.model.items.IGenericItem;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.IItemFactory;
 import com.lordhero.game.model.items.IWeapon;
@@ -26,7 +28,7 @@ import com.lordhero.game.view.INpcSelectionReceiver;
 
 import net.dermetfan.utils.Pair;
 
-public class Entities implements IEntities, IEntityFactory {
+public class Entities implements IEntities, IItemCollector, IEntityFactory {
 	private static IItemFactory ItemFactory = new com.lordhero.game.model.items.ItemFactory();
 
 	private Hashtable<String, List<IEntity>> _entities;
@@ -233,6 +235,21 @@ public class Entities implements IEntities, IEntityFactory {
 		_createdEntitiesBuffer.add(new Pair<String, IEntity>(site, missile));
 		
 		return missile;
+	}
+	
+	@Override
+	public List<IGenericItem> getItemsByName(String itemName) {
+		List<IGenericItem> itemCollection = new LinkedList<IGenericItem>();
+		
+		List<IItem> items = getItemsOnSite();
+		
+		for (IItem item : items) {
+			if (item instanceof IGenericItem) {
+				itemCollection.add((IGenericItem)item);
+			}
+		}
+		
+		return itemCollection;
 	}
 	
 	@Override

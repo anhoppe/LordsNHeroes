@@ -97,8 +97,9 @@ public class ItemFactory implements IItemFactory {
 	}
 
 	private void createDoor(GenericItem genericItem) {
-		genericItem.addProperty(Consts.ItemPropKeyCode, new Integer(0));
-		genericItem.addProperty(Consts.ItemPropIsOpen, new Boolean(false));
+		genericItem.addProperty(Consts.ItemPropKeyCode, Integer.valueOf(0));
+		genericItem.addProperty(Consts.ItemPropIsOpen, Boolean.valueOf(false));
+		genericItem.addProperty(Consts.ItemPropIsLocked, Boolean.valueOf(true));
 		
 		genericItem.setSprite(getSpriteFromTileSet(Consts.ItemSpriteIndexDoor), Consts.ItemSpriteIndexDoor);
 	}

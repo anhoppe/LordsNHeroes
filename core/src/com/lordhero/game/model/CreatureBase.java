@@ -7,10 +7,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
-import com.lordhero.game.model.items.RangeWeapon;
 import com.lordhero.game.model.items.IItem;
 import com.lordhero.game.model.items.MeleeWeapon;
 

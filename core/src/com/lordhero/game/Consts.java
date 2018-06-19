@@ -6,13 +6,14 @@ public class Consts {
 	
 	/////////////////////////////////////////////////////////////////////
 	// Keyboard commands
-	public static final int CharacterSheetKey = Input.Keys.C;
-	public static final int KeyEnterBuilding = Input.Keys.E;
-	public static final int PickUpItemKey = Input.Keys.SPACE;
-	public static final int KeySlot1 = Input.Keys.NUM_1;
-	public static final int KeySlot9 = Input.Keys.NUM_9;
-	public static final int SwitchWeaponKey = Input.Keys.X;
-	public static final int TalkToNpcKey = Input.Keys.T;
+	public static final int KeyCodeCharacterSheet = Input.Keys.C;
+	public static final int KeyCodeEnterBuilding = Input.Keys.E;
+	public static final int KeyCodePickUpItem = Input.Keys.SPACE;
+	public static final int KeyCodeSlot1 = Input.Keys.NUM_1;
+	public static final int KeyCodeSlot9 = Input.Keys.NUM_9;
+	public static final int KeyCodeOpen = Input.Keys.O;	
+	public static final int KeyCodeSwitchWeapon = Input.Keys.X;
+	public static final int KeyCodeTalkToNpc = Input.Keys.T;
 	
 	/////////////////////////////////////////////////////////////////////
 	// Strings
@@ -55,6 +56,7 @@ public class Consts {
 	public static final String DungeonTemplate = "dungeon_template";
 
 	// Item properties
+	public static final String ItemPropIsLocked = "is_locked";
 	public static final String ItemPropIsOpen = "is_open";
 	public static final String ItemPropKeyCode = "key_code";
 	
@@ -67,7 +69,7 @@ public class Consts {
 	public static final int TileWidth = 32;
 	public static final int TileHeight = 32;
 	public static final int ItemTileSetWidthFields = 30;
-	public static final int IsAtRange = 16;
+	public static final int IsAtRange = 32;
 	
 	// Direction constants
 	public static final int Up = 1;

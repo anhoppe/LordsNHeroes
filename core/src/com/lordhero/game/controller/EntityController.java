@@ -1,12 +1,16 @@
 package com.lordhero.game.controller;
 
+import java.util.Hashtable;
+
 import com.lordhero.game.Consts;
 import com.lordhero.game.IGameMode;
 import com.lordhero.game.IGameMode.GameMode;
 import com.lordhero.game.model.IEntities;
 import com.lordhero.game.model.INpc;
 import com.lordhero.game.model.IPlayer;
+import com.lordhero.game.model.items.IGenericItem;
 import com.lordhero.game.model.items.IItem;
+import com.lordhero.game.model.items.logic.IItemLogic;
 
 public class EntityController implements IController {
 	
@@ -15,6 +19,8 @@ public class EntityController implements IController {
 	IGameMode _gameMode;
 	
 	IPlayer _player;
+	
+	Hashtable<String, IItemLogic> _itemLogic;
 	
 	public EntityController() {
 	}
@@ -30,6 +36,10 @@ public class EntityController implements IController {
 	public void setPlayer(IPlayer player) {
 		_player = player;
 	}
+	
+	public void setItemLogic(Hashtable<String, IItemLogic> itemLogic) {
+		_itemLogic = itemLogic;
+	}
   	
 	@Override
 	public void update() {
@@ -39,17 +49,27 @@ public class EntityController implements IController {
 	@Override
 	public boolean processKeyUp(int keyCode) {		
 		if (_gameMode.is(GameMode.Play)) {
-			if (keyCode == Consts.TalkToNpcKey) {
+			if (keyCode == Consts.KeyCodeTalkToNpc) {
 				INpc npc = _entities.getNpcInRange((int)_player.getX(), (int)_player.getY());				
 				if (npc != null) {
 					_gameMode.set(GameMode.Purchase, npc);
 					return true;					
 				}
 			}
-			if (keyCode == Consts.PickUpItemKey) {
+			if (keyCode == Consts.KeyCodePickUpItem) {
 				IItem item = _entities.getItemInRange((int)_player.getX(), (int)_player.getY());
 				if (_player.addItem(item, false)) {
 					_entities.remove(item);					
+				}
+			}
+			if (keyCode == Consts.KeyCodeOpen) {
+				IItem item = _entities.getItemInRange((int)_player.getX(), (int)_player.getY());
+				if (item instanceof IGenericItem) {
+ 					IGenericItem genericItem = (IGenericItem)item;
+					if (genericItem.is(Consts.ItemDoor)) {
+						IItemLogic itemLogic = _itemLogic.get(Consts.ItemDoor);
+						itemLogic.use(genericItem, (int)_player.getX(), (int)_player.getY());
+					}
 				}
 			}
 		}
@@ -65,11 +85,11 @@ public class EntityController implements IController {
 
 	@Override
 	public boolean processMouseUp(int xScreen, int yScreen, int xCursor, int yCursor) {
-		if (_gameMode.get() == IGameMode.GameMode.AddNpc) {
+		if (_gameMode.is(IGameMode.GameMode.AddNpc)) {
 			_entities.addNpc(xCursor, yCursor);
 			return true;
 		}
-		else if (_gameMode.get() == IGameMode.GameMode.SelectMapItems) {
+		else if (_gameMode.is(IGameMode.GameMode.SelectMapItems)) {
 			_entities.selectEntity(xCursor, yCursor);
 			return true;
 		}

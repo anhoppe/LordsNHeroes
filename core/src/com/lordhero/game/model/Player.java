@@ -5,8 +5,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.omg.PortableServer._ServantLocatorStub;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -15,11 +13,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.XmlWriter;
+import com.lordhero.game.model.items.IGenericItem;
 import com.lordhero.game.model.items.IItem;
-import com.lordhero.game.model.items.IMeleeWeapon;
 import com.lordhero.game.model.items.IWeapon;
 import com.lordhero.game.model.items.MeleeWeapon;
 import com.lordhero.game.model.items.RangeWeapon;
+import com.lordhero.game.model.items.logic.IItemLogic;
 
 public class Player extends CreatureBase implements IPlayer {
     private static final float PlayerSpeed = 150f;
@@ -47,7 +46,9 @@ public class Player extends CreatureBase implements IPlayer {
     private List<IItem> _items;
     
     private Hashtable<Integer, IItem> _slotToItem;
-    		
+    			
+	private Hashtable<String, IItemLogic> _itemLogic;
+
 	public Player() {
 		_image = new Texture(Gdx.files.internal("My1stHero.png"));
 		_sprite = new Sprite(_image);
@@ -59,6 +60,10 @@ public class Player extends CreatureBase implements IPlayer {
 		
 		_xPos = -1;
 		_yPos = -1;
+	}
+	
+	public void setItemLogic(Hashtable<String, IItemLogic> itemLogic) {
+		_itemLogic = itemLogic;
 	}
 
 	@Override
@@ -191,7 +196,11 @@ public class Player extends CreatureBase implements IPlayer {
 	}
 
  	@Override
-	public boolean addItem(IItem item, boolean playerHasToBuy) {		
+	public boolean addItem(IItem item, boolean playerHasToBuy) {
+ 		if (item == null) {
+ 			return false;
+ 		}
+ 		
  		if (playerHasToBuy) {
 	 		_money -= item.getPrice();			
 		}
@@ -215,6 +224,11 @@ public class Player extends CreatureBase implements IPlayer {
 			RangeWeapon rangedWeapon = (RangeWeapon)_activeItem;
 			Missile missile = entityFactory.createMissile(_xPos, _yPos, _viewDirectionDeg, rangedWeapon.getDamage());
 			addActiveMissile(missile);
+		}
+		else if (_activeItem instanceof IGenericItem) {
+			IGenericItem genericItem = (IGenericItem)_activeItem;
+			IItemLogic logic = _itemLogic.get(genericItem.getName());
+			logic.use(genericItem, (int)_xPos, (int)_yPos);
 		}
 	}
 

@@ -44,8 +44,7 @@ public class ItemBase implements IItem {
 			if (Math.abs(xPosPx - (int)_sprite.getX()) < Consts.IsAtRange &&
 				Math.abs(yPosPx - (int)_sprite.getY()) < Consts.IsAtRange) {
 				isAt = true;
-			}
-			
+			}			
 		}
 			
 		return isAt;

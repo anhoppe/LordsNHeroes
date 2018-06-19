@@ -39,15 +39,13 @@ public class GenericItem extends ItemBase implements IGenericItem {
 	}
 	
 	@Override
+	public boolean is(String itemName) {
+		return _name.equals(itemName);
+	}
+	
+	@Override
 	public boolean getBoolean(String propertyName) {
-		ItemProperty property = _properties.get(propertyName);
-		
-		if (property == null) {
-			System.err.println("Generic item " + _name + " has no such property: " + propertyName);
-			return false;
-		}
-		
-		Object value = property.get();
+		Object value = getPropertyValue(propertyName);
 		
 		if (!(value instanceof Boolean)) {
 			System.err.println("Property " + propertyName + " is not of type boolean");
@@ -55,6 +53,29 @@ public class GenericItem extends ItemBase implements IGenericItem {
 		}
 		
 		return ((Boolean)value).booleanValue();
+	}
+	
+	@Override
+	public void setBoolean(String propertyName, boolean value) {
+		Object prevValue = getPropertyValue(propertyName);
+		
+		if (!(prevValue instanceof Boolean)) {
+			System.err.println("Property " + propertyName + " is not of type boolean");
+		}
+
+		addProperty(propertyName, Boolean.valueOf(value));
+	}
+	
+	@Override
+	public int getInteger(String propertyName) {
+		Object value = getPropertyValue(propertyName);
+		
+		if (!(value instanceof Integer)) {
+			System.err.println("Property " + propertyName + " is not of type integer");
+			return 0;
+		}
+		
+		return ((Integer)value).intValue();
 	}
 
 	@Override
@@ -94,4 +115,15 @@ public class GenericItem extends ItemBase implements IGenericItem {
 		
 		_properties.put(propertyName, new ItemProperty(object));
 	}
+	
+	private Object getPropertyValue(String propertyName) {
+		ItemProperty property = _properties.get(propertyName);
+		
+		if (property == null) {
+			System.err.println("Generic item " + _name + " has no such property: " + propertyName);
+			return false;
+		}
+		
+		return property.get();
+	}		
 }

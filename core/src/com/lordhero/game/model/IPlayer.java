@@ -1,14 +1,9 @@
 package com.lordhero.game.model;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lordhero.game.model.items.IItem;
-import com.lordhero.game.model.items.IMeleeWeapon;
 import com.lordhero.game.model.items.IWeapon;
-import com.lordhero.game.model.items.MeleeWeapon;
-import com.lordhero.game.model.items.RangeWeapon;
 
 public interface IPlayer extends ICreature {
 	public enum Direction {

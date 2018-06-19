@@ -32,6 +32,7 @@ import com.lordhero.game.model.Map;
 import com.lordhero.game.model.Player;
 import com.lordhero.game.model.items.logic.Door;
 import com.lordhero.game.model.items.logic.IItemLogic;
+import com.lordhero.game.model.items.logic.Key;
 import com.lordhero.game.view.AddItemPanel;
 import com.lordhero.game.view.CharacterSheet;
 import com.lordhero.game.view.HeroSheet;
@@ -113,8 +114,6 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 				}
 			}
 		}
-		
-		setupItemLogic();
 	}
 
 	@Override
@@ -141,9 +140,9 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 
         // Create models
 		_player = new Player();
-		_map = new Map();
-		
+		_map = new Map();		
         _entities = new Entities();
+		_itemLogic = new Hashtable<String, IItemLogic>();
         
 		// Create controllers
         EntityController entityController = new EntityController();
@@ -174,6 +173,8 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         _map.setGameSourceProvider(this);
         _map.setSelectedSiteProvider(_siteEditor);
         
+        _player.setItemLogic(_itemLogic);
+        
 		// Controller DI
         mapController.setMap(_map);
         mapController.setPlayer(_player);
@@ -184,6 +185,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
         entityController.setEntities(_entities);
         entityController.setGameMode(this);       
 		entityController.setPlayer(_player);
+		entityController.setItemLogic(_itemLogic);
 		
 		// View DI
 		_lordSheet.setLord(_player);
@@ -203,7 +205,11 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
        
         _characterSheet.setGameMode(this);
         _characterSheet.setPlayer(_player);
-        
+
+        ///////////////////////////////////////////////////////////////////
+        // Item logic
+		setupItemLogic();
+
         ///////////////////////////////////////////////////////////////////
         // Required initialization
 		Path path = Paths.get(getSaveFolder(SaveType.Entities).toString(), "player.xml");
@@ -495,7 +501,7 @@ public class Main extends ApplicationAdapter implements InputProcessor, IGameMod
 	}
 	
 	private void setupItemLogic() {
-		_itemLogic = new Hashtable<String, IItemLogic>();
 		_itemLogic.put(Consts.ItemDoor, new Door());
+		_itemLogic.put(Consts.ItemKey, new Key(_entities));
 	}
 }

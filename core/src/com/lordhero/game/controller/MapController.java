@@ -61,18 +61,18 @@ public class MapController implements IController {
 	
 	@Override
 	public boolean processKeyUp(int keyCode) {
-    	if (keyCode == Consts.KeyEnterBuilding)
+    	if (keyCode == Consts.KeyCodeEnterBuilding)
     	{
     		if (_map.enter(_network)) {
     			return true;
     		}
     	}		
-		else if (_gameMode.is(GameMode.Play) && keyCode == Consts.CharacterSheetKey) {
+		else if (_gameMode.is(GameMode.Play) && keyCode == Consts.KeyCodeCharacterSheet) {
 			_gameMode.set(GameMode.CharacterSheet, null);
 			return true;
 		}
-		else if (_gameMode.is(GameMode.Play) && keyCode >= Consts.KeySlot1 && keyCode <= Consts.KeySlot9) {
-			_player.useItemInSlot(keyCode - Consts.KeySlot1);
+		else if (_gameMode.is(GameMode.Play) && keyCode >= Consts.KeyCodeSlot1 && keyCode <= Consts.KeyCodeSlot9) {
+			_player.useItemInSlot(keyCode - Consts.KeyCodeSlot1);
 		}
 
 		return false;
